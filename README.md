@@ -79,5 +79,6 @@ npm test        # Stylelint のルールと、全パレットのコントラス�
 
 ## ライセンス
 
+- Kasane 本体(CSS、仕様書、ドキュメント、Stylelint のプラグイン、生成スクリプト): MIT License(`LICENSE`)
 - LINE Seed JP: SIL Open Font License 1.1(`v1/fonts/LICENSE-LINE-Seed-JP.txt`)
-- Kasane 本体のライセンスは未定です。
+- Zen Maru Gothic と Inter は Google Fonts から読み込みます(どちらも SIL Open Font License 1.1)。

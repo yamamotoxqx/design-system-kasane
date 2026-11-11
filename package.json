@@ -17,12 +17,13 @@
   "scripts": {
     "build": "node tools/gen.cjs && python3 tools/build_site.py",
     "test": "node test/run.js",
-    "dist": "rm -rf dist && mkdir dist && cp -r index.html llms.txt _headers v1 dist/"
+    "dist": "rm -rf dist && mkdir dist && cp -r index.html llms.txt _headers LICENSE v1 dist/"
   },
   "peerDependencies": {
     "stylelint": ">=16"
   },
   "devDependencies": {
     "stylelint": "^16.10.0"
-  }
+  },
+  "license": "MIT"
 }
