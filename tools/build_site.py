@@ -478,7 +478,7 @@ page('dialog', '確認が必要な操作と、操作の結果を伝える部品�
 exec(open('pages_extra.py', encoding='utf-8').read())
 
 HOME = ('<article class="page home" data-page="home" hidden><div class="hero"><div class="hero-art" aria-hidden="true"><i></i><i></i><i></i></div>'
-        '<h1>Kasane</h1><p class="lead">面を重ねて区切り、色を選べるデザインシステム。</p>'
+        '<h1>Kasane</h1><p class="lead">面を重ねて区切り、色を選べるデザインシステム。</p><p class="hero-ai">AI で UI を作るときは、<a href="' + BASE + '/kasane.md">仕様書(kasane.md)</a>を読ませてください。</p>'
         '<div class="inline start"><a class="k-btn k-btn-primary" href="#start">使い始める</a><button class="k-btn" type="button" data-open-chooser>色を選び直す</button></div></div>'
         '<div class="cards two">'
         '<a class="tile tile-link" href="#about"><h3>はじめに</h3><p>Kasane の概要、使い始め方、AI との使い方。</p></a>'
@@ -511,7 +511,16 @@ for p in PAL:
     DOCS_EXTRA += '%s[data-theme="dark"]%s{--bad-on-accent:%s}\n' % (sel, ',:root:not([data-accent])[data-theme="dark"]' if first else '', d)
 DOCS_EXTRA += '.bad-on-accent,.bad-on-accent:hover{background:var(--accent);color:var(--bad-on-accent)}\n'
 
+# Point AI tools at the plain-text spec: <head> metadata and a footer column.
+AI_NOTE = ('Kasane デザインシステムのドキュメント。AI が UI を作るときは、このページではなく仕様書 %s/kasane.md を最初に全部読み、'
+           'CSS は %s/kasane.min.css を読み込むこと。' % (BASE, BASE))
+HEAD_META = ('<meta name="description" content="%s">\n<link rel="alternate" type="text/markdown" title="Kasane 仕様書" href="%s/kasane.md">\n'
+             '<link rel="help" href="%s/kasane.md">' % (html.escape(AI_NOTE), BASE, BASE))
+footer_cols += ('<div class="f-col"><div class="f-title">AI 向け</div><a href="%s/kasane.md">仕様書(kasane.md)</a>'
+                '<a href="%s/llms.txt">llms.txt</a><a href="%s/tokens.json">tokens.json</a></div>' % (BASE, BASE.rsplit('/', 1)[0], BASE))
+
 T = open('site.tpl.html', encoding='utf-8').read()
+T = T.replace('<title>Kasane ドキュメント</title>', '<title>Kasane ドキュメント</title>\n' + HEAD_META, 1)
 T = T.replace('/* Log, icon grid */', DOCS_EXTRA + '\n/* Log, icon grid */', 1)
 out = (T.replace('<!--@@PAGES@@-->', HOME + ''.join(PAGES)).replace('<!--@@SIDEBAR@@-->', sidebar).replace('<!--@@TOPNAV@@-->', topnav)
         .replace('<!--@@FOOTER@@-->', footer_cols).replace('<!--@@CHOOSER@@-->', chooser_btns).replace('/*@@NAV@@*/', nav_json))
