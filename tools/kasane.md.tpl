@@ -469,6 +469,49 @@ UI を作ったら、渡す前に次をすべて確かめてください。
 - [ ] `data-theme="dark"` と `data-accent` を変えても読める
 - [ ] 幅375pxで横スクロールが出ない
 
+### 画面を撮って確かめる(できる場合)
+
+スクリーンショットを撮れる道具(Playwright、ブラウザの操作など)が使えるなら、作った画面を実際に撮って見直してください。
+
+撮る組み合わせ:
+
+| 幅 | テーマ | パレット |
+|---|---|---|
+| 1280px | ライト | 山吹(`yamabuki`) |
+| 1280px | ダーク | 山吹(`yamabuki`) |
+| 375px | ライト | 藍(`ai`) |
+| 375px | ダーク | 墨(`sumi`) |
+
+見るところ:
+
+- [ ] 文字が切れたり、重なったり、はみ出したりしていない
+- [ ] 横スクロールが出ていない
+- [ ] どの組み合わせでも文字とボタンが読める(明るい黄色の上の白い文字、などがない)
+- [ ] カードやリストの区切りが、面の色の差で見分けられる
+- [ ] 同じ種類の部品の大きさ、余白、角丸がそろっている
+- [ ] 主ボタンが目立ち、取り消しのボタンが控えめになっている
+- [ ] 空の状態、長い名前、件数が多いときにも崩れない(データを差し替えて撮る)
+
+崩れを見つけたら直して、もう一度撮ります。撮れない環境のときは、撮れなかったことを作業の報告で伝えてください。
+
+Playwright で撮る例:
+
+```js
+// npx playwright install chromium  のあと  node shot.mjs
+import { chromium } from "playwright";
+const url = "http://localhost:3000/users";   // 作った画面
+const cases = [[1280, "light", "yamabuki"], [1280, "dark", "yamabuki"], [375, "light", "ai"], [375, "dark", "sumi"]];
+const browser = await chromium.launch();
+for (const [width, theme, accent] of cases) {
+  const page = await browser.newPage({ viewport: { width, height: 900 } });
+  await page.goto(url);
+  await page.evaluate(([t, a]) => { document.documentElement.dataset.theme = t; document.documentElement.dataset.accent = a; }, [theme, accent]);
+  await page.waitForTimeout(500);
+  await page.screenshot({ path: `shot-${width}-${theme}-${accent}.png`, fullPage: true });
+}
+await browser.close();
+```
+
 ---
 
 ## 12. 自動チェック
