@@ -40,17 +40,17 @@ Kasane(かさね)は、Webサイトと Webアプリのためのデザインシ�
     } catch (e) {}
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://<配信先>/v1/fonts/line-seed-jp.css">
-  <link rel="stylesheet" href="https://<配信先>/v1/kasane.min.css">
+  <link rel="stylesheet" href="https://kasane.y-n0.de/v1/fonts/line-seed-jp.css">
+  <link rel="stylesheet" href="https://kasane.y-n0.de/v1/kasane.min.css">
 </head>
 ```
 
 | ファイル | 内容 |
 |---|---|
-| `https://<配信先>/v1/kasane.css` | すべてのトークンと部品(読みやすい版) |
-| `https://<配信先>/v1/kasane.min.css` | 同じ内容の縮小版。本番ではこちら |
-| `https://<配信先>/v1/fonts/line-seed-jp.css` | LINE Seed JP(400 / 700 / 800) |
-| `https://<配信先>/v1/tokens.json` | トークンの値(W3C Design Tokens 形式) |
+| `https://kasane.y-n0.de/v1/kasane.css` | すべてのトークンと部品(読みやすい版) |
+| `https://kasane.y-n0.de/v1/kasane.min.css` | 同じ内容の縮小版。本番ではこちら |
+| `https://kasane.y-n0.de/v1/fonts/line-seed-jp.css` | LINE Seed JP(400 / 700 / 800) |
+| `https://kasane.y-n0.de/v1/tokens.json` | トークンの値(W3C Design Tokens 形式) |
 
 ### 色とテーマの切り替え
 

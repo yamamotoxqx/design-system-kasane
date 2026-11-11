@@ -4,8 +4,8 @@ os.chdir(HERE)
 ROOT = os.path.join(HERE, '..')
 OUT = os.path.join(HERE, '.out')
 VERSION = 'v1'
-# Where v1/ is served from. Set KASANE_BASE_URL when the hosting is decided, then rebuild.
-BASE = os.environ.get('KASANE_BASE_URL', 'https://<配信先>').rstrip('/') + '/' + VERSION
+# Where v1/ is served from (Cloudflare Pages). Override with KASANE_BASE_URL if it moves.
+BASE = os.environ.get('KASANE_BASE_URL', 'https://kasane.y-n0.de').rstrip('/') + '/' + VERSION
 EMBED = '--embed' in sys.argv   # single-file build (fonts and CSS inlined) for previews
 
 esc = html.escape

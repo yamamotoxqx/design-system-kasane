@@ -12,8 +12,8 @@
 <html lang="ja" data-accent="ai">
 <head>
   <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://<配信先>/v1/fonts/line-seed-jp.css">
-  <link rel="stylesheet" href="https://<配信先>/v1/kasane.min.css">
+  <link rel="stylesheet" href="https://kasane.y-n0.de/v1/fonts/line-seed-jp.css">
+  <link rel="stylesheet" href="https://kasane.y-n0.de/v1/kasane.min.css">
 </head>
 <body>
   <button class="k-btn k-btn-primary" type="button">保存する</button>
@@ -24,7 +24,7 @@
 - `data-accent`: パレットの名前(省略すると `yamabuki`)
 - `data-theme`: `light` か `dark`(省略すると端末の設定)
 
-くわしくは、ドキュメントサイト(`index.html`)と仕様書([`v1/kasane.md`](v1/kasane.md))を見てください。
+くわしくは、ドキュメントサイト(https://kasane.y-n0.de/)と仕様書(https://kasane.y-n0.de/v1/kasane.md)を見てください。
 
 ## AI に使ってもらう
 
@@ -34,10 +34,10 @@
 ## UI
 
 UIを作る・変更するときは、作業の前に次の仕様書を最後まで読み、そのルールに従うこと。
-https://<配信先>/v1/kasane.md
+https://kasane.y-n0.de/v1/kasane.md
 
 CSSは次を読み込む。
-https://<配信先>/v1/kasane.min.css
+https://kasane.y-n0.de/v1/kasane.min.css
 
 作業の最後に、仕様書の「作業の最後に確かめること」をすべて確かめること。
 ```
@@ -75,7 +75,7 @@ npm run build   # tools/ から v1/ と index.html を生成
 npm test        # Stylelint のルールと、全パレットのコントラストを検査
 ```
 
-配信先が決まったら、`KASANE_BASE_URL=https://… npm run build` で URL を埋め込みます。
+配信は Cloudflare Pages(ビルドコマンド `npm run dist`、出力ディレクトリ `dist`)で、`main` に push すると更新されます。配信先を変えるときは `KASANE_BASE_URL=https://… npm run build` で作り直します。
 
 ## ライセンス
 

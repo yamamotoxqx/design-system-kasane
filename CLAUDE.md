@@ -9,6 +9,6 @@ Kasane デザインシステム本体のリポジトリ。
   - ドキュメントサイトの枠: `tools/site.tpl.html`
   - AI 用の仕様書: `tools/kasane.md.tpl`
 - 変更したら `npm run build` → `npm test`。CI も同じことをして、生成物が古いと失敗する。
-- 配信先が決まったら `KASANE_BASE_URL=https://… npm run build` で URL を埋め込む。
+- 配信先は https://kasane.y-n0.de(Cloudflare Pages、`npm run dist` → `dist/`)。`main` に push すると配信も更新される。配信先を変えるときは `KASANE_BASE_URL=https://… npm run build`。
 - 見た目が大きく変わる変更(トークン名やクラス名の変更・削除)は `v2/` として出し、`v1/` は残す。
 - UI のルールは `v1/kasane.md` に従う。
