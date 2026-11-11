@@ -10,10 +10,14 @@
     "./kasane.css": "./v1/kasane.css",
     "./tokens.json": "./v1/tokens.json"
   },
-  "files": ["v1", "stylelint"],
+  "files": [
+    "v1",
+    "stylelint"
+  ],
   "scripts": {
     "build": "node tools/gen.cjs && python3 tools/build_site.py",
-    "test": "node test/run.js"
+    "test": "node test/run.js",
+    "dist": "rm -rf dist && mkdir dist && cp -r index.html llms.txt _headers v1 dist/"
   },
   "peerDependencies": {
     "stylelint": ">=16"

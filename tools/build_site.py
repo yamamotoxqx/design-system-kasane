@@ -305,8 +305,8 @@ page('principles', 'どの色を選んでも同じ使い心地になるように
        '枠線、影、区切り線でカードやリストを区切りません。') + '</section>'
   + '<section class="sec" id="pcolor"><h2><span class="num-tag">2</span>色は選べる、読みやすさは変えない</h2><p>色は必ずトークンで指定します。塗りには <code>--accent</code>、その上の文字には <code>--on-accent</code>、アクセント色の文字やリンクには <code>--accent-ink</code> を使います。こうすると、どのパレットでも文字は4.5:1以上のコントラストになります。</p>'
   + dd('<div class="stack"><button class="k-btn k-btn-primary" type="button">保存する</button><span class="a-ink">詳しく見る</span></div>', '塗りと文字で、別のトークンを使い分けます。',
-       '<div class="stack"><button class="k-btn" type="button" style="background:#f5c53d;color:#fff">保存する</button><span style="color:var(--accent);font-weight:700;text-decoration:underline">詳しく見る</span></div>',
-       '色を直接書いたり、塗り用の <code>--accent</code> を文字に使ったりしません。読みにくくなり、パレットも切り替わりません。') + '</section>'
+       '<div class="stack"><button class="k-btn bad-on-accent" type="button">保存する</button><span style="color:var(--accent);font-weight:700;text-decoration:underline">詳しく見る</span></div>',
+       '塗りの上の文字を白などに決め打ちしたり、塗り用の <code>--accent</code> を文字に使ったりしません。パレットやテーマによっては読めなくなります。') + '</section>'
   + '<section class="sec" id="beyond"><h2><span class="num-tag">3</span>色だけで伝えない</h2><p>成功は緑、エラーは赤で固定していますが、色の見え方は人や画面によって変わります。状態にはアイコンと文字を必ず添えます。チェックは印、スイッチはつまみの位置でも状態が分かるようにします。</p>'
   + dd('<div class="inline"><span class="k-badge k-badge-ok">%s保存しました</span><span class="k-badge k-badge-danger">%s送信できません</span></div>' % (I_OK, I_WARN), '色に加えて、アイコンと文字で状態を伝えます。',
        '<div class="inline" style="gap:20px"><span class="dot"><i style="background:var(--ok)"></i>田中さん</span><span class="dot"><i style="background:var(--danger)"></i>佐藤さん</span></div>',
@@ -461,7 +461,27 @@ footer_cols = ''.join('<div class="f-col"><div class="f-title">%s</div>%s</div>'
 chooser_btns = ''.join('<button class="pal" type="button" data-accent-set="%s" aria-pressed="false"><i style="background:linear-gradient(135deg,%s 50%%,%s 50%%)"></i><b>%s</b><small>%s</small></button>' % (p['id'], p['light']['--accent'], p['dark']['--accent'], p['name'], p['en']) for p in PAL)
 nav_json = json.dumps([{'id': sid, 'label': label, 'pages': [list(p) for p in pages]} for sid, label, pages in NAV], ensure_ascii=False)
 
+# Docs-only: for the Don't example, the text colour that reads worst on each palette's accent
+# (white on light accents, near-black on dark ones), so the example follows the selected palette.
+def _lum(h):
+    c = [int(h[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+    c = [x / 12.92 if x <= .04045 else ((x + .055) / 1.055) ** 2.4 for x in c]
+    return .2126 * c[0] + .7152 * c[1] + .0722 * c[2]
+def _cr(a, b):
+    x, y = _lum(a), _lum(b); return (max(x, y) + .05) / (min(x, y) + .05)
+def _bad(acc): return min(('#ffffff', '#1a1a1a'), key=lambda c: _cr(c, acc))
+DOCS_EXTRA = ''
+for p in PAL:
+    sel = ':root[data-accent="%s"]' % p['id']
+    first = p['id'] == PAL[0]['id']
+    l, d = _bad(p['light']['--accent']), _bad(p['dark']['--accent'])
+    DOCS_EXTRA += '%s%s{--bad-on-accent:%s}\n' % (sel, ',:root:not([data-accent])' if first else '', l)
+    DOCS_EXTRA += '@media (prefers-color-scheme:dark){%s:not([data-theme="light"])%s{--bad-on-accent:%s}}\n' % (sel, ',:root:not([data-accent]):not([data-theme="light"])' if first else '', d)
+    DOCS_EXTRA += '%s[data-theme="dark"]%s{--bad-on-accent:%s}\n' % (sel, ',:root:not([data-accent])[data-theme="dark"]' if first else '', d)
+DOCS_EXTRA += '.bad-on-accent,.bad-on-accent:hover{background:var(--accent);color:var(--bad-on-accent)}\n'
+
 T = open('site.tpl.html', encoding='utf-8').read()
+T = T.replace('/* Log, icon grid */', DOCS_EXTRA + '\n/* Log, icon grid */', 1)
 out = (T.replace('<!--@@PAGES@@-->', HOME + ''.join(PAGES)).replace('<!--@@SIDEBAR@@-->', sidebar).replace('<!--@@TOPNAV@@-->', topnav)
         .replace('<!--@@FOOTER@@-->', footer_cols).replace('<!--@@CHOOSER@@-->', chooser_btns).replace('/*@@NAV@@*/', nav_json))
 if EMBED:

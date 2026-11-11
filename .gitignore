@@ -2,3 +2,4 @@ node_modules/
 tools/.out/
 tools/__pycache__/
 .DS_Store
+dist/
