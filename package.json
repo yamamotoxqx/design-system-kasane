@@ -5,24 +5,25 @@
   "type": "module",
   "private": true,
   "exports": {
-    "./stylelint": "./stylelint/index.js",
-    "./stylelint/plugin": "./stylelint/plugin.js",
+    "./stylelint": "./lint/stylelint.js",
     "./kasane.css": "./v1/kasane.css",
     "./tokens.json": "./v1/tokens.json"
   },
   "files": [
     "v1",
-    "stylelint"
+    "lint"
   ],
   "scripts": {
     "build": "node tools/gen.cjs && python3 tools/build_site.py",
     "test": "node test/run.js",
-    "dist": "rm -rf dist && mkdir dist && cp -r index.html llms.txt robots.txt _headers LICENSE v1 dist/ && npm pack ./stylelint --pack-destination dist/v1 --silent"
+    "dist": "rm -rf dist && mkdir dist && cp -r index.html llms.txt robots.txt _headers LICENSE v1 dist/ && npm pack ./lint --pack-destination dist/v1 --silent"
   },
   "peerDependencies": {
     "stylelint": ">=16"
   },
   "devDependencies": {
+    "htmlparser2": "^12.0.0",
+    "lucide-static": "^1.71.0",
     "stylelint": "^16.10.0"
   },
   "license": "MIT"

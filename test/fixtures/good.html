@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ja" data-accent="ai">
+<body>
+  <div class="k-card">
+    <h3 class="k-card-title">ユーザー</h3>
+    <label class="k-field">名前<input class="k-input" type="text"></label>
+    <input class="k-input" type="email" id="mail"><label for="mail">メール</label>
+    <input type="hidden" name="token">
+    <label class="k-switch"><input type="checkbox" checked><span class="k-switch-track" aria-hidden="true"></span>通知</label>
+    <span class="k-badge k-badge-ok"><svg aria-hidden="true" class="lucide lucide-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>完了</span>
+    <button class="k-btn k-btn-icon" type="button" aria-label="メニューを開く"><svg aria-hidden="true" class="lucide lucide-menu" viewBox="0 0 24 24"></svg></button>
+    <button class="k-btn k-btn-quiet" type="button">キャンセル</button>
+    <button class="k-btn k-btn-primary" type="button">保存する</button>
+    <div class="k-bar" role="progressbar" aria-label="進捗" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"><i style="width:40%"></i></div>
+    <div class="k-seg" role="tablist" aria-label="表示">
+      <button type="button" role="tab" aria-selected="true" aria-controls="p1">一覧</button>
+    </div>
+    <div class="app-logo"><svg viewBox="0 0 10 10"><circle cx="5" cy="5" r="5"/></svg></div>
+    <span class="k-badge k-badge-info" data-kasane-ignore="status-icon">メモ</span>
+  </div>
+  <div class="k-scrim"><div class="k-dialog" role="dialog" aria-modal="true" aria-labelledby="t"><h3 class="k-dialog-title" id="t">確認</h3></div></div>
+</body>
+</html>

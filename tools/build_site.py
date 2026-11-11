@@ -7,17 +7,28 @@ VERSION = 'v1'
 # Where v1/ is served from (Cloudflare Pages). Override with KASANE_BASE_URL if it moves.
 BASE = os.environ.get('KASANE_BASE_URL', 'https://kasane.y-n0.de').rstrip('/') + '/' + VERSION
 EMBED = '--embed' in sys.argv
-LINT_VER = json.load(open(os.path.join(ROOT, 'stylelint', 'package.json'), encoding='utf-8'))['version']
-LINT_URL = '%s/stylelint-config-kasane-%s.tgz' % (BASE, LINT_VER)   # single-file build (fonts and CSS inlined) for previews
+LINT_VER = json.load(open(os.path.join(ROOT, 'lint', 'package.json'), encoding='utf-8'))['version']
+LINT_URL = '%s/kasane-lint-%s.tgz' % (BASE, LINT_VER)   # single-file build (fonts and CSS inlined) for previews
 
 esc = html.escape
 PAL = json.load(open(os.path.join(OUT, 'palettes.json'), encoding='utf-8'))
 PALETTES_CSS = open(os.path.join(OUT, 'kasane-palettes.css'), encoding='utf-8').read()
 
-I_OK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
-I_NG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>'
-I_WARN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 6v8M12 18v.5"/></svg>'
-I_INFO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 11v7M12 6.5v.5"/></svg>'
+LUCIDE_DIR = os.path.join(ROOT, 'node_modules', 'lucide-static', 'icons')
+LUCIDE_VER = json.load(open(os.path.join(ROOT, 'node_modules', 'lucide-static', 'package.json'), encoding='utf-8'))['version']
+LUCIDE_URL = 'https://unpkg.com/lucide-static@%s/icons' % LUCIDE_VER
+ICON_STROKE = '2.5'
+def icon(name, cls=''):
+    """Inline a Lucide icon as one line, with Kasane's stroke width and aria-hidden."""
+    svg = open(os.path.join(LUCIDE_DIR, name + '.svg'), encoding='utf-8').read()
+    svg = re.sub(r'<!--.*?-->', '', svg, flags=re.S)
+    svg = re.sub(r'\s+', ' ', svg).replace('> <', '><').strip()
+    head, body = svg.split('>', 1)                       # only strip size attributes from the <svg> tag itself
+    svg = re.sub(r' (?:xmlns|width|height)="[^"]*"', '', head) + '>' + body
+    svg = svg.replace('stroke-width="2"', 'stroke-width="%s"' % ICON_STROKE)
+    svg = svg.replace('class="lucide ', 'class="%slucide ' % (cls + ' ' if cls else ''), 1)
+    return svg.replace('<svg ', '<svg aria-hidden="true" ', 1)
+I_OK, I_NG, I_WARN, I_INFO = icon('check'), icon('x'), icon('circle-alert'), icon('info')
 
 # ---------------------------------------------------------------- component CSS (single source: used live and shown as sample code)
 BASE_CSS = '''/* Kasane components
@@ -39,7 +50,9 @@ body {
 }
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 .k-title { font-family: var(--font-title); font-weight: 900; line-height: 1.3; }
-.k-num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }'''
+.k-num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+/* Icons are Lucide (https://lucide.dev), drawn at stroke-width 2.5 */
+svg.lucide { flex: none; stroke-width: 2.5; }'''
 
 CSS = {}
 CSS['button'] = '''.k-btn {
@@ -235,6 +248,12 @@ os.makedirs(os.path.join(ROOT, VERSION), exist_ok=True)
 open(os.path.join(ROOT, VERSION, 'kasane.css'), 'w', encoding='utf-8').write(FULL_CSS)
 open(os.path.join(ROOT, VERSION, 'kasane.min.css'), 'w', encoding='utf-8').write(minify(FULL_CSS))
 
+# Data for the HTML check: Kasane class names and Lucide icon names
+k_classes = sorted(set(re.findall(r'\.(k-[a-z0-9-]+)', FULL_CSS)))
+json.dump(k_classes, open(os.path.join(ROOT, 'lint', 'data', 'classes.json'), 'w', encoding='utf-8'), indent=0)
+lucide_names = sorted(f[:-4] for f in os.listdir(LUCIDE_DIR) if f.endswith('.svg'))
+json.dump({'version': LUCIDE_VER, 'names': lucide_names}, open(os.path.join(ROOT, 'lint', 'data', 'lucide.json'), 'w', encoding='utf-8'), separators=(',', ':'))
+
 # Design tokens in the W3C Design Tokens Community Group format
 def tok(v, t='color'): return {'$type': t, '$value': v}
 tokens = {'$description': 'Kasane %s design tokens' % VERSION, 'palette': {}, 'radius': {}, 'space': {}, 'fontSize': {}, 'fontFamily': {}, 'duration': {}}
@@ -249,7 +268,7 @@ tokens['duration'] = {'fast': tok('150ms', 'duration'), 'base': tok('220ms', 'du
 json.dump(tokens, open(os.path.join(ROOT, VERSION, 'tokens.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
 
 # Rules and spec for AI tools and people
-md = open('kasane.md.tpl', encoding='utf-8').read().replace('{{BASE}}', BASE).replace('{{VERSION}}', VERSION).replace('{{LINT_URL}}', LINT_URL).replace('{{SITE}}', BASE.rsplit('/', 1)[0])
+md = open('kasane.md.tpl', encoding='utf-8').read().replace('{{BASE}}', BASE).replace('{{VERSION}}', VERSION).replace('{{LINT_URL}}', LINT_URL).replace('{{SITE}}', BASE.rsplit('/', 1)[0]).replace('{{LUCIDE_VER}}', LUCIDE_VER).replace('{{LUCIDE_URL}}', LUCIDE_URL)
 open(os.path.join(ROOT, VERSION, 'kasane.md'), 'w', encoding='utf-8').write(md)
 open(os.path.join(ROOT, 'llms.txt'), 'w', encoding='utf-8').write(
     '# Kasane\n\n> 面を重ねて区切り、アクセントの色を9色から選べる、Webサイトと Webアプリのためのデザインシステム。\n\n'
@@ -301,11 +320,11 @@ page('about', 'Kasane(かさね)は、Webサイトと Webアプリのための�
         '<div class="tile"><h3>9色から選べる</h3><p>アクセントの色を変えても、文字の読みやすさは同じ基準を守ります。</p></div>'
         '<div class="tile"><h3>CSSだけで使える</h3><p>トークンと部品は1つのCSSファイルで、URLから読み込めます。ビルドや JavaScript のライブラリは要りません。</p></div></div>')
   + sec('このサイトの構成', '<ul class="site-map">'
-        '<li><a href="#start"><span class="sm-text"><b>使い始める</b><span>CSSの読み込みと、色とテーマの切り替え方</span></span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a></li>'
-        '<li><a href="#with-ai"><span class="sm-text"><b>AI と使う</b><span>Claude Code などに Kasane のルールを渡す方法</span></span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a></li>'
-        '<li><a href="#principles"><span class="sm-text"><b>原則</b><span>設計の考え方、アクセシビリティの基準、文章の書き方</span></span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a></li>'
-        '<li><a href="#color"><span class="sm-text"><b>スタイル</b><span>カラー、タイポグラフィ、角丸と余白、レイアウト、アイコン、動き</span></span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a></li>'
-        '<li><a href="#button"><span class="sm-text"><b>コンポーネント</b><span>部品の見本とサンプルコード</span></span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a></li>'
+        '<li><a href="#start"><span class="sm-text"><b>使い始める</b><span>CSSの読み込みと、色とテーマの切り替え方</span></span>' + icon('chevron-right', 'go') + '</a></li>'
+        '<li><a href="#with-ai"><span class="sm-text"><b>AI と使う</b><span>Claude Code などに Kasane のルールを渡す方法</span></span>' + icon('chevron-right', 'go') + '</a></li>'
+        '<li><a href="#principles"><span class="sm-text"><b>原則</b><span>設計の考え方、アクセシビリティの基準、文章の書き方</span></span>' + icon('chevron-right', 'go') + '</a></li>'
+        '<li><a href="#color"><span class="sm-text"><b>スタイル</b><span>カラー、タイポグラフィ、角丸と余白、レイアウト、アイコン、動き</span></span>' + icon('chevron-right', 'go') + '</a></li>'
+        '<li><a href="#button"><span class="sm-text"><b>コンポーネント</b><span>部品の見本とサンプルコード</span></span>' + icon('chevron-right', 'go') + '</a></li>'
         '</ul>'))
 
 page('start', 'CSSを読み込み、<code>&lt;html&gt;</code> に色の名前を付けるだけで使えます。ファイルはURLで配信しているので、手元に置く必要はありません。',
@@ -521,6 +540,7 @@ footer_cols += ('<div class="f-col"><div class="f-title">AI 向け</div><a href=
                 '<a href="%s/llms.txt">llms.txt</a><a href="%s/tokens.json">tokens.json</a></div>' % (BASE, BASE.rsplit('/', 1)[0], BASE))
 
 T = open('site.tpl.html', encoding='utf-8').read()
+T = re.sub(r'<!--@@ICON:([a-z0-9-]+)@@-->', lambda m: icon(m.group(1)), T)
 T = T.replace('<title>Kasane ドキュメント</title>', '<title>Kasane ドキュメント</title>\n' + HEAD_META, 1)
 T = T.replace('/* Log, icon grid */', DOCS_EXTRA + '\n/* Log, icon grid */', 1)
 out = (T.replace('<!--@@PAGES@@-->', HOME + ''.join(PAGES)).replace('<!--@@SIDEBAR@@-->', sidebar).replace('<!--@@TOPNAV@@-->', topnav)

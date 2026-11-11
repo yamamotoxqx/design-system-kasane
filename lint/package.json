@@ -1,0 +1,34 @@
+{
+  "name": "kasane-lint",
+  "version": "1.0.0",
+  "description": "Automatic checks for the Kasane design system: Stylelint rules for CSS and kasane-check for HTML.",
+  "type": "module",
+  "main": "stylelint.js",
+  "exports": {
+    "./stylelint": "./stylelint.js",
+    "./plugin": "./plugin.js",
+    "./check": "./check.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "stylelint.js",
+    "plugin.js",
+    "check.js",
+    "data"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "stylelint": ">=16"
+  },
+  "bin": {
+    "kasane-check": "check.js"
+  },
+  "dependencies": {
+    "htmlparser2": "^12.0.0"
+  },
+  "peerDependenciesMeta": {
+    "stylelint": {
+      "optional": true
+    }
+  }
+}

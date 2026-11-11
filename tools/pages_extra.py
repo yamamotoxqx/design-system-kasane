@@ -1,8 +1,6 @@
 # Extra pages for the non-component sections. Executed inside build_site.py (uses page, sec, ex, dd, code, table, CSS, I_*).
 
-I_PLUS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>'
-I_MENU = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>'
-I_CHEV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>'
+I_PLUS, I_MENU, I_CHEV = icon('plus'), icon('menu'), icon('chevron-right')
 
 # ---------------------------------------------------------------- はじめに
 page('with-ai', 'Claude Code や Codex などの AI にUIを作ってもらうときに、Kasane のルールを守ってもらう方法です。ファイルを手元に置かなくても、URLを伝えるだけで使えます。',
@@ -17,16 +15,15 @@ page('with-ai', 'Claude Code や Codex などの AI にUIを作ってもらう�
       + '<p>URLを読むたびに許可を求められる場合は、配信先のドメインを Claude Code の設定で許可しておくと、聞かれなくなります。</p>')
   + sec('Codex で使う', '<p>プロジェクトの <code>AGENTS.md</code> に、上と同じ内容を書きます。Codex をネットにつながらない設定で使っているとURLを読めないので、その場合は <code>kasane.md</code> をリポジトリに置き、そのファイルを読むように書きます。</p>')
   + sec('ほかの AI で使う', '<p>チャットで使う場合は、<code>kasane.md</code> の内容を貼るか、ファイルとして添付します。プロジェクトの指示に入れておくと、毎回貼る必要がなくなります。</p>')
-  + sec('自動でチェックする', '<p>AI は長い指示の一部を読み落とすことがあります。Stylelint のプラグインを入れると、色の直接指定、影、入力の部品以外の枠線、トークン以外の角丸や余白などを、機械的に見つけられます。</p>'
-      + '<p>ルールは、CSSと同じ配信先からパッケージとして入れられます。GitHub のアカウントや認証は要りません。</p>'
+  + sec('自動でチェックする', '<p>AI は長い指示の一部を読み落とすことがあります。<code>kasane-lint</code> を入れると、ルールの多くを機械的に確かめられます。CSS は Stylelint、HTML は <code>kasane-check</code> が見ます。CSSと同じ配信先から入れられ、GitHub のアカウントは要りません。</p>'
       + code('bash', 'npm install --save-dev stylelint ' + LINT_URL)
       + '<p>プロジェクトに <code>.stylelintrc.json</code> を作ります。</p>'
-      + code('JSON', '{\n  "extends": ["stylelint-config-kasane"]\n}')
-      + code('bash', 'npx stylelint "src/**/*.css"')
+      + code('JSON', '{\n  "extends": ["kasane-lint/stylelint"]\n}')
+      + code('bash', 'npx stylelint "src/**/*.css"\nnpx kasane-check "src/**/*.html"')
       + '<p>URLのファイル名には版の番号が入っています。ルールを更新するときは新しい番号のファイルを出すので、入れたものが勝手に変わることはありません。</p>'
       + '<p>AI に自分で直してもらうには、<code>CLAUDE.md</code> や <code>AGENTS.md</code> に次の1行を足します。</p>'
-      + code('Markdown', 'CSSを変更したら、作業の最後に npx stylelint "src/**/*.css" を実行し、出たものをすべて直すこと。')
-      + table(['ルール', '見つけるもの'], [
+      + code('Markdown', '作業の最後に npx stylelint "src/**/*.css" と npx kasane-check "src/**/*.html" を実行し、出たものをすべて直すこと。'))
+  + sec('CSS のルール(Stylelint)', table(['ルール', '見つけるもの'], [
           ['<code>kasane/no-raw-color</code>', '色の直接指定(<code>#fff</code>、<code>rgb()</code>、色の名前など)'],
           ['<code>kasane/no-shadow</code>', '<code>box-shadow</code> などの影'],
           ['<code>kasane/border-only-on-inputs</code>', '入力の部品以外への枠線と区切り線'],
@@ -34,12 +31,27 @@ page('with-ai', 'Claude Code や Codex などの AI にUIを作ってもらう�
           ['<code>kasane/no-outline-none</code>', '<code>outline: none</code>'],
           ['<code>kasane/font-family-token</code>', 'トークン以外の書体の指定']])
       + '<p>自分で作った入力欄のクラスに枠を付けたいときは、設定で許可できます。</p>'
-      + code('JSON', '{\n  "extends": ["stylelint-config-kasane"],\n  "rules": {\n    "kasane/border-only-on-inputs": [true, { "inputSelectors": ["\\\\.app-search"] }]\n  }\n}')
-      + '<p>機械で見つけられないこと(主ボタンが1つか、状態にアイコンがあるか、など)は、仕様書のチェックリストで確かめます。</p>')
+      + code('JSON', '{\n  "extends": ["kasane-lint/stylelint"],\n  "rules": {\n    "kasane/border-only-on-inputs": [true, { "inputSelectors": ["\\\\.app-search"] }]\n  }\n}'))
+  + sec('HTML のルール(kasane-check)', table(['ルール', '見つけるもの'], [
+          ['<code>kasane/one-primary</code>', '1つの画面に主ボタンが2つ以上ある'],
+          ['<code>kasane/status-icon</code>', '成功・エラー・情報のバッジやエラー文にアイコンがない'],
+          ['<code>kasane/inline-style</code>', '<code>style</code> 属性に色・影・枠線・書体が直接書かれている'],
+          ['<code>kasane/icon-button-label</code>', '文字のないボタンやリンクに <code>aria-label</code> がない'],
+          ['<code>kasane/form-label</code>', '入力欄にラベルがない'],
+          ['<code>kasane/switch-structure</code>', 'スイッチの中に必要な要素がない'],
+          ['<code>kasane/unknown-class</code>', 'Kasane にない <code>k-</code> のクラス(書き間違いや作り話)'],
+          ['<code>kasane/lucide-icon</code>', 'Lucide に実在しないアイコン名、部品の中の Lucide 以外のアイコン'],
+          ['<code>kasane/dialog-label</code>', 'ダイアログに名前がない'],
+          ['<code>kasane/tab-aria</code>', 'タブに <code>aria-selected</code> か <code>aria-controls</code> がない']])
+      + '<p>理由があってルールから外れる所には、<code>data-kasane-ignore</code> を付けると、その要素と中身を検査から外せます。ルール名を書くと、そのルールだけを外せます。</p>'
+      + code('HTML', '<section data-kasane-ignore="one-primary">…</section>')
+      + '<p>React などで HTML を JavaScript の中に書いている場合は、ビルドして書き出した HTML(<code>dist/**/*.html</code> など)を検査します。</p>'
+      + '<p>機械で見つけられないこと(見た目のバランスや、文章の書き方など)は、仕様書のチェックリストと、画面を撮っての見直しで確かめます。</p>')
   + sec('画面を撮って確かめる', '<p>スクリーンショットを撮れる AI(Playwright やブラウザを操作できるもの)には、作った画面をライト・ダーク、パソコン・スマートフォンの幅で撮って見直すよう、仕様書で指示しています。文字の切れや重なり、読みにくい色の組み合わせ、部品の大きさのばらつきなど、ルールでは見つけにくい崩れを拾えます。撮れない環境では、撮れなかったことを報告するよう書いてあります。</p>'))
 
 page('updates', 'Kasane の変更の記録です。',
   sec('2026年11月', '<ul class="log">'
+      '<li><time class="k-num">11.11</time><div><b>アイコンを Lucide に統一、HTML のチェックを追加</b><span>アイコンは Lucide だけを使う決まりにしました。kasane-check で、HTML の使い方も自動で確かめられます。</span></div></li>'
       '<li><time class="k-num">11.11</time><div><b>URLでの配信と自動チェックを用意</b><span>CSSを1本にまとめ、AI用の仕様書(kasane.md)と Stylelint のプラグインを加えました。</span></div></li>'
       '<li><time class="k-num">11.11</time><div><b>ドキュメントサイトを作成</b><span>はじめに、原則、スタイル、コンポーネントの4セクションで構成しました。初回に色を選ぶ画面と、ライト・ダークの切り替えがあります。</span></div></li>'
       '<li><time class="k-num">11.11</time><div><b>色以外は Hidamari を引き継ぐことに決定</b><span>書体(LINE Seed JP、Zen Maru Gothic、Inter)、角丸、部品を引き継ぎました。</span></div></li>'
@@ -74,17 +86,30 @@ page('layout', '画面は、面を重ねて組み立てます。余白は部品�
       + table(['幅', '変わること'], [['1100px以下', '右の目次を隠す'], ['820px以下', '左のナビゲーションをメニューに入れ、1列にする']])
       + code('CSS', '.shell { display: grid; grid-template-columns: 248px minmax(0, 1fr) 216px; gap: var(--space-5); }\n@media (max-width: 1100px) { .shell { grid-template-columns: 248px minmax(0, 1fr); } }\n@media (max-width: 820px)  { .shell { grid-template-columns: minmax(0, 1fr); } }')))
 
-ICONS = [('チェック', I_OK), ('閉じる', I_NG), ('注意', I_WARN), ('情報', I_INFO), ('追加', I_PLUS), ('メニュー', I_MENU), ('進む', I_CHEV)]
-page('icons', 'アイコンは、角の丸い線で描きます。文字を補うもので、アイコンだけで意味を伝えることは避けます。',
-  sec('描き方', '<p>24pxの枠に、太さ3の線で描きます。線の端と角は丸くします。色は <code>currentColor</code> にして、まわりの文字と同じ色にします。</p>'
-      '<div class="icon-grid">' + ''.join('<div>%s<small>%s</small></div>' % (svg, name) for name, svg in ICONS) + '</div>'
-      + code('HTML', I_OK))
-  + sec('大きさ', table(['場所', '大きさ'], [['バッジの中', '14px'], ['ボタンの中', '18px'], ['アイコンだけのボタン', '22px']]))
+ICONS = [('成功・チェック', 'check'), ('閉じる', 'x'), ('エラー・注意', 'circle-alert'), ('情報', 'info'), ('警告', 'triangle-alert'),
+         ('追加', 'plus'), ('編集', 'pencil'), ('削除', 'trash-2'), ('検索', 'search'), ('設定', 'settings'),
+         ('人', 'user'), ('人たち', 'users'), ('通知', 'bell'), ('予定', 'calendar'), ('メニュー', 'menu'),
+         ('進む', 'chevron-right'), ('矢印', 'arrow-right'), ('外部リンク', 'external-link'), ('ログアウト', 'log-out'), ('コード', 'code')]
+page('icons', 'アイコンは Lucide を使います。線で描かれた、角の丸いアイコン集です。文字を補うもので、アイコンだけで意味を伝えることは避けます。',
+  sec('使うアイコン集', '<p><a href="https://lucide.dev/icons/">Lucide</a>(ISC ライセンス)から選びます。ほかのアイコン集と混ぜたり、自分で描いたりしません。いまの版は <code>' + LUCIDE_VER + '</code> です。</p>'
+      + table(['決まり', '内容'], [
+          ['線の太さ', '<code>2.5</code>(Lucide の標準の2より少し太く。<code>kasane.css</code> が自動で 2.5 にします)'],
+          ['色', '<code>currentColor</code>(まわりの文字と同じ色)'],
+          ['塗り', 'しない(線のアイコンだけ)'],
+          ['クラス', 'Lucide の <code>class="lucide lucide-名前"</code> を消さない(自動チェックで使います)']]))
+  + sec('よく使うアイコン', '<p>名前で探して、<code>lucide.dev</code> からコピーするか、次の場所から SVG を取ってきて貼ります。</p>'
+      '<div class="icon-grid">' + ''.join('<div>%s<small>%s</small><code>%s</code></div>' % (icon(n), l, n) for l, n in ICONS) + '</div>'
+      + code('bash', 'curl ' + LUCIDE_URL + '/user-plus.svg'))
+  + sec('状態のアイコン', '<p>状態を表すときは、次のアイコンを使います。</p>'
+      + table(['状態', 'アイコン', '名前'], [['成功', I_OK, '<code>check</code>'], ['エラー', I_WARN, '<code>circle-alert</code>'], ['情報', I_INFO, '<code>info</code>'], ['閉じる', I_NG, '<code>x</code>']]))
+  + sec('大きさ', table(['場所', '大きさ'], [['バッジの中', '14px'], ['エラーの文の前', '16px'], ['ボタンの中', '18px'], ['アイコンだけのボタン', '22px']])
+      + '<p>Kasane の部品の中に置けば、大きさは CSS で自動的に決まります。</p>')
   + sec('ボタンの中で使う', ex('<button class="k-btn k-btn-primary" type="button">%s予定を追加</button>' % I_PLUS))
   + sec('アイコンだけのボタン', '<p>文字がないボタンには、<code>aria-label</code> で名前を付けます。</p>'
       + ex('<button class="k-btn k-btn-icon" type="button" aria-label="メニューを開く">%s</button>' % I_MENU)
       + dd('<span class="k-badge k-badge-ok">%s完了</span>' % I_OK, 'アイコンに文字を添えます。',
-           '<span class="k-badge k-badge-ok" style="padding:4px 8px">%s</span>' % I_OK.replace('<svg ', '<svg style="margin:0" '), 'アイコンだけで状態を表しません。')))
+           '<span class="k-badge k-badge-ok" style="padding:4px 8px">%s</span>' % I_OK.replace('<svg ', '<svg style="margin:0" ', 1), 'アイコンだけで状態を表しません。'))
+  + sec('AI に頼むとき', '<p>AI はアイコンの形を記憶から描いてしまうことがあります。仕様書では「名前を決めて、SVG は必ず取ってきて貼る」と指示しています。自動チェックでは、Lucide に実在しない名前を見つけられます。</p>'))
 
 page('motion', '動きは短く、控えめにします。画面が変わったことに気づけて、操作を待たせない長さにします。',
   sec('動きの役割', '<p>Kasane の動きには、3つの役割があります。飾りのための動きは使いません。</p>'

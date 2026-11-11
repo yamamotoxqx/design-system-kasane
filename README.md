@@ -42,19 +42,31 @@ https://kasane.y-n0.de/v1/kasane.min.css
 作業の最後に、仕様書の「作業の最後に確かめること」をすべて確かめること。
 ```
 
-## 自動チェック(Stylelint)
+## 自動チェック(kasane-lint)
+
+CSS は Stylelint、HTML は `kasane-check` で、ルールを機械的に確かめます。
 
 ```bash
-npm install --save-dev stylelint https://kasane.y-n0.de/v1/stylelint-config-kasane-1.0.0.tgz
+npm install --save-dev stylelint https://kasane.y-n0.de/v1/kasane-lint-1.0.0.tgz
 ```
 
 ```json
-{ "extends": ["stylelint-config-kasane"] }
+{ "extends": ["kasane-lint/stylelint"] }
 ```
 
-ルールを変えたら `stylelint/package.json` の `version` を上げます。ファイル名に版が入るので、入れている側の内容が勝手に変わることはありません。
+```bash
+npx stylelint "src/**/*.css"
+npx kasane-check "src/**/*.html"
+```
 
-色の直接指定、影、入力の部品以外の枠線、トークン以外の角丸・余白・文字の大きさ・動きの長さ、`outline: none`、トークン以外の書体を見つけます。
+- CSS: 色の直接指定、影、入力の部品以外の枠線、トークン以外の角丸・余白・文字の大きさ・動きの長さ、`outline: none`、トークン以外の書体
+- HTML: 主ボタンの数、状態のアイコン、`style` 属性の色、ラベル、スイッチの作り、Kasane にない `k-` クラス、Lucide に実在しないアイコン名、ダイアログやタブの属性
+
+ルールを変えたら `lint/package.json` の `version` を上げます。ファイル名に版が入るので、入れている側の内容が勝手に変わることはありません。
+
+## アイコン
+
+アイコンは [Lucide](https://lucide.dev/icons/)(ISC License)だけを使います。線の太さは 2.5。
 
 ## ファイル
 
@@ -66,7 +78,7 @@ npm install --save-dev stylelint https://kasane.y-n0.de/v1/stylelint-config-kasa
 | `v1/fonts/` | LINE Seed JP(文字の範囲ごとに分割) |
 | `index.html` | ドキュメントサイト |
 | `llms.txt` | AI に仕様書の場所を知らせる案内 |
-| `stylelint/` | Stylelint のプラグインと設定(`npm run dist` で `v1/stylelint-config-kasane-<版>.tgz` として配信) |
+| `lint/` | `kasane-lint`(Stylelint のルールと `kasane-check`)。`npm run dist` で `v1/kasane-lint-<版>.tgz` として配信 |
 | `tools/` | 上のファイルを生成するソース |
 
 ## 開発
@@ -74,7 +86,7 @@ npm install --save-dev stylelint https://kasane.y-n0.de/v1/stylelint-config-kasa
 ```bash
 npm install
 npm run build   # tools/ から v1/ と index.html を生成
-npm test        # Stylelint のルールと、全パレットのコントラストを検査
+npm test        # Stylelint と kasane-check のルール、全パレットのコントラストを検査
 ```
 
 配信は Cloudflare Pages(ビルドコマンド `npm run dist`、出力ディレクトリ `dist`)で、`main` に push すると更新されます。配信先を変えるときは `KASANE_BASE_URL=https://… npm run build` で作り直します。

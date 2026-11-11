@@ -1,4 +1,4 @@
-// Shareable config: { "extends": ["design-system-kasane/stylelint"] }
+// Shareable config: { "extends": ["kasane-lint/stylelint"] }
 import { fileURLToPath } from 'node:url';
 
 export default {

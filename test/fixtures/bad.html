@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="ja">
+<body>
+  <button class="k-btn k-btn-primary" type="button">保存する</button>
+  <button class="k-btn k-btn-primary" type="button">送信する</button> <!-- expect kasane/one-primary -->
+  <span class="k-badge k-badge-ok">完了</span> <!-- expect kasane/status-icon -->
+  <span class="k-error">入力してください。</span> <!-- expect kasane/status-icon -->
+  <div class="k-card" style="background:#fff">カード</div> <!-- expect kasane/inline-style -->
+  <div class="k-card" style="box-shadow: 0 2px 4px var(--ink)">カード</div> <!-- expect kasane/inline-style -->
+  <p style="color: red">注意</p> <!-- expect kasane/inline-style -->
+  <button class="k-btn k-btn-icon" type="button"><svg class="lucide lucide-menu" viewBox="0 0 24 24"></svg></button> <!-- expect kasane/icon-button-label -->
+  <input class="k-input" type="text" placeholder="名前"> <!-- expect kasane/form-label -->
+  <label class="k-switch"><input type="checkbox">通知</label> <!-- expect kasane/switch-structure -->
+  <button class="k-btn k-btn-secondary" type="button">戻る</button> <!-- expect kasane/unknown-class -->
+  <span class="k-badge k-badge-ok"><svg class="lucide lucide-checkmark-fancy" viewBox="0 0 24 24"></svg>完了</span> <!-- expect kasane/lucide-icon -->
+  <button class="k-btn" type="button"><svg viewBox="0 0 24 24"><path d="M1 1"/></svg>追加</button> <!-- expect kasane/lucide-icon -->
+  <div class="k-dialog" role="dialog">確認</div> <!-- expect kasane/dialog-label -->
+  <button type="button" role="tab">一覧</button> <!-- expect kasane/tab-aria -->
+</body>
+</html>

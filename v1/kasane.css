@@ -681,6 +681,8 @@ body {
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 .k-title { font-family: var(--font-title); font-weight: 900; line-height: 1.3; }
 .k-num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+/* Icons are Lucide (https://lucide.dev), drawn at stroke-width 2.5 */
+svg.lucide { flex: none; stroke-width: 2.5; }
 
 /* Button */
 .k-btn {

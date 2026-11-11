@@ -100,6 +100,8 @@ function setAccent(id) {              // パレットの名前
 8. **フォーカスのリングを消さない。** `outline: none` を書かない。押せる場所は高さ44px以上(小さいボタンでも36px)。
 9. **主ボタン(`.k-btn-primary`)は、1つの画面に1つまで。**
 10. **新しい部品は、既存のトークンと部品の組み合わせで作る。**
+11. **アイコンは Lucide だけ。SVG は取ってきて貼る。**
+    理由: 記憶から描いた形は崩れやすく、ほかのアイコン集と混ぜると線の雰囲気がそろわない。
 
 ---
 
@@ -249,9 +251,9 @@ function setAccent(id) {              // パレットの名前
 <button class="k-btn" type="button" disabled>使えません</button>
 
 <!-- アイコン付き(アイコンは 18px、文字の前) -->
-<button class="k-btn k-btn-primary" type="button"><svg …></svg>予定を追加</button>
+<button class="k-btn k-btn-primary" type="button"><svg …(plus)></svg>予定を追加</button>
 <!-- アイコンだけ(aria-label 必須) -->
-<button class="k-btn k-btn-icon" type="button" aria-label="メニューを開く"><svg …></svg></button>
+<button class="k-btn k-btn-icon" type="button" aria-label="メニューを開く"><svg …(menu)></svg></button>
 ```
 
 - 並べるときは、取り消しを左、実行を右に置きます。
@@ -269,7 +271,7 @@ function setAccent(id) {              // パレットの名前
 <!-- エラー: 枠を赤くし、何が問題でどう直すかを書く -->
 <label class="k-field">メールアドレス
   <input class="k-input" type="email" aria-invalid="true" aria-describedby="mail-error">
-  <span class="k-error" id="mail-error"><svg …(注意のアイコン)></svg>「@」のあとにドメインを入力してください。</span>
+  <span class="k-error" id="mail-error"><svg …(circle-alert)></svg>「@」のあとにドメインを入力してください。</span>
 </label>
 
 <!-- 複数行 -->
@@ -321,9 +323,9 @@ function setAccent(id) {              // パレットの名前
 ```html
 <span class="k-badge">下書き</span>
 <span class="k-badge k-badge-accent">注目</span>
-<span class="k-badge k-badge-ok"><svg …(チェック)></svg>完了</span>
-<span class="k-badge k-badge-danger"><svg …(注意)></svg>エラー</span>
-<span class="k-badge k-badge-info"><svg …(情報)></svg>情報</span>
+<span class="k-badge k-badge-ok"><svg …(check)></svg>完了</span>
+<span class="k-badge k-badge-danger"><svg …(circle-alert)></svg>エラー</span>
+<span class="k-badge k-badge-info"><svg …(info)></svg>情報</span>
 ```
 
 ### タブ、2択の切り替え
@@ -383,10 +385,29 @@ function setAccent(id) {              // パレットの名前
 
 ### アイコン
 
-24pxの枠に、太さ3の線(`stroke-width="3"`)、端と角は丸く(`stroke-linecap="round" stroke-linejoin="round"`)、色は `currentColor`。塗りつぶしのアイコンは使いません。文字と一緒に使い、アイコンだけのボタンには `aria-label` を付けます。
+アイコンは **Lucide**(1.71.0)だけを使います。ほかのアイコン集と混ぜたり、自分で描いたりしません。
+
+- **SVG は記憶から描かず、必ず取ってきて貼る。** 名前を決めたら `https://unpkg.com/lucide-static@1.71.0/icons/<名前>.svg` から取得します(一覧: https://lucide.dev/icons/)。
+- 取ってきた SVG の `class="lucide lucide-<名前>"` は消さない。自動チェックで、実在する名前かを確かめます。
+- `width` `height` `xmlns` は消してかまいません。`aria-hidden="true"` を付けます。
+- 線の太さは `kasane.css` が 2.5 にします。色は `currentColor`(まわりの文字と同じ色)。塗りつぶしのアイコンは使いません。
+- 文字と一緒に使います。アイコンだけのボタンには `aria-label` を付けます。
+
+| 用途 | 名前 |
+|---|---|
+| 成功・チェック | `check` |
+| エラー・注意 | `circle-alert` |
+| 情報 | `info` |
+| 閉じる | `x` |
+| 追加 / 編集 / 削除 | `plus` / `pencil` / `trash-2` |
+| 検索 / 設定 / 通知 | `search` / `settings` / `bell` |
+| 人 / 人たち | `user` / `users` |
+| メニュー / 進む | `menu` / `chevron-right` |
+
+大きさは置く場所で決まります(バッジの中 14px、エラーの文 16px、ボタンの中 18px、アイコンだけのボタン 22px)。Kasane の部品の中に置けば自動です。
 
 ```html
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+<svg aria-hidden="true" class="lucide lucide-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
 ```
 
 ---
@@ -447,7 +468,8 @@ function setAccent(id) {              // パレットの名前
 | `padding: 20px;` | `padding: var(--space-5);` など |
 | `font-family: sans-serif;` | 指定しない(`body` に設定済み)か `var(--font-body)` |
 | 金額の列がそのまま | `.k-num` を付ける |
-| `<span style="color:green">●</span> 完了` | `<span class="k-badge k-badge-ok"><svg…></svg>完了</span>` |
+| `<span style="color:green">●</span> 完了` | `<span class="k-badge k-badge-ok"><svg …(check)></svg>完了</span>` |
+| アイコンの SVG を記憶から描く | Lucide から取ってきて貼る |
 | `button:focus { outline: none; }` | 書かない |
 | 主ボタンを2つ並べる | 片方を `.k-btn` か `.k-btn-quiet` にする |
 | 黄色のボタンに白い文字 | `color: var(--on-accent);` |
@@ -463,6 +485,7 @@ UI を作ったら、渡す前に次をすべて確かめてください。
 - [ ] `--accent` を文字の色に使っていない。`--accent` の上の文字は `--on-accent`
 - [ ] 角丸、余白、文字の大きさ、動きの長さがトークンの値になっている
 - [ ] 状態(成功・エラー・情報)にアイコンと文字がある
+- [ ] アイコンはすべて Lucide から取ってきたもの(`class="lucide lucide-…"` が付いている)
 - [ ] 主ボタンが1画面に1つまで
 - [ ] `.k-title` はページのタイトルと章の見出しだけ。縦に並ぶ数字に `.k-num`
 - [ ] `outline: none` がない。押せる場所が高さ44px以上
@@ -516,28 +539,48 @@ await browser.close();
 
 ## 12. 自動チェック
 
-Stylelint のプラグインで、ルールの一部を機械的に確かめられます。
+`kasane-lint` で、ルールの多くを機械的に確かめられます。CSS は Stylelint、HTML は `kasane-check` が見ます。
 
 ```bash
-npm install --save-dev stylelint https://kasane.y-n0.de/v1/stylelint-config-kasane-1.0.0.tgz
+npm install --save-dev stylelint https://kasane.y-n0.de/v1/kasane-lint-1.0.0.tgz
 ```
 
 ```json
 // .stylelintrc.json
-{ "extends": ["stylelint-config-kasane"] }
+{ "extends": ["kasane-lint/stylelint"] }
 ```
 
 ```bash
 npx stylelint "src/**/*.css"
+npx kasane-check "src/**/*.html"
 ```
+
+**作業の最後に、2つのコマンドを実行し、出たものをすべて直してください**(`kasane-lint` が入っているプロジェクトの場合)。React などで HTML を JavaScript の中に書いている場合は、ビルドして書き出した HTML を `kasane-check` に渡します。
+
+### CSS のルール(Stylelint)
 
 | ルール | 見つけるもの |
 |---|---|
 | `kasane/no-raw-color` | 色の直接指定(`#…`、`rgb()`、`hsl()`、`oklch()`、色の名前) |
 | `kasane/no-shadow` | `box-shadow` |
 | `kasane/border-only-on-inputs` | 入力の部品以外への `border` と、区切り線 |
-| `kasane/use-tokens` | 角丸、余白、文字の大きさ、動きの長さの直接指定 |
+| `kasane/use-tokens` | 角丸、余白、文字の大きさ、動きの長さの直接指定(警告) |
 | `kasane/no-outline-none` | `outline: none` / `outline: 0` |
 | `kasane/font-family-token` | トークン以外の `font-family` |
 
-CSS を変更したら、作業の最後に `npx stylelint "src/**/*.css"` を実行し、出たものをすべて直してください(Stylelint が入っているプロジェクトの場合)。
+### HTML のルール(kasane-check)
+
+| ルール | 見つけるもの |
+|---|---|
+| `kasane/one-primary` | 1つのファイルに主ボタン(`k-btn-primary`)が2つ以上 |
+| `kasane/status-icon` | `k-badge-ok` `k-badge-danger` `k-badge-info` `k-error` にアイコン(`<svg>`)がない |
+| `kasane/inline-style` | `style` 属性の色・影・枠線・書体 |
+| `kasane/icon-button-label` | 文字のないボタン・リンクに `aria-label` がない |
+| `kasane/form-label` | 入力欄にラベルがない |
+| `kasane/switch-structure` | `k-switch` の中に `input[type=checkbox]` と `k-switch-track` がない |
+| `kasane/unknown-class` | Kasane にない `k-` のクラス |
+| `kasane/lucide-icon` | Lucide に実在しないアイコン名、部品の中の Lucide 以外のアイコン |
+| `kasane/dialog-label` | `role="dialog"` に名前がない |
+| `kasane/tab-aria` | `role="tab"` に `aria-selected` か `aria-controls` がない |
+
+理由があってルールから外れる所には `data-kasane-ignore="ルール名"`(空なら全ルール)を付けると、その要素と中身を検査から外せます。外した理由を作業の報告で伝えてください。

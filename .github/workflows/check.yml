@@ -18,6 +18,6 @@ jobs:
       - run: npm ci
       # Rebuild from the sources and fail if the committed files are out of date.
       - run: npm run build
-      - run: git diff --exit-code -- v1 index.html llms.txt
+      - run: git diff --exit-code -- v1 index.html llms.txt lint/data
       # Lint rules work, and every palette meets the contrast rules.
       - run: npm test

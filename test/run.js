@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const here = (p) => fileURLToPath(new URL(p, import.meta.url));
-const config = (await import('../stylelint/index.js')).default;
+const config = (await import('../lint/stylelint.js')).default;
 let failed = 0;
 const fail = (msg) => { failed++; console.error('  ✗ ' + msg); };
 const pass = (msg) => console.log('  ✓ ' + msg);
@@ -25,7 +25,22 @@ lines.forEach((text, i) => {
   hit ? pass(`bad.css:${i + 1} ${m[1]}`) : fail(`bad.css:${i + 1} expected ${m[1]}`);
 });
 
-// ---------------------------------------------------------------- 2. contrast
+// ---------------------------------------------------------------- 2. HTML check
+console.log('\nHTML check (kasane-check)');
+const { checkHtml } = await import('../lint/check.js');
+const goodHtml = checkHtml(readFileSync(here('fixtures/good.html'), 'utf8'));
+if (goodHtml.length) goodHtml.forEach((w) => fail(`good.html:${w.line} ${w.rule} — ${w.text}`)); else pass('good.html has no reports');
+const badSrc = readFileSync(here('fixtures/bad.html'), 'utf8');
+const badHtml = checkHtml(badSrc);
+badSrc.split('\n').forEach((text, i) => {
+  const m = text.match(/expect (\S+) -->/);
+  if (!m) return;
+  badHtml.some((w) => w.line === i + 1 && w.rule === m[1]) ? pass(`bad.html:${i + 1} ${m[1]}`) : fail(`bad.html:${i + 1} expected ${m[1]}`);
+});
+const expected = (badSrc.match(/expect /g) || []).length;
+if (badHtml.length !== expected) fail(`bad.html: ${badHtml.length} reports, expected ${expected}: ` + badHtml.map((w) => w.line + ' ' + w.rule).join(', '));
+
+// ---------------------------------------------------------------- 3. contrast
 console.log('\nPalette contrast (v1/tokens.json)');
 const tokens = JSON.parse(readFileSync(here('../v1/tokens.json'), 'utf8'));
 const lin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
