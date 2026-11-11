@@ -7,3 +7,4 @@ UI を作るときは、まず次の仕様書を最後まで読んでくださ�
 - [Kasane v1 仕様書](https://kasane.y-n0.de/v1/kasane.md): ルール、トークン、全部品の HTML、作業後のチェックリスト
 - [kasane.css](https://kasane.y-n0.de/v1/kasane.css): すべてのトークンと部品の CSS
 - [tokens.json](https://kasane.y-n0.de/v1/tokens.json): トークンの値(W3C Design Tokens 形式)
+- [ソースコード](https://github.com/yamamotoxqx/design-system-kasane): GitHub のリポジトリ(MIT License)

@@ -249,14 +249,15 @@ tokens['duration'] = {'fast': tok('150ms', 'duration'), 'base': tok('220ms', 'du
 json.dump(tokens, open(os.path.join(ROOT, VERSION, 'tokens.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
 
 # Rules and spec for AI tools and people
-md = open('kasane.md.tpl', encoding='utf-8').read().replace('{{BASE}}', BASE).replace('{{VERSION}}', VERSION).replace('{{LINT_URL}}', LINT_URL)
+md = open('kasane.md.tpl', encoding='utf-8').read().replace('{{BASE}}', BASE).replace('{{VERSION}}', VERSION).replace('{{LINT_URL}}', LINT_URL).replace('{{SITE}}', BASE.rsplit('/', 1)[0])
 open(os.path.join(ROOT, VERSION, 'kasane.md'), 'w', encoding='utf-8').write(md)
 open(os.path.join(ROOT, 'llms.txt'), 'w', encoding='utf-8').write(
     '# Kasane\n\n> 面を重ねて区切り、アクセントの色を9色から選べる、Webサイトと Webアプリのためのデザインシステム。\n\n'
     'UI を作るときは、まず次の仕様書を最後まで読んでください。\n\n'
     '- [Kasane %s 仕様書](%s/kasane.md): ルール、トークン、全部品の HTML、作業後のチェックリスト\n'
     '- [kasane.css](%s/kasane.css): すべてのトークンと部品の CSS\n'
-    '- [tokens.json](%s/tokens.json): トークンの値(W3C Design Tokens 形式)\n' % (VERSION, BASE, BASE, BASE))
+    '- [tokens.json](%s/tokens.json): トークンの値(W3C Design Tokens 形式)\n'
+    '- [ソースコード](https://github.com/yamamotoxqx/design-system-kasane): GitHub のリポジトリ(MIT License)\n' % (VERSION, BASE, BASE, BASE))
 
 # ---------------------------------------------------------------- helpers
 def code(lang, src):

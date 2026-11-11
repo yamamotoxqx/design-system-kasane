@@ -7,6 +7,8 @@ Kasane(かさね)は、Webサイトと Webアプリのためのデザインシ�
 **UI を作る・変更する前に、このファイルを最後まで読んでください。**
 ここに書かれていないことは、「8. Kasane にない部品を作るとき」の手順で決めます。
 
+ドキュメント: https://kasane.y-n0.de/ ・ ソース: https://github.com/yamamotoxqx/design-system-kasane(MIT License)
+
 ---
 
 ## 0. 優先順位
