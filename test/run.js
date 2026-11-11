@@ -1,0 +1,58 @@
+// npm test: (1) the Stylelint rules catch what they should, (2) every palette meets the contrast rules.
+import stylelint from 'stylelint';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
+const here = (p) => fileURLToPath(new URL(p, import.meta.url));
+const config = (await import('../stylelint/index.js')).default;
+let failed = 0;
+const fail = (msg) => { failed++; console.error('  ✗ ' + msg); };
+const pass = (msg) => console.log('  ✓ ' + msg);
+
+// ---------------------------------------------------------------- 1. lint rules
+console.log('Stylelint rules');
+const lint = async (file) => (await stylelint.lint({ files: here(file), config, configBasedir: here('../') })).results[0].warnings;
+
+const good = await lint('fixtures/good.css');
+if (good.length) good.forEach((w) => fail(`good.css:${w.line} ${w.rule} — ${w.text}`)); else pass('good.css has no reports');
+
+const bad = await lint('fixtures/bad.css');
+const lines = readFileSync(here('fixtures/bad.css'), 'utf8').split('\n');
+lines.forEach((text, i) => {
+  const m = text.match(/expect (\S+)/);
+  if (!m) return;
+  const hit = bad.some((w) => w.line === i + 1 && w.rule === m[1]);
+  hit ? pass(`bad.css:${i + 1} ${m[1]}`) : fail(`bad.css:${i + 1} expected ${m[1]}`);
+});
+
+// ---------------------------------------------------------------- 2. contrast
+console.log('\nPalette contrast (v1/tokens.json)');
+const tokens = JSON.parse(readFileSync(here('../v1/tokens.json'), 'utf8'));
+const lin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+const lum = (hex) => { const n = [1, 3, 5].map((i) => lin(parseInt(hex.substr(i, 2), 16) / 255)); return 0.2126 * n[0] + 0.7152 * n[1] + 0.0722 * n[2]; };
+const ratio = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
+// [text, background(s), minimum]
+const RULES = [
+  ['ink', ['bg', 'surface', 'surface-2', 'surface-3'], 4.5],
+  ['muted', ['bg', 'surface', 'surface-2'], 4.5],
+  ['accent-ink', ['bg', 'surface', 'surface-2', 'accent-soft'], 4.5],
+  ['on-accent', ['accent'], 4.5],
+  ['ok', ['ok-soft'], 4.5], ['danger', ['danger-soft'], 4.5], ['info', ['info-soft'], 4.5],
+  ['line', ['surface'], 3],
+  ['focus', ['bg', 'surface', 'surface-2'], 3],
+];
+for (const [id, pal] of Object.entries(tokens.palette)) {
+  for (const theme of ['light', 'dark']) {
+    const t = pal[theme];
+    let worst = Infinity;
+    for (const [fg, bgs, min] of RULES) for (const bg of bgs) {
+      const r = ratio(t[fg].$value, t[bg].$value);
+      worst = Math.min(worst, r / min);
+      if (r < min) fail(`${id} ${theme}: ${fg} on ${bg} = ${r.toFixed(2)}:1 (needs ${min}:1)`);
+    }
+    if (worst >= 1) pass(`${id} ${theme}`);
+  }
+}
+
+console.log(failed ? `\n${failed} check(s) failed` : '\nAll checks passed');
+process.exit(failed ? 1 : 0);

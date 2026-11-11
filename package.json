@@ -1,0 +1,24 @@
+{
+  "name": "design-system-kasane",
+  "version": "1.0.0",
+  "description": "Kasane: a design system with layered surfaces and nine selectable accent palettes.",
+  "type": "module",
+  "private": true,
+  "exports": {
+    "./stylelint": "./stylelint/index.js",
+    "./stylelint/plugin": "./stylelint/plugin.js",
+    "./kasane.css": "./v1/kasane.css",
+    "./tokens.json": "./v1/tokens.json"
+  },
+  "files": ["v1", "stylelint"],
+  "scripts": {
+    "build": "node tools/gen.cjs && python3 tools/build_site.py",
+    "test": "node test/run.js"
+  },
+  "peerDependencies": {
+    "stylelint": ">=16"
+  },
+  "devDependencies": {
+    "stylelint": "^16.10.0"
+  }
+}

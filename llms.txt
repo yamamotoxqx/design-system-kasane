@@ -1,0 +1,9 @@
+# Kasane
+
+> 面を重ねて区切り、アクセントの色を9色から選べる、Webサイトと Webアプリのためのデザインシステム。
+
+UI を作るときは、まず次の仕様書を最後まで読んでください。
+
+- [Kasane v1 仕様書](https://<配信先>/v1/kasane.md): ルール、トークン、全部品の HTML、作業後のチェックリスト
+- [kasane.css](https://<配信先>/v1/kasane.css): すべてのトークンと部品の CSS
+- [tokens.json](https://<配信先>/v1/tokens.json): トークンの値(W3C Design Tokens 形式)

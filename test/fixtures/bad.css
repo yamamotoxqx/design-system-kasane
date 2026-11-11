@@ -1,0 +1,14 @@
+/* Every line marked "expect" must be reported by that rule. */
+.a { background: #ffffff; }                         /* expect kasane/no-raw-color */
+.b { color: rgb(0 0 0 / .5); }                      /* expect kasane/no-raw-color */
+.c { color: white; }                                /* expect kasane/no-raw-color */
+.d { box-shadow: 0 2px 8px var(--ink); }            /* expect kasane/no-shadow */
+.card { border: 1px solid var(--line); }            /* expect kasane/border-only-on-inputs */
+.list li + li { border-top: 1px solid var(--line); } /* expect kasane/border-only-on-inputs */
+.e { outline: 2px solid var(--line); }              /* expect kasane/border-only-on-inputs */
+.f { border-radius: 8px; }                          /* expect kasane/use-tokens */
+.g { padding: 20px; }                               /* expect kasane/use-tokens */
+.h { font-size: 15px; }                             /* expect kasane/use-tokens */
+.i { transition: opacity 300ms; }                   /* expect kasane/use-tokens */
+.j:focus { outline: none; }                         /* expect kasane/no-outline-none */
+.k { font-family: Arial, sans-serif; }              /* expect kasane/font-family-token */

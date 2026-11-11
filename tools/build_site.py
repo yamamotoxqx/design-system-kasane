@@ -1,0 +1,490 @@
+import json, html, os, re, sys
+HERE = os.path.dirname(os.path.abspath(__file__))
+os.chdir(HERE)
+ROOT = os.path.join(HERE, '..')
+OUT = os.path.join(HERE, '.out')
+VERSION = 'v1'
+# Where v1/ is served from. Set KASANE_BASE_URL when the hosting is decided, then rebuild.
+BASE = os.environ.get('KASANE_BASE_URL', 'https://<配信先>').rstrip('/') + '/' + VERSION
+EMBED = '--embed' in sys.argv   # single-file build (fonts and CSS inlined) for previews
+
+esc = html.escape
+PAL = json.load(open(os.path.join(OUT, 'palettes.json'), encoding='utf-8'))
+PALETTES_CSS = open(os.path.join(OUT, 'kasane-palettes.css'), encoding='utf-8').read()
+
+I_OK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
+I_NG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>'
+I_WARN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 6v8M12 18v.5"/></svg>'
+I_INFO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 11v7M12 6.5v.5"/></svg>'
+
+# ---------------------------------------------------------------- component CSS (single source: used live and shown as sample code)
+BASE_CSS = '''/* Kasane components
+   Fonts: LINE Seed JP is served from fonts/line-seed-jp.css next to this file (weights 400, 700, 800).
+   Zen Maru Gothic 900 and Inter come from Google Fonts:
+   <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"> */
+:root {
+  --font-body: "LINE Seed JP", "Hiragino Maru Gothic ProN", "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
+  --font-title: "Zen Maru Gothic", "LINE Seed JP", "Hiragino Maru Gothic ProN", sans-serif;  /* 900, titles only */
+  --font-num: "Inter", "LINE Seed JP", system-ui, sans-serif;                                 /* with tabular-nums */
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --text-xs: 12px; --text-sm: 14px; --text-base: 16px; --text-lg: 18px; --text-xl: 24px; --text-2xl: 32px;
+  --r-lg: 28px; --r-md: 18px; --r-sm: 14px; --r-full: 999px;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 24px; --space-6: 32px; --space-7: 56px;
+}
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-weight: 400; font-size: var(--text-base); line-height: 1.8;
+}
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.k-title { font-family: var(--font-title); font-weight: 900; line-height: 1.3; }
+.k-num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }'''
+
+CSS = {}
+CSS['button'] = '''.k-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  min-height: 44px; padding: 0 var(--space-5); border: 0; border-radius: var(--r-full);
+  background: var(--surface-2); color: var(--ink);
+  font: inherit; font-weight: 700; font-size: 15px; cursor: pointer;
+  transition: background-color var(--motion-fast), transform var(--motion-fast);
+}
+.k-btn:hover { background: var(--surface-3); }
+.k-btn:active { transform: translateY(1px); }
+.k-btn-primary, .k-btn-primary:hover { background: var(--accent); color: var(--on-accent); }
+.k-btn-quiet { background: transparent; color: var(--muted); }
+.k-btn-quiet:hover { background: var(--surface-2); color: var(--ink); }
+.k-btn-danger, .k-btn-danger:hover { background: var(--danger-soft); color: var(--danger); }
+.k-btn-sm { min-height: 36px; padding: 0 var(--space-4); font-size: var(--text-sm); }
+.k-btn-lg { min-height: 54px; padding: 0 var(--space-6); font-size: 17px; }
+.k-btn svg { width: 18px; height: 18px; flex: none; }
+.k-btn-icon { width: 44px; padding: 0; }
+.k-btn-icon svg { width: 22px; height: 22px; }
+.k-btn[disabled] { opacity: .45; cursor: not-allowed; transform: none; }
+@media (prefers-reduced-motion: reduce) { .k-btn { transition: none; } }'''
+
+CSS['input'] = '''.k-field { display: flex; flex-direction: column; gap: 6px; font-weight: 700; font-size: var(--text-sm); }
+.k-input {
+  width: 100%; min-height: 46px; padding: 8px 14px;
+  background: var(--surface); color: var(--ink);
+  border: 2px solid var(--line); border-radius: var(--r-sm);
+  font: inherit; font-weight: 400; font-size: var(--text-base);
+}
+.k-input::placeholder { color: var(--muted); }
+.k-input:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-color: var(--ink); }
+.k-input[aria-invalid="true"] { border-color: var(--danger); }
+.k-hint { font-weight: 400; font-size: 13px; color: var(--muted); }
+.k-error { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--danger); }
+.k-error svg { width: 16px; height: 16px; flex: none; }
+
+.k-select { position: relative; }
+.k-select select { appearance: none; -webkit-appearance: none; padding-right: 44px; cursor: pointer; }
+.k-select::after {
+  content: ""; position: absolute; right: 18px; top: 50%; width: 8px; height: 8px; pointer-events: none;
+  border-right: 2.5px solid var(--muted); border-bottom: 2.5px solid var(--muted);
+  transform: translateY(-70%) rotate(45deg);
+}
+
+.k-option { display: inline-flex; align-items: center; gap: 10px; min-height: 36px; cursor: pointer; }
+.k-check {
+  appearance: none; -webkit-appearance: none; flex: none; display: grid; place-items: center;
+  width: 24px; height: 24px; margin: 0; cursor: pointer;
+  background: var(--surface); border: 2px solid var(--line); border-radius: 8px;
+}
+.k-check:checked { background: var(--accent); border-color: var(--accent); }
+.k-check:checked::after {
+  content: ""; width: 11px; height: 6px; margin-top: -3px;
+  border-left: 3px solid var(--on-accent); border-bottom: 3px solid var(--on-accent);
+  transform: rotate(-45deg);
+}
+
+.k-radio {
+  appearance: none; -webkit-appearance: none; flex: none;
+  width: 24px; height: 24px; margin: 0; cursor: pointer;
+  background: var(--surface); border: 2px solid var(--line); border-radius: 50%;
+}
+.k-radio:checked { border-color: var(--accent); background: radial-gradient(circle, var(--on-accent) 0 30%, var(--accent) 34%); }
+
+.k-switch { display: inline-flex; align-items: center; gap: 10px; min-height: 36px; cursor: pointer; }
+.k-switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.k-switch-track { flex: none; position: relative; width: 50px; height: 30px; border-radius: var(--r-full); background: var(--line); transition: background-color var(--motion-fast); }
+.k-switch-track::after {
+  content: ""; position: absolute; left: 3px; top: 3px; width: 24px; height: 24px;
+  border-radius: 50%; background: var(--surface); transition: transform var(--motion-fast);
+}
+.k-switch input:checked + .k-switch-track { background: var(--accent); }
+.k-switch input:checked + .k-switch-track::after { transform: translateX(20px); background: var(--on-accent); }
+.k-switch input:focus-visible + .k-switch-track { outline: 3px solid var(--focus); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .k-switch-track, .k-switch-track::after { transition: none; } }'''
+
+CSS['card'] = '''.k-card {
+  display: flex; flex-direction: column; gap: var(--space-3);
+  background: var(--surface); border-radius: var(--r-lg); padding: var(--space-5);
+}
+.k-card-title { margin: 0; font-size: var(--text-lg); font-weight: 800; line-height: 1.5; }
+.k-card-text { margin: 0; font-size: 15px; color: var(--muted); }
+.k-list { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.k-list-item {
+  display: flex; align-items: center; gap: var(--space-3);
+  background: var(--surface-2); border-radius: var(--r-md); padding: var(--space-3) var(--space-4);
+}
+.k-list-item-main { flex: 1; min-width: 0; font-weight: 700; }
+.k-list-item-sub { font-size: 13px; color: var(--muted); }
+.k-nest { background: var(--surface-2); border-radius: var(--r-md); padding: var(--space-4); }
+.k-notice {
+  display: flex; flex-direction: column; gap: var(--space-2);
+  background: var(--surface-2); border-radius: var(--r-lg); padding: 22px;
+}
+.k-notice-title { margin: 0; font-size: var(--text-lg); font-weight: 800; line-height: 1.5; color: var(--notice-head); }'''
+
+CSS['badge'] = '''.k-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 2px 12px; border-radius: var(--r-full);
+  background: var(--surface-3); color: var(--ink);
+  font-size: 13px; font-weight: 700; line-height: 1.7;
+}
+.k-badge svg { width: 14px; height: 14px; flex: none; margin-left: -3px; }
+.k-badge-accent { background: var(--accent-soft); color: var(--accent-ink); }
+.k-badge-ok { background: var(--ok-soft); color: var(--ok); }
+.k-badge-danger { background: var(--danger-soft); color: var(--danger); }
+.k-badge-info { background: var(--info-soft); color: var(--info); }'''
+
+CSS['tabs'] = '''.k-seg { display: inline-flex; gap: 2px; padding: 4px; border-radius: var(--r-full); background: var(--surface-2); }
+.k-seg button {
+  min-height: 36px; padding: 6px var(--space-4); border: 0; border-radius: var(--r-full);
+  background: transparent; color: var(--muted);
+  font: inherit; font-weight: 700; font-size: var(--text-sm); cursor: pointer; white-space: nowrap;
+}
+.k-seg button:hover { color: var(--ink); }
+.k-seg button[aria-selected="true"], .k-seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); }'''
+
+CSS['progress'] = '''.k-bar { height: 14px; border-radius: var(--r-full); background: var(--surface-2); overflow: hidden; }
+.k-bar > i { display: block; height: 100%; border-radius: var(--r-full); background: var(--accent); }
+.k-bar-head { display: flex; justify-content: space-between; font-size: var(--text-sm); font-weight: 700; }'''
+
+CSS['dialog'] = '''.k-scrim {
+  position: fixed; inset: 0; z-index: 10; display: grid; place-items: center; padding: var(--space-4);
+  background: rgba(0, 0, 0, .5);
+  animation: k-fade var(--motion-base);
+}
+.k-dialog {
+  display: flex; flex-direction: column; gap: var(--space-3);
+  width: 100%; max-width: 420px; padding: 28px;
+  background: var(--surface); border-radius: var(--r-lg);
+  animation: k-enter var(--motion-base) var(--ease-out);
+}
+.k-dialog-title { margin: 0; font-size: 20px; font-weight: 800; line-height: 1.5; }
+.k-dialog-text { margin: 0; font-size: 15px; color: var(--muted); }
+.k-dialog-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
+.k-toast {
+  position: fixed; left: 50%; bottom: 24px; z-index: 11; transform: translateX(-50%);
+  padding: 12px 22px; border-radius: var(--r-full);
+  background: var(--ink); color: var(--bg); font-weight: 700; font-size: 15px;
+}
+@media (prefers-reduced-motion: reduce) { .k-scrim, .k-dialog { animation: none; } }'''
+
+CSS['motion'] = '''/* Motion: short and quiet */
+:root { --motion-fast: 150ms; --motion-base: 220ms; --motion-slow: 450ms; --ease-out: cubic-bezier(.2, .7, .3, 1); }
+@keyframes k-enter { from { opacity: 0; transform: translateY(16px); } }
+@keyframes k-fade { from { opacity: 0; } }
+.k-enter { animation: k-enter var(--motion-slow) var(--ease-out); }
+@media (prefers-reduced-motion: reduce) { .k-enter { animation: none; } }'''
+
+COMPONENTS_CSS = BASE_CSS + '\n\n/* Button */\n' + CSS['button'] + '\n\n/* Input, checkbox, switch */\n' + CSS['input'] + '\n\n/* Card and list */\n' + CSS['card'] + '\n\n/* Badge */\n' + CSS['badge'] + '\n\n/* Segmented control, tabs */\n' + CSS['tabs'] + '\n\n/* Progress bar */\n' + CSS['progress'] + '\n\n/* Dialog and toast */\n' + CSS['dialog'] + '\n\n' + CSS['motion'] + '\n'
+
+# ---------------------------------------------------------------- distributable files
+HEADER = '/*! Kasane %s — design tokens and components. Docs: index.html / kasane.md */\n' % VERSION
+FULL_CSS = HEADER + '\n/* ================= Palettes (colour tokens) ================= */\n' + PALETTES_CSS + '\n/* ================= Shared tokens and components ================= */\n' + COMPONENTS_CSS
+def minify(c):
+    keep = HEADER.strip()
+    c = re.sub(r'/\*.*?\*/', '', c, flags=re.S)
+    c = re.sub(r'\s+', ' ', c)
+    c = re.sub(r'\s*([{}:;,>])\s*', r'\1', c)
+    c = c.replace(';}', '}')
+    return keep + '\n' + c.strip() + '\n'
+os.makedirs(os.path.join(ROOT, VERSION), exist_ok=True)
+open(os.path.join(ROOT, VERSION, 'kasane.css'), 'w', encoding='utf-8').write(FULL_CSS)
+open(os.path.join(ROOT, VERSION, 'kasane.min.css'), 'w', encoding='utf-8').write(minify(FULL_CSS))
+
+# Design tokens in the W3C Design Tokens Community Group format
+def tok(v, t='color'): return {'$type': t, '$value': v}
+tokens = {'$description': 'Kasane %s design tokens' % VERSION, 'palette': {}, 'radius': {}, 'space': {}, 'fontSize': {}, 'fontFamily': {}, 'duration': {}}
+for p in PAL:
+    tokens['palette'][p['id']] = {'$description': '%s (%s)' % (p['name'], p['en']),
+        'light': {k[2:]: tok(v) for k, v in p['light'].items()}, 'dark': {k[2:]: tok(v) for k, v in p['dark'].items()}}
+for k, v in (('lg', 28), ('md', 18), ('sm', 14), ('full', 999)): tokens['radius'][k] = tok('%dpx' % v, 'dimension')
+for i, v in enumerate((4, 8, 12, 16, 24, 32, 56)): tokens['space'][str(i + 1)] = tok('%dpx' % v, 'dimension')
+for k, v in (('xs', 12), ('sm', 14), ('base', 16), ('lg', 18), ('xl', 24), ('2xl', 32)): tokens['fontSize'][k] = tok('%dpx' % v, 'dimension')
+tokens['fontFamily'] = {'body': tok(['LINE Seed JP', 'sans-serif'], 'fontFamily'), 'title': tok(['Zen Maru Gothic', 'sans-serif'], 'fontFamily'), 'num': tok(['Inter', 'sans-serif'], 'fontFamily')}
+tokens['duration'] = {'fast': tok('150ms', 'duration'), 'base': tok('220ms', 'duration'), 'slow': tok('450ms', 'duration')}
+json.dump(tokens, open(os.path.join(ROOT, VERSION, 'tokens.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
+
+# Rules and spec for AI tools and people
+md = open('kasane.md.tpl', encoding='utf-8').read().replace('{{BASE}}', BASE).replace('{{VERSION}}', VERSION)
+open(os.path.join(ROOT, VERSION, 'kasane.md'), 'w', encoding='utf-8').write(md)
+open(os.path.join(ROOT, 'llms.txt'), 'w', encoding='utf-8').write(
+    '# Kasane\n\n> 面を重ねて区切り、アクセントの色を9色から選べる、Webサイトと Webアプリのためのデザインシステム。\n\n'
+    'UI を作るときは、まず次の仕様書を最後まで読んでください。\n\n'
+    '- [Kasane %s 仕様書](%s/kasane.md): ルール、トークン、全部品の HTML、作業後のチェックリスト\n'
+    '- [kasane.css](%s/kasane.css): すべてのトークンと部品の CSS\n'
+    '- [tokens.json](%s/tokens.json): トークンの値(W3C Design Tokens 形式)\n' % (VERSION, BASE, BASE, BASE))
+
+# ---------------------------------------------------------------- helpers
+def code(lang, src):
+    return ('<div class="code"><div class="code-head"><span>%s</span><button class="copy" type="button">コピー</button></div>'
+            '<pre><code>%s</code></pre></div>') % (lang, esc(src.strip('\n')))
+
+def ex(src, stack=False):
+    """Live demo + the same HTML as sample code."""
+    return '<div class="ex"><div class="ex-demo%s">%s</div>%s</div>' % (' ex-stack' if stack else '', src, code('HTML', src))
+
+def dd(do_html, do_text, dont_html, dont_text):
+    return ('<div class="dd"><figure class="dd-item dd-do"><div class="dd-demo">%s</div><figcaption class="dd-cap"><span class="dd-label">%sDo</span>%s</figcaption></figure>'
+            '<figure class="dd-item dd-dont"><div class="dd-demo">%s</div><figcaption class="dd-cap"><span class="dd-label">%sDon\'t</span>%s</figcaption></figure></div>') % (do_html, I_OK, do_text, dont_html, I_NG, dont_text)
+
+def table(head, rows):
+    return '<div class="tbl"><table><thead><tr>%s</tr></thead><tbody>%s</tbody></table></div>' % (
+        ''.join('<th>%s</th>' % h for h in head), ''.join('<tr>%s</tr>' % ''.join('<td>%s</td>' % c for c in r) for r in rows))
+
+NAV = [
+    ('intro', 'はじめに', [('about', 'Kasane とは'), ('start', '使い始める'), ('with-ai', 'AI と使う'), ('updates', '更新情報')]),
+    ('principle', '原則', [('principles', 'デザイン原則'), ('accessibility', 'アクセシビリティ'), ('writing', '文章')]),
+    ('style', 'スタイル', [('color', 'カラー'), ('typography', 'タイポグラフィ'), ('shape', '角丸と余白'), ('layout', 'レイアウト'), ('icons', 'アイコン'), ('motion', '動き')]),
+    ('component', 'コンポーネント', [('button', 'ボタン'), ('input', '入力欄'), ('card', 'カードとリスト'), ('badge', 'バッジ'), ('tabs', 'タブ'), ('progress', '進捗バー'), ('dialog', 'ダイアログとトースト')]),
+]
+SEC_OF = {pid: label for _, label, pages in NAV for pid, _ in pages}
+TITLE_OF = {pid: t for _, _, pages in NAV for pid, t in pages}
+
+PAGES = []
+def page(pid, lead, body):
+    PAGES.append('<article class="page" data-page="%s" hidden><div class="page-head"><div class="crumbs">%s / %s</div><h1>%s</h1><p class="lead">%s</p></div>%s</article>'
+                 % (pid, SEC_OF[pid], TITLE_OF[pid], TITLE_OF[pid], lead, body))
+
+def sec(title, body):
+    return '<section class="sec"><h2>%s</h2>%s</section>' % (title, body)
+
+# ---------------------------------------------------------------- pages
+page('about', 'Kasane(かさね)は、Webサイトと Webアプリのためのデザインシステムです。面を重ねて情報を区切り、アクセントの色を9色から選べます。',
+  sec('名前の由来', '<p>「かさね」には2つの意味があります。1つは、背景・カード・中の面と、面を重ねて画面を組み立てること。もう1つは、色の組み合わせを楽しむ「襲(かさね)の色目」です。パレットの名前も、山吹、藤、藍など日本の色の名前から取っています。</p>')
+  + sec('特徴', '<div class="cards">'
+        '<div class="tile"><h3>枠も影も使わない</h3><p>カードやリストは、面の色の差だけで区切ります。枠を持つのは入力欄だけです。</p></div>'
+        '<div class="tile"><h3>9色から選べる</h3><p>アクセントの色を変えても、文字の読みやすさは同じ基準を守ります。</p></div>'
+        '<div class="tile"><h3>CSSだけで使える</h3><p>トークンと部品は1つのCSSファイルで、URLから読み込めます。ビルドや JavaScript のライブラリは要りません。</p></div></div>')
+  + sec('このサイトの構成', '<ul class="site-map">'
+        '<li><a href="#start"><span class="sm-text"><b>使い始める</b><span>CSSの読み込みと、色とテーマの切り替え方</span></span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a></li>'
+        '<li><a href="#with-ai"><span class="sm-text"><b>AI と使う</b><span>Claude Code などに Kasane のルールを渡す方法</span></span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a></li>'
+        '<li><a href="#principles"><span class="sm-text"><b>原則</b><span>設計の考え方、アクセシビリティの基準、文章の書き方</span></span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a></li>'
+        '<li><a href="#color"><span class="sm-text"><b>スタイル</b><span>カラー、タイポグラフィ、角丸と余白、レイアウト、アイコン、動き</span></span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a></li>'
+        '<li><a href="#button"><span class="sm-text"><b>コンポーネント</b><span>部品の見本とサンプルコード</span></span><svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a></li>'
+        '</ul>'))
+
+page('start', 'CSSを読み込み、<code>&lt;html&gt;</code> に色の名前を付けるだけで使えます。ファイルはURLで配信しているので、手元に置く必要はありません。',
+  sec('1. CSSと書体を読み込む', '<p><code>kasane.css</code> に、色のトークン(9色)、書体・角丸・余白のトークン、部品のスタイルがすべて入っています。軽い縮小版の <code>kasane.min.css</code> もあります。</p>'
+      + code('HTML', '<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">\n<link rel="stylesheet" href="' + BASE + '/fonts/line-seed-jp.css">\n<link rel="stylesheet" href="' + BASE + '/kasane.min.css">')
+      + '<p>URLの <code>' + VERSION + '</code> は版の番号です。見た目が大きく変わる更新は新しい版として出すので、同じURLを使っている限り、見た目が急に変わることはありません。</p>')
+  + sec('2. アクセントの色を選ぶ', '<p><code>data-accent</code> にパレットの名前を書きます。書かなければ山吹になります。使える名前は <a href="#color">カラー</a> のページにあります。</p>'
+      + code('HTML', '<html lang="ja" data-accent="ai">'))
+  + sec('3. ライトとダークを切り替える', '<p>何も指定しなければ、端末の設定(<code>prefers-color-scheme</code>)に従います。利用者が切り替えられるようにするには、<code>data-theme</code> に <code>light</code> か <code>dark</code> を書きます。このサイトのページ下部にある切り替えも、この方法です。</p>'
+      + code('JavaScript', 'const root = document.documentElement;\n\n// いまダークかどうか(指定がなければ端末の設定)\nfunction isDark() {\n  const t = root.dataset.theme;\n  return t ? t === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;\n}\n\n// "light" か "dark" に切り替えて保存する\nfunction setTheme(theme) {\n  root.dataset.theme = theme;\n  try { localStorage.setItem("kasane-theme", theme); } catch (e) {}\n}')
+      + code('HTML', '<div class="k-seg" role="group" aria-label="テーマ">\n  <button type="button" aria-pressed="true" onclick="setTheme(\'light\')">ライト</button>\n  <button type="button" aria-pressed="false" onclick="setTheme(\'dark\')">ダーク</button>\n</div>'))
+  + sec('4. 選んだ色を保存する', '<p>色やテーマを保存している場合は、<code>&lt;head&gt;</code> の先頭で、CSSより前に適用します。こうすると、ページを開いた瞬間に別の色が見えるちらつきを防げます。</p>'
+      + code('HTML', '<head>\n  <script>\n    try {\n      var a = localStorage.getItem("kasane-accent");\n      var t = localStorage.getItem("kasane-theme");\n      if (a) document.documentElement.dataset.accent = a;\n      if (t) document.documentElement.dataset.theme = t;\n    } catch (e) {}\n  </script>\n  <link rel="stylesheet" href="' + BASE + '/kasane.min.css">\n</head>'))
+  + sec('5. 部品を使う', '<p>部品はクラスを付けるだけで使えます。独自の部品を作るときは、色を直接書かずにトークンを参照します。</p>'
+      + ex('<button class="k-btn k-btn-primary" type="button">保存する</button>\n<button class="k-btn" type="button">下書き</button>')
+      + code('CSS', '.my-banner {\n  background: var(--accent-soft);\n  color: var(--accent-ink);\n  border-radius: var(--r-md);\n  padding: var(--space-4);\n}')))
+
+PR = [('layers', '面を重ねて区切る', '枠線や影を使わず、面の色の差だけでまとまりを作ります。'),
+      ('pcolor', '色は選べる、読みやすさは変えない', 'アクセントは9色から選べます。文字の読みやすさは全色で同じ基準を守ります。'),
+      ('beyond', '色だけで伝えない', '状態や選択は、アイコン、文字、位置を組み合わせて伝えます。'),
+      ('soft', 'やわらかく、はっきり', '角は丸く、押せる場所は大きく。操作できる場所が迷わず分かるようにします。'),
+      ('type', '書体は役割で分ける', '基本は LINE Seed JP。例外はタイトルと、桁をそろえたい数字だけです。')]
+page('principles', 'どの色を選んでも同じ使い心地になるように、5つの原則を決めています。',
+  sec('5つの原則', '<div class="cards two">' + ''.join('<button class="tile tile-link" type="button" data-scroll="%s"><span class="num-tag">%d</span><h3>%s</h3><p>%s</p></button>' % (k, i + 1, t, d) for i, (k, t, d) in enumerate(PR)) + '</div>')
+  + '<section class="sec" id="layers"><h2><span class="num-tag">1</span>面を重ねて区切る</h2><p>背景、カード、中の面と、内側に入るほど面の色を一段ずつ変えます。枠を持つのは入力欄だけです。入力欄は「書き込める場所」だと一目で分かる必要があるためです。</p>'
+  + dd('<div class="k-card mini"><b>今週のやること</b><ul class="k-list"><li class="k-list-item">図書館の本を返す</li><li class="k-list-item">発表スライドの確認</li></ul></div>',
+       'カードは <code>--surface</code>、中の行は <code>--surface-2</code> の面で区切ります。',
+       '<div class="k-card mini" style="border:1px solid var(--line);box-shadow:0 6px 16px rgba(0,0,0,.18)"><b>今週のやること</b><div style="border-top:1px solid var(--line);padding-top:8px">図書館の本を返す</div><div style="border-top:1px solid var(--line);padding-top:8px">発表スライドの確認</div></div>',
+       '枠線、影、区切り線でカードやリストを区切りません。') + '</section>'
+  + '<section class="sec" id="pcolor"><h2><span class="num-tag">2</span>色は選べる、読みやすさは変えない</h2><p>色は必ずトークンで指定します。塗りには <code>--accent</code>、その上の文字には <code>--on-accent</code>、アクセント色の文字やリンクには <code>--accent-ink</code> を使います。こうすると、どのパレットでも文字は4.5:1以上のコントラストになります。</p>'
+  + dd('<div class="stack"><button class="k-btn k-btn-primary" type="button">保存する</button><span class="a-ink">詳しく見る</span></div>', '塗りと文字で、別のトークンを使い分けます。',
+       '<div class="stack"><button class="k-btn" type="button" style="background:#f5c53d;color:#fff">保存する</button><span style="color:var(--accent);font-weight:700;text-decoration:underline">詳しく見る</span></div>',
+       '色を直接書いたり、塗り用の <code>--accent</code> を文字に使ったりしません。読みにくくなり、パレットも切り替わりません。') + '</section>'
+  + '<section class="sec" id="beyond"><h2><span class="num-tag">3</span>色だけで伝えない</h2><p>成功は緑、エラーは赤で固定していますが、色の見え方は人や画面によって変わります。状態にはアイコンと文字を必ず添えます。チェックは印、スイッチはつまみの位置でも状態が分かるようにします。</p>'
+  + dd('<div class="inline"><span class="k-badge k-badge-ok">%s保存しました</span><span class="k-badge k-badge-danger">%s送信できません</span></div>' % (I_OK, I_WARN), '色に加えて、アイコンと文字で状態を伝えます。',
+       '<div class="inline" style="gap:20px"><span class="dot"><i style="background:var(--ok)"></i>田中さん</span><span class="dot"><i style="background:var(--danger)"></i>佐藤さん</span></div>',
+       '色のついた丸だけで状態を表しません。何を意味するのかが伝わりません。') + '</section>'
+  + '<section class="sec" id="soft"><h2><span class="num-tag">4</span>やわらかく、はっきり</h2><p>カードは28px、中の面は18px、入力欄は14pxの角丸にし、ボタンは丸薬型にします。押せる場所は高さ44px以上を基本にし、キーボードで操作したときはフォーカスのリングを必ず表示します。</p>'
+  + dd('<button class="k-btn k-btn-primary" type="button">予約する</button>', '丸薬型で高さ44px。指でも押しやすい大きさです。',
+       '<button class="k-btn k-btn-primary" type="button" style="min-height:24px;padding:0 8px;font-size:11px;border-radius:2px">予約する</button>',
+       '小さく角ばったボタンにしません。<code>outline: none</code> でフォーカスのリングを消すのも避けます。') + '</section>'
+  + '<section class="sec" id="type"><h2><span class="num-tag">5</span>書体は役割で分ける</h2><p>基本の書体は LINE Seed JP です。例外は2つだけで、ページのタイトルと章の見出しは Zen Maru Gothic の極太、桁をそろえたい数字は Inter の等幅数字にします。くわしくは <a href="#typography">タイポグラフィ</a> にあります。</p>'
+  + dd('<div class="k-card mini"><b>今月の支出</b><div class="k-num" style="text-align:right;line-height:1.7">1,280<br>12,400<br>980</div></div>', '縦に並ぶ数字は <code>.k-num</code> で桁をそろえます。',
+       '<div class="k-card mini"><b>今月の支出</b><div style="text-align:right;line-height:1.7">1,280<br>12,400<br>980</div></div>', '数字の列を基本の書体のままにしません。桁の位置がずれて比べにくくなります。') + '</section>')
+
+page('accessibility', '色を選べるシステムでは、どの色でも読めて操作できることが土台になります。Kasane が守る基準をまとめます。',
+  sec('コントラストの基準', '<p>9色すべてで、ライトとダークの両方がこの基準を満たすことを、パレットを作るときに検査しています。</p>'
+      + table(['対象', '使うトークン', '基準'], [
+          ['本文の文字', '<code>--ink</code>、<code>--muted</code>', '面に対して 4.5:1 以上'],
+          ['主ボタンの上の文字', '<code>--on-accent</code>', '<code>--accent</code> に対して 4.5:1 以上'],
+          ['アクセント色の文字・リンク', '<code>--accent-ink</code>', '面と <code>--accent-soft</code> に対して 4.5:1 以上'],
+          ['状態の文字', '<code>--ok</code>、<code>--danger</code>、<code>--info</code>', '対応する <code>-soft</code> の面に対して 4.5:1 以上'],
+          ['入力欄の枠、スイッチのオフ', '<code>--line</code>', '<code>--surface</code> に対して 3:1 以上'],
+          ['フォーカスのリング', '<code>--focus</code>', '面に対して 3:1 以上']]))
+  + sec('アクセントの塗りは、差が小さいことがある', '<p>山吹や青磁など明るいパレットでは、ライトのときに <code>--accent</code> の塗りと面の差が 3:1 に届きません。塗りの色だけで「選ばれている」「オンになっている」を伝えないでください。チェックの印、スイッチのつまみの位置、文字の太さなどを組み合わせます。</p>'
+      + dd('<label class="k-switch"><input type="checkbox" checked id="a11y-sw1"><span class="k-switch-track" aria-hidden="true"></span>通知 オン</label>', 'つまみの位置と文字でも、オンだと分かります。',
+           '<div class="inline"><span style="width:44px;height:24px;border-radius:999px;background:var(--accent);display:block"></span><span style="width:44px;height:24px;border-radius:999px;background:var(--surface-3);display:block"></span></div>', '色の違いだけでオンとオフを表しません。'))
+  + sec('キーボードとフォーカス', '<p>操作できる部品はすべて、Tab キーで移動できるようにします。フォーカスが当たったときは、<code>--focus</code> の3pxのリングを表示します。</p>'
+      + code('CSS', ':focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }'))
+  + sec('押せる場所の大きさ', '<p>ボタンや選択肢は、高さ44px以上を基本にします。小さいボタン(<code>.k-btn-sm</code>)でも36pxです。</p>')
+  + sec('動きを減らす設定', '<p>端末で「視差効果を減らす」が有効なときは、切り替えの動きを止めます。</p>'
+      + code('CSS', '@media (prefers-reduced-motion: reduce) {\n  .k-switch-track::after { transition: none; }\n}')))
+
+pal_btns = ''.join('<button class="pal" type="button" data-accent-set="%s" aria-pressed="false"><i style="background:linear-gradient(135deg,%s 50%%,%s 50%%)"></i><b>%s</b><small>%s</small></button>' % (p['id'], p['light']['--accent'], p['dark']['--accent'], p['name'], p['id']) for p in PAL)
+TOKENS = [('--bg', 'ページの背景'), ('--surface', 'カード、パネル'), ('--surface-2', '中の面、リストの行、通常のボタン'), ('--surface-3', 'ホバー、押下'),
+          ('--ink', '文字'), ('--muted', '補足の文字'), ('--line', '入力欄の枠、スイッチのオフ'),
+          ('--accent', 'アクセントの塗り(主ボタン、チェック、スイッチのオン)'), ('--on-accent', 'アクセントの塗りの上の文字'),
+          ('--accent-soft', '薄いアクセントの面'), ('--accent-ink', 'アクセント色の文字、リンク'), ('--focus', 'フォーカスのリング'),
+          ('--ok', '成功の文字'), ('--ok-soft', '成功の面'), ('--danger', 'エラー・削除の文字'), ('--danger-soft', 'エラー・削除の面'),
+          ('--info', '情報の文字'), ('--info-soft', '情報の面')]
+page('color', '色はすべてトークンで指定します。アクセントは9色のパレットから選べて、ライトとダークの値はパレットごとに決まっています。',
+  sec('パレット', '<p>押すと、このサイト全体の色が切り替わります。<code>data-accent</code> には、下の英字の名前を書きます。</p><div class="pals">' + pal_btns + '</div>'
+      + code('HTML', '<html data-accent="fuji">'))
+  + sec('面の重なり', '<p>内側に入るほど、面の色を一段ずつ変えます。</p>'
+      '<div class="layers L0"><span>--bg</span><div class="layers L1"><span>--surface</span><div class="layers L2"><span>--surface-2</span><div class="layers L3"><span>--surface-3</span></div></div></div></div>')
+  + sec('トークンの一覧', '<p>値は、いま表示しているパレットとテーマのものです。</p>'
+      + table(['トークン', '用途', 'いまの値'], [['<code>%s</code>' % k, d, '<span class="sw"><i style="background:var(%s)"></i><span data-token="%s"></span></span>' % (k, k)] for k, d in TOKENS]))
+  + sec('アクセントの使い分け', '<p>アクセントには、塗り用と文字用の2つのトークンがあります。黄色や水色のような明るい色は、そのまま文字にすると読めないためです。</p>'
+      + code('CSS', '.button-primary { background: var(--accent); color: var(--on-accent); }\n.link           { color: var(--accent-ink); }\n.highlight      { background: var(--accent-soft); color: var(--accent-ink); }'))
+  + sec('状態の色', '<p>成功は緑、エラーは赤、情報は落ち着いた青灰色で、どのパレットでも同じです。文字の色は、対応する <code>-soft</code> の面に重ねて使い、アイコンを必ず添えます。</p>'
+      + ex('<span class="k-badge k-badge-ok">%s成功</span>\n<span class="k-badge k-badge-danger">%sエラー</span>\n<span class="k-badge k-badge-info">%s情報</span>' % (I_OK, I_WARN, I_INFO))))
+
+page('typography', '書体は役割で使い分けます。基本は LINE Seed JP で、例外はタイトルと、桁をそろえたい数字だけです。',
+  sec('書体', table(['役割', '書体', 'トークン'], [
+        ['基本(本文、見出し、ボタン)', 'LINE Seed JP 400 / 700 / 800', '<code>--font-body</code>'],
+        ['タイトル(ページのタイトルと章の見出し)', 'Zen Maru Gothic 900', '<code>--font-title</code>、<code>.k-title</code>'],
+        ['数字(金額、件数、日付を並べる所)', 'Inter + tabular-nums', '<code>--font-num</code>、<code>.k-num</code>']])
+      + '<p>LINE Seed JP は Kasane と一緒に配信しています。文字の範囲ごとに細かく分けてあるので、ページで使う文字の分だけが読み込まれます。Zen Maru Gothic と Inter は Google Fonts から読み込みます。</p>'
+      + code('HTML', '<link rel="stylesheet" href="' + BASE + '/fonts/line-seed-jp.css">\n<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">')
+      + '<p>3つの書体はどれも SIL Open Font License 1.1 で公開されています。</p>')
+  + sec('文字の大きさ', '<div class="type-list">'
+      '<div class="type-row"><code>--text-2xl</code><span class="k-title" style="font-size:32px">ページのタイトル</span><small>32px / Zen Maru Gothic 900</small></div>'
+      '<div class="type-row"><code>--text-xl</code><span class="k-title" style="font-size:24px">章の見出し</span><small>24px / Zen Maru Gothic 900</small></div>'
+      '<div class="type-row"><code>--text-lg</code><span style="font-size:18px;font-weight:800;line-height:1.5">カードの見出し</span><small>18px / 800</small></div>'
+      '<div class="type-row"><code>--text-base</code><span style="font-size:16px">本文の文字はこの大きさです。</span><small>16px / 400</small></div>'
+      '<div class="type-row"><code>--text-sm</code><span style="font-size:14px">ラベルや補足に使います。</span><small>14px / 400・700</small></div>'
+      '<div class="type-row"><code>--text-xs</code><span style="font-size:12px">注釈や日付に使います。</span><small>12px / 400</small></div></div>')
+  + sec('タイトルの使い方', dd('<div class="stack" style="align-items:flex-start"><span class="k-title" style="font-size:24px">今週のおしらせ</span><span style="font-size:14px">図書館は金曜日、17時に閉まります。</span></div>', 'Zen Maru Gothic はタイトルだけに使います。',
+        '<div class="stack" style="align-items:flex-start"><span class="k-title" style="font-size:24px">今週のおしらせ</span><span class="k-title" style="font-size:14px">図書館は金曜日、17時に閉まります。</span></div>', '本文やカードの中の見出しには使いません。極太の文字が続くと読みにくくなります。'))
+  + sec('行間と行の長さ', '<p>本文の行間は 1.8、タイトルは 1.3 です。長い文章は、1行が全角35〜40文字に収まる幅にします。</p>'
+      + code('CSS', 'body { line-height: 1.8; }\n.k-title { line-height: 1.3; }\n.prose { max-width: 38em; }'))
+  + sec('数字', '<p>金額や件数を縦に並べるときは、Inter の等幅数字にして桁をそろえます。</p>'
+      '<div class="numcmp"><div><small>LINE Seed JP</small><span>1,111.00</span><span>8,888.00</span><span>10,000.01</span></div><div class="k-num"><small>Inter + tabular-nums</small><span>1,111.00</span><span>8,888.00</span><span>10,000.01</span></div></div>'
+      + ex('<span class="k-num">12,480</span> 円')))
+
+page('shape', '角を大きく丸め、余白を決まった段階から選ぶことで、やわらかく整った印象にします。',
+  sec('角丸', '<p>外側の面ほど大きく、内側の面ほど小さくします。</p>'
+      '<div class="radii"><div><i style="border-radius:28px"></i><code>--r-lg</code><small>28px カード、パネル</small></div><div><i style="border-radius:18px"></i><code>--r-md</code><small>18px 中の面、リストの行</small></div><div><i style="border-radius:14px"></i><code>--r-sm</code><small>14px 入力欄</small></div><div><i style="border-radius:999px"></i><code>--r-full</code><small>ボタン、バッジ</small></div></div>')
+  + sec('余白', '<p>余白は7段階から選びます。部品の中は小さく、章の間は大きく取ります。</p>'
+      '<div class="spaces">' + ''.join('<div><code>--space-%d</code><i style="width:%dpx"></i><small>%dpx %s</small></div>' % (i + 1, v, v, d) for i, (v, d) in enumerate([(4, 'アイコンと文字の間'), (8, 'ボタンどうしの間'), (12, 'リストの行の内側'), (16, '中の面の内側'), (24, 'カードの内側'), (32, 'カードどうしの間'), (56, '章と章の間')])) + '</div>')
+  + sec('押せる場所の大きさ', '<p>ボタンは高さ44px、小さいボタンは36px、入力欄は46pxです。</p>')
+  + sec('サンプルコード', code('CSS', '.panel {\n  background: var(--surface);\n  border-radius: var(--r-lg);\n  padding: var(--space-5);\n}\n.panel > * + * { margin-top: var(--space-3); }')))
+
+page('button', '操作のきっかけになる部品です。丸薬型で、枠線はありません。',
+  sec('種類', '<p>主な操作は <code>.k-btn-primary</code>、取り消しなど控えめな操作は <code>.k-btn-quiet</code>、削除は <code>.k-btn-danger</code> を使います。</p>'
+      + ex('<button class="k-btn k-btn-primary" type="button">保存する</button>\n<button class="k-btn" type="button">下書きにする</button>\n<button class="k-btn k-btn-quiet" type="button">キャンセル</button>\n<button class="k-btn k-btn-danger" type="button">削除する</button>'))
+  + sec('大きさと無効', ex('<button class="k-btn k-btn-primary k-btn-sm" type="button">小さいボタン</button>\n<button class="k-btn k-btn-primary" type="button">標準のボタン</button>\n<button class="k-btn k-btn-primary k-btn-lg" type="button">大きいボタン</button>\n<button class="k-btn" type="button" disabled>使えません</button>'))
+  + sec('使い方', dd('<div class="inline"><button class="k-btn k-btn-quiet" type="button">キャンセル</button><button class="k-btn k-btn-primary" type="button">保存する</button></div>', '主ボタンは1つの画面に1つまでにします。',
+                    '<div class="inline"><button class="k-btn k-btn-primary" type="button">キャンセル</button><button class="k-btn k-btn-primary" type="button">保存する</button></div>', '主ボタンを並べません。どちらが主な操作か分からなくなります。'))
+  + sec('CSS', code('CSS', CSS['button'])))
+
+page('input', '文字の入力欄、チェックボックス、スイッチです。Kasane で枠線を持つのは、この入力の部品だけです。',
+  sec('文字の入力欄', ex('<label class="k-field">お名前\n  <input class="k-input" type="text" placeholder="例:山田 花子">\n  <span class="k-hint">本名でなくてもかまいません。</span>\n</label>', True))
+  + sec('エラー', '<p>枠を赤くするだけでなく、何が問題で、どう直せばよいかを文で伝えます。</p>'
+        + ex('<label class="k-field">メールアドレス\n  <input class="k-input" type="email" value="hanako@" aria-invalid="true" aria-describedby="mail-error">\n  <span class="k-error" id="mail-error">%s「@」のあとにドメインを入力してください。</span>\n</label>' % I_WARN, True))
+  + sec('選択欄', ex('<label class="k-field">場所\n  <span class="k-select">\n    <select class="k-input">\n      <option>東京</option>\n      <option>大阪</option>\n      <option>福岡</option>\n    </select>\n  </span>\n</label>', True))
+  + sec('チェックボックス', ex('<label class="k-option"><input class="k-check" type="checkbox" checked> お知らせを受け取る</label>\n<label class="k-option"><input class="k-check" type="checkbox"> 週のまとめを受け取る</label>'))
+  + sec('ラジオボタン', ex('<label class="k-option"><input class="k-radio" type="radio" name="density" checked> ゆったり</label>\n<label class="k-option"><input class="k-radio" type="radio" name="density"> ふつう</label>\n<label class="k-option"><input class="k-radio" type="radio" name="density"> コンパクト</label>'))
+  + sec('スイッチ', '<p>すぐに反映される設定に使います。オンとオフは、つまみの位置でも分かります。</p>'
+        + ex('<label class="k-switch">\n  <input type="checkbox" checked>\n  <span class="k-switch-track" aria-hidden="true"></span>\n  自動で保存する\n</label>'))
+  + sec('CSS', code('CSS', CSS['input'])))
+
+page('card', '情報のまとまりを作る面です。枠線も影も使わず、面の色で区切ります。',
+  sec('カード', ex('<div class="k-card">\n  <h3 class="k-card-title">今週のおしらせ</h3>\n  <p class="k-card-text">金曜日は、図書館が17時に閉まります。</p>\n  <div><button class="k-btn" type="button">詳しく見る</button></div>\n</div>', True))
+  + sec('リスト', '<p>行は <code>--surface-2</code> の面にして、行どうしは6pxの隙間で分けます。区切り線は使いません。</p>'
+        + ex('<div class="k-card">\n  <h3 class="k-card-title">やること</h3>\n  <ul class="k-list">\n    <li class="k-list-item"><span class="k-list-item-main">図書館の本を返す</span><span class="k-list-item-sub">11月5日まで</span></li>\n    <li class="k-list-item"><span class="k-list-item-main">発表スライドの確認</span><span class="k-list-item-sub">11月8日まで</span></li>\n  </ul>\n</div>', True))
+  + sec('中の面', '<p>カードの中に小さなまとまりを作るときは、<code>.k-nest</code> で面を一段変えます。</p>'
+        + ex('<div class="k-card">\n  <h3 class="k-card-title">設定</h3>\n  <div class="k-nest">通知は、毎朝8時にまとめて届きます。</div>\n</div>', True))
+  + sec('お知らせ', '<p>お知らせの見出しは、ライトでは文字色、ダークではアクセントの色になります。</p>'
+        + ex('<div class="k-notice">\n  <h3 class="k-notice-title">お知らせ</h3>\n  <div>今週のまとめは、日曜の夜に届きます。</div>\n</div>', True))
+  + sec('CSS', code('CSS', CSS['card'])))
+
+page('badge', '状態や分類を短い言葉で示す部品です。',
+  sec('種類', '<p>状態を表すバッジには、アイコンを必ず添えます。</p>'
+      + ex('<span class="k-badge">下書き</span>\n<span class="k-badge k-badge-accent">注目</span>\n<span class="k-badge k-badge-ok">%s完了</span>\n<span class="k-badge k-badge-danger">%sエラー</span>\n<span class="k-badge k-badge-info">%s情報</span>' % (I_OK, I_WARN, I_INFO)))
+  + sec('リストの中で使う', ex('<ul class="k-list" style="width:100%%;max-width:420px">\n  <li class="k-list-item"><span class="k-list-item-main">レポートの提出</span><span class="k-badge k-badge-ok">%s完了</span></li>\n  <li class="k-list-item"><span class="k-list-item-main">発表スライド</span><span class="k-badge k-badge-accent">もうすぐ</span></li>\n</ul>' % I_OK, True))
+  + sec('CSS', code('CSS', CSS['badge'])))
+
+page('tabs', '同じ場所で表示を切り替える部品です。選択中の項目だけ、面の色を変えます。',
+  sec('タブ', '<p><code>.k-seg</code> は <code>--surface</code> の面の上に置きます。</p>'
+      + ex('<div class="k-card">\n  <div><div class="k-seg" role="tablist" aria-label="説明">\n    <button type="button" role="tab" id="tab-a" aria-controls="panel-a" aria-selected="true">概要</button>\n    <button type="button" role="tab" id="tab-b" aria-controls="panel-b" aria-selected="false" tabindex="-1">使い方</button>\n  </div></div>\n  <div class="k-nest" role="tabpanel" id="panel-a" aria-labelledby="tab-a">Kasane は、色を選べるデザインシステムです。</div>\n  <div class="k-nest" role="tabpanel" id="panel-b" aria-labelledby="tab-b" hidden>CSSを読み込み、部品のクラスを付けて使います。</div>\n</div>', True)
+      + code('JavaScript', 'document.querySelectorAll(\'[role="tablist"]\').forEach((list) => {\n  const tabs = [...list.querySelectorAll(\'[role="tab"]\')];\n  const select = (tab) => tabs.forEach((t) => {\n    const on = t === tab;\n    t.setAttribute("aria-selected", String(on));\n    t.tabIndex = on ? 0 : -1;\n    document.getElementById(t.getAttribute("aria-controls")).hidden = !on;\n  });\n  tabs.forEach((tab, i) => {\n    tab.addEventListener("click", () => select(tab));\n    tab.addEventListener("keydown", (e) => {\n      const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;\n      if (!d) return;\n      const next = tabs[(i + d + tabs.length) % tabs.length];\n      select(next); next.focus();\n    });\n  });\n});'))
+  + sec('2つから選ぶ切り替え', '<p>表示の切り替えなど、選択肢が少ないときにも使えます。このときは <code>aria-pressed</code> で選択中を示します。</p>'
+      + ex('<div class="k-card"><div class="k-seg" role="group" aria-label="並び順">\n  <button type="button" aria-pressed="true">新しい順</button>\n  <button type="button" aria-pressed="false">古い順</button>\n</div></div>'))
+  + sec('CSS', code('CSS', CSS['tabs'])))
+
+page('progress', '作業がどこまで進んだかを示す部品です。',
+  sec('進捗バー', '<p>バーの長さだけでなく、数字でも進み具合を伝えます。数字は <code>.k-num</code> にします。</p>'
+      + ex('<div class="k-card">\n  <div class="k-bar-head"><span>部品</span><span class="k-num">72%</span></div>\n  <div class="k-bar" role="progressbar" aria-label="部品" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"><i style="width:72%"></i></div>\n</div>', True))
+  + sec('CSS', code('CSS', CSS['progress'])))
+
+page('dialog', '確認が必要な操作と、操作の結果を伝える部品です。',
+  sec('ダイアログ', '<p>取り消しのボタンは枠も背景もない <code>.k-btn-quiet</code> にして左に、実行するボタンは右に置きます。</p>'
+      + ex('<div class="k-dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title">\n  <h3 class="k-dialog-title" id="dialog-title">このメモを削除しますか?</h3>\n  <p class="k-dialog-text">削除すると元に戻せません。</p>\n  <div class="k-dialog-actions">\n    <button class="k-btn k-btn-quiet" type="button">キャンセル</button>\n    <button class="k-btn k-btn-danger" type="button">削除する</button>\n  </div>\n</div>', True)
+      + '<p>実際に使うときは、全体を <code>.k-scrim</code> で包んで画面の中央に重ねます。開いたら最初のボタンにフォーカスを移し、Esc キーで閉じられるようにします。</p>'
+      + code('HTML', '<div class="k-scrim">\n  <div class="k-dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title">\n    ...\n  </div>\n</div>'))
+  + sec('トースト', '<p>操作の結果を、画面の下に短く表示します。数秒で消えるので、大事な内容には使いません。</p>'
+      + ex('<div class="k-toast" role="status">保存しました</div>'))
+  + sec('CSS', code('CSS', CSS['dialog'])))
+
+exec(open('pages_extra.py', encoding='utf-8').read())
+
+HOME = ('<article class="page home" data-page="home" hidden><div class="hero"><div class="hero-art" aria-hidden="true"><i></i><i></i><i></i></div>'
+        '<h1>Kasane</h1><p class="lead">面を重ねて区切り、色を選べるデザインシステム。</p>'
+        '<div class="inline start"><a class="k-btn k-btn-primary" href="#start">使い始める</a><button class="k-btn" type="button" data-open-chooser>色を選び直す</button></div></div>'
+        '<div class="cards two">'
+        '<a class="tile tile-link" href="#about"><h3>はじめに</h3><p>Kasane の概要、使い始め方、AI との使い方。</p></a>'
+        '<a class="tile tile-link" href="#principles"><h3>原則</h3><p>設計の考え方、アクセシビリティ、文章の書き方。</p></a>'
+        '<a class="tile tile-link" href="#color"><h3>スタイル</h3><p>カラー、タイポグラフィ、レイアウト、アイコン、動き。</p></a>'
+        '<a class="tile tile-link" href="#button">\n<h3>コンポーネント</h3><p>部品の見本とサンプルコード。</p></a></div></article>')
+
+sidebar = ''.join('<div class="nav-group" data-sec="%s"><div class="nav-title">%s</div>%s</div>' % (sid, label, ''.join('<a class="nav-link" href="#%s">%s</a>' % (pid, t) for pid, t in pages)) for sid, label, pages in NAV)
+topnav = ''.join('<a href="#%s" data-sec="%s">%s</a>' % (pages[0][0], sid, label) for sid, label, pages in NAV)
+footer_cols = ''.join('<div class="f-col"><div class="f-title">%s</div>%s</div>' % (label, ''.join('<a href="#%s">%s</a>' % (pid, t) for pid, t in pages)) for _, label, pages in NAV)
+chooser_btns = ''.join('<button class="pal" type="button" data-accent-set="%s" aria-pressed="false"><i style="background:linear-gradient(135deg,%s 50%%,%s 50%%)"></i><b>%s</b><small>%s</small></button>' % (p['id'], p['light']['--accent'], p['dark']['--accent'], p['name'], p['en']) for p in PAL)
+nav_json = json.dumps([{'id': sid, 'label': label, 'pages': [list(p) for p in pages]} for sid, label, pages in NAV], ensure_ascii=False)
+
+T = open('site.tpl.html', encoding='utf-8').read()
+out = (T.replace('<!--@@PAGES@@-->', HOME + ''.join(PAGES)).replace('<!--@@SIDEBAR@@-->', sidebar).replace('<!--@@TOPNAV@@-->', topnav)
+        .replace('<!--@@FOOTER@@-->', footer_cols).replace('<!--@@CHOOSER@@-->', chooser_btns).replace('/*@@NAV@@*/', nav_json))
+if EMBED:
+    # Single file for previews: inline the CSS and a subset of LINE Seed JP.
+    import subprocess, base64
+    src = os.environ.get('LINE_SEED_SRC', '/home/claude/hidamari/fonts/node_modules/line-seed-jp/woff2')
+    out = out.replace('<!--@@HEADLINKS@@-->', '').replace('/*@@PALETTES@@*/', PALETTES_CSS).replace('/*@@COMPONENTS@@*/', COMPONENTS_CSS)
+    chars = (set(out) | set(chr(c) for c in range(0x20, 0x7f))) - {'\n', '\t'}
+    open(os.path.join(OUT, 'chars.txt'), 'w', encoding='utf-8').write(''.join(sorted(chars)))
+    faces = []
+    for fn, w in (('Rg', 400), ('Bd', 700), ('Eb', 800)):
+        dst = os.path.join(OUT, 'sub_%s.woff2' % fn)
+        subprocess.run(['pyftsubset', os.path.join(src, 'LINESeedJP_OTF_%s.woff2' % fn), '--text-file=' + os.path.join(OUT, 'chars.txt'),
+                        '--flavor=woff2', '--output-file=' + dst, '--layout-features=*'], check=True, capture_output=True)
+        faces.append("@font-face{font-family:'LINE Seed JP';font-weight:%d;font-style:normal;font-display:swap;src:url(data:font/woff2;base64,%s) format('woff2')}"
+                     % (w, base64.b64encode(open(dst, 'rb').read()).decode()))
+    out = out.replace('/*@@FONTS@@*/', '\n'.join(faces))
+    target = os.path.join(OUT, 'docs-embedded.html')
+else:
+    # The docs site uses the same files it documents.
+    out = (out.replace('<!--@@HEADLINKS@@-->', '<link rel="stylesheet" href="%s/fonts/line-seed-jp.css">\n<link rel="stylesheet" href="%s/kasane.css">' % (VERSION, VERSION))
+              .replace('/*@@PALETTES@@*/', '').replace('/*@@COMPONENTS@@*/', '').replace('/*@@FONTS@@*/', ''))
+    target = os.path.join(ROOT, 'index.html')
+assert '@@' not in out
+open(target, 'w', encoding='utf-8').write(out)
+print('wrote', os.path.relpath(target, ROOT), len(out), 'bytes;', len(PAGES) + 1, 'pages')
