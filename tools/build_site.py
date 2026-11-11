@@ -6,7 +6,9 @@ OUT = os.path.join(HERE, '.out')
 VERSION = 'v1'
 # Where v1/ is served from (Cloudflare Pages). Override with KASANE_BASE_URL if it moves.
 BASE = os.environ.get('KASANE_BASE_URL', 'https://kasane.y-n0.de').rstrip('/') + '/' + VERSION
-EMBED = '--embed' in sys.argv   # single-file build (fonts and CSS inlined) for previews
+EMBED = '--embed' in sys.argv
+LINT_VER = json.load(open(os.path.join(ROOT, 'stylelint', 'package.json'), encoding='utf-8'))['version']
+LINT_URL = '%s/stylelint-config-kasane-%s.tgz' % (BASE, LINT_VER)   # single-file build (fonts and CSS inlined) for previews
 
 esc = html.escape
 PAL = json.load(open(os.path.join(OUT, 'palettes.json'), encoding='utf-8'))
@@ -147,14 +149,43 @@ CSS['badge'] = '''.k-badge {
 .k-badge-danger { background: var(--danger-soft); color: var(--danger); }
 .k-badge-info { background: var(--info-soft); color: var(--info); }'''
 
-CSS['tabs'] = '''.k-seg { display: inline-flex; gap: 2px; padding: 4px; border-radius: var(--r-full); background: var(--surface-2); }
+CSS['tabs'] = '''.k-seg {
+  position: relative; isolation: isolate;
+  display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 2px;
+  padding: 4px; border-radius: var(--r-full); background: var(--surface-2);
+}
 .k-seg button {
   min-height: 36px; padding: 6px var(--space-4); border: 0; border-radius: var(--r-full);
   background: transparent; color: var(--muted);
   font: inherit; font-weight: 700; font-size: var(--text-sm); cursor: pointer; white-space: nowrap;
+  transition: color var(--motion-fast);
 }
 .k-seg button:hover { color: var(--ink); }
-.k-seg button[aria-selected="true"], .k-seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); }'''
+.k-seg button[aria-selected="true"], .k-seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); }
+
+/* Sliding thumb: the selected background moves like a switch (up to 5 items, browsers with :has) */
+@supports selector(:has(*)) {
+  .k-seg { --n: 1; --i: 0; }
+  .k-seg:has(> :nth-child(2):last-child) { --n: 2; }
+  .k-seg:has(> :nth-child(3):last-child) { --n: 3; }
+  .k-seg:has(> :nth-child(4):last-child) { --n: 4; }
+  .k-seg:has(> :nth-child(5):last-child) { --n: 5; }
+  .k-seg:has(> :nth-child(2)[aria-selected="true"], > :nth-child(2)[aria-pressed="true"]) { --i: 1; }
+  .k-seg:has(> :nth-child(3)[aria-selected="true"], > :nth-child(3)[aria-pressed="true"]) { --i: 2; }
+  .k-seg:has(> :nth-child(4)[aria-selected="true"], > :nth-child(4)[aria-pressed="true"]) { --i: 3; }
+  .k-seg:has(> :nth-child(5)[aria-selected="true"], > :nth-child(5)[aria-pressed="true"]) { --i: 4; }
+  .k-seg::before {
+    content: ""; position: absolute; z-index: -1; top: 4px; bottom: 4px; left: 4px;
+    width: calc((100% - 8px - (var(--n) - 1) * 2px) / var(--n));
+    border-radius: var(--r-full); background: var(--surface);
+    transform: translateX(calc(var(--i) * (100% + 2px)));
+    transition: transform var(--motion-base) var(--ease-out);
+    opacity: 0;
+  }
+  .k-seg:has(> [aria-selected="true"], > [aria-pressed="true"])::before { opacity: 1; }
+  .k-seg button[aria-selected="true"], .k-seg button[aria-pressed="true"] { background: transparent; }
+}
+@media (prefers-reduced-motion: reduce) { .k-seg::before, .k-seg button { transition: none; } }'''
 
 CSS['progress'] = '''.k-bar { height: 14px; border-radius: var(--r-full); background: var(--surface-2); overflow: hidden; }
 .k-bar > i { display: block; height: 100%; border-radius: var(--r-full); background: var(--accent); }
@@ -218,7 +249,7 @@ tokens['duration'] = {'fast': tok('150ms', 'duration'), 'base': tok('220ms', 'du
 json.dump(tokens, open(os.path.join(ROOT, VERSION, 'tokens.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
 
 # Rules and spec for AI tools and people
-md = open('kasane.md.tpl', encoding='utf-8').read().replace('{{BASE}}', BASE).replace('{{VERSION}}', VERSION)
+md = open('kasane.md.tpl', encoding='utf-8').read().replace('{{BASE}}', BASE).replace('{{VERSION}}', VERSION).replace('{{LINT_URL}}', LINT_URL)
 open(os.path.join(ROOT, VERSION, 'kasane.md'), 'w', encoding='utf-8').write(md)
 open(os.path.join(ROOT, 'llms.txt'), 'w', encoding='utf-8').write(
     '# Kasane\n\n> 面を重ねて区切り、アクセントの色を9色から選べる、Webサイトと Webアプリのためのデザインシステム。\n\n'
@@ -423,7 +454,7 @@ page('badge', '状態や分類を短い言葉で示す部品です。',
   + sec('CSS', code('CSS', CSS['badge'])))
 
 page('tabs', '同じ場所で表示を切り替える部品です。選択中の項目だけ、面の色を変えます。',
-  sec('タブ', '<p><code>.k-seg</code> は <code>--surface</code> の面の上に置きます。</p>'
+  sec('タブ', '<p><code>.k-seg</code> は <code>--surface</code> の面の上に置きます。選ぶと、選択中の背景がスイッチのつまみのように横へ動きます(項目は5つまで)。</p>'
       + ex('<div class="k-card">\n  <div><div class="k-seg" role="tablist" aria-label="説明">\n    <button type="button" role="tab" id="tab-a" aria-controls="panel-a" aria-selected="true">概要</button>\n    <button type="button" role="tab" id="tab-b" aria-controls="panel-b" aria-selected="false" tabindex="-1">使い方</button>\n  </div></div>\n  <div class="k-nest" role="tabpanel" id="panel-a" aria-labelledby="tab-a">Kasane は、色を選べるデザインシステムです。</div>\n  <div class="k-nest" role="tabpanel" id="panel-b" aria-labelledby="tab-b" hidden>CSSを読み込み、部品のクラスを付けて使います。</div>\n</div>', True)
       + code('JavaScript', 'document.querySelectorAll(\'[role="tablist"]\').forEach((list) => {\n  const tabs = [...list.querySelectorAll(\'[role="tab"]\')];\n  const select = (tab) => tabs.forEach((t) => {\n    const on = t === tab;\n    t.setAttribute("aria-selected", String(on));\n    t.tabIndex = on ? 0 : -1;\n    document.getElementById(t.getAttribute("aria-controls")).hidden = !on;\n  });\n  tabs.forEach((tab, i) => {\n    tab.addEventListener("click", () => select(tab));\n    tab.addEventListener("keydown", (e) => {\n      const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;\n      if (!d) return;\n      const next = tabs[(i + d + tabs.length) % tabs.length];\n      select(next); next.focus();\n    });\n  });\n});'))
   + sec('2つから選ぶ切り替え', '<p>表示の切り替えなど、選択肢が少ないときにも使えます。このときは <code>aria-pressed</code> で選択中を示します。</p>'

@@ -18,9 +18,14 @@ page('with-ai', 'Claude Code や Codex などの AI にUIを作ってもらう�
   + sec('Codex で使う', '<p>プロジェクトの <code>AGENTS.md</code> に、上と同じ内容を書きます。Codex をネットにつながらない設定で使っているとURLを読めないので、その場合は <code>kasane.md</code> をリポジトリに置き、そのファイルを読むように書きます。</p>')
   + sec('ほかの AI で使う', '<p>チャットで使う場合は、<code>kasane.md</code> の内容を貼るか、ファイルとして添付します。プロジェクトの指示に入れておくと、毎回貼る必要がなくなります。</p>')
   + sec('自動でチェックする', '<p>AI は長い指示の一部を読み落とすことがあります。Stylelint のプラグインを入れると、色の直接指定、影、入力の部品以外の枠線、トークン以外の角丸や余白などを、機械的に見つけられます。</p>'
-      + code('bash', 'npm install --save-dev stylelint github:yamamotoxqx/design-system-kasane')
-      + code('JSON', '{\n  "extends": ["design-system-kasane/stylelint"]\n}')
+      + '<p>ルールは、CSSと同じ配信先からパッケージとして入れられます。GitHub のアカウントや認証は要りません。</p>'
+      + code('bash', 'npm install --save-dev stylelint ' + LINT_URL)
+      + '<p>プロジェクトに <code>.stylelintrc.json</code> を作ります。</p>'
+      + code('JSON', '{\n  "extends": ["stylelint-config-kasane"]\n}')
       + code('bash', 'npx stylelint "src/**/*.css"')
+      + '<p>URLのファイル名には版の番号が入っています。ルールを更新するときは新しい番号のファイルを出すので、入れたものが勝手に変わることはありません。</p>'
+      + '<p>AI に自分で直してもらうには、<code>CLAUDE.md</code> や <code>AGENTS.md</code> に次の1行を足します。</p>'
+      + code('Markdown', 'CSSを変更したら、作業の最後に npx stylelint "src/**/*.css" を実行し、出たものをすべて直すこと。')
       + table(['ルール', '見つけるもの'], [
           ['<code>kasane/no-raw-color</code>', '色の直接指定(<code>#fff</code>、<code>rgb()</code>、色の名前など)'],
           ['<code>kasane/no-shadow</code>', '<code>box-shadow</code> などの影'],
@@ -29,7 +34,7 @@ page('with-ai', 'Claude Code や Codex などの AI にUIを作ってもらう�
           ['<code>kasane/no-outline-none</code>', '<code>outline: none</code>'],
           ['<code>kasane/font-family-token</code>', 'トークン以外の書体の指定']])
       + '<p>自分で作った入力欄のクラスに枠を付けたいときは、設定で許可できます。</p>'
-      + code('JSON', '{\n  "extends": ["design-system-kasane/stylelint"],\n  "rules": {\n    "kasane/border-only-on-inputs": [true, { "inputSelectors": ["\\\\.app-search"] }]\n  }\n}')
+      + code('JSON', '{\n  "extends": ["stylelint-config-kasane"],\n  "rules": {\n    "kasane/border-only-on-inputs": [true, { "inputSelectors": ["\\\\.app-search"] }]\n  }\n}')
       + '<p>機械で見つけられないこと(主ボタンが1つか、状態にアイコンがあるか、など)は、仕様書のチェックリストで確かめます。</p>'))
 
 page('updates', 'Kasane の変更の記録です。',
@@ -101,8 +106,8 @@ page('motion', '動きは短く、控えめにします。画面が変わった�
       '<div class="ex"><div class="ex-demo"><button class="k-btn" type="button" data-open-demo>ダイアログを開く</button></div>'
       + code('CSS', '.k-scrim  { animation: k-fade var(--motion-base); }\n.k-dialog { animation: k-enter var(--motion-base) var(--ease-out); }') + '</div>'
       '<div class="k-scrim" id="demo-dialog" hidden><div class="k-dialog" role="dialog" aria-modal="true" aria-labelledby="demo-dialog-title"><h3 class="k-dialog-title" id="demo-dialog-title">このメモを削除しますか?</h3><p class="k-dialog-text">これは動きの見本です。どちらを押しても、何も削除されません。</p><div class="k-dialog-actions"><button class="k-btn k-btn-quiet" type="button" data-close-demo>キャンセル</button><button class="k-btn k-btn-danger" type="button" data-close-demo>削除する</button></div></div></div>')
-  + sec('操作に反応する', '<p>ボタンは、押すと1pxだけ沈みます。スイッチは、つまみが150msで動きます。押した瞬間に反応が返ることを優先して、短くしています。</p>'
-      + ex('<button class="k-btn k-btn-primary" type="button">押してみる</button>\n<label class="k-switch">\n  <input type="checkbox" checked>\n  <span class="k-switch-track" aria-hidden="true"></span>\n  切り替えてみる\n</label>')
+  + sec('操作に反応する', '<p>ボタンは、押すと1pxだけ沈みます。スイッチは、つまみが150msで動きます。タブや2択の切り替えでは、選択中の背景が220msで横へ動きます。押した瞬間に反応が返ることを優先して、短くしています。</p>'
+      + ex('<button class="k-btn k-btn-primary" type="button">押してみる</button>\n<label class="k-switch">\n  <input type="checkbox" checked>\n  <span class="k-switch-track" aria-hidden="true"></span>\n  切り替えてみる\n</label>\n<div class="k-seg" role="group" aria-label="表示">\n  <button type="button" aria-pressed="true" data-seg-demo>週</button>\n  <button type="button" aria-pressed="false" data-seg-demo>月</button>\n  <button type="button" aria-pressed="false" data-seg-demo>年</button>\n</div>')
       + code('CSS', '.k-btn { transition: background-color var(--motion-fast), transform var(--motion-fast); }\n.k-btn:active { transform: translateY(1px); }\n.k-switch-track::after { transition: transform var(--motion-fast); }'))
   + sec('動きを減らす設定', '<p>端末で「視差効果を減らす」が有効なときは、すべての動きを止めます。動きがなくても、内容と状態はすべて分かるようにします。</p>'
       + code('CSS', '@media (prefers-reduced-motion: reduce) {\n  .k-enter, .k-scrim, .k-dialog { animation: none; }\n  .k-btn, .k-switch-track, .k-switch-track::after { transition: none; }\n}'))

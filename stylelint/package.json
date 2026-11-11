@@ -1,0 +1,16 @@
+{
+  "name": "stylelint-config-kasane",
+  "version": "1.0.0",
+  "description": "Stylelint rules for the Kasane design system.",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./plugin": "./plugin.js"
+  },
+  "files": ["index.js", "plugin.js"],
+  "license": "MIT",
+  "peerDependencies": {
+    "stylelint": ">=16"
+  }
+}

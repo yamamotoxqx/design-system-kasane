@@ -342,7 +342,7 @@ function setAccent(id) {              // パレットの名前
 </div>
 ```
 
-タブは、左右の矢印キーで移動できるようにします。
+タブは、左右の矢印キーで移動できるようにします。選択中の背景は、つまみのように横へ動きます(項目は5つまで)。
 
 ### 進捗バー
 
@@ -474,12 +474,12 @@ UI を作ったら、渡す前に次をすべて確かめてください。
 Stylelint のプラグインで、ルールの一部を機械的に確かめられます。
 
 ```bash
-npm install --save-dev stylelint github:yamamotoxqx/design-system-kasane
+npm install --save-dev stylelint {{LINT_URL}}
 ```
 
 ```json
 // .stylelintrc.json
-{ "extends": ["design-system-kasane/stylelint"] }
+{ "extends": ["stylelint-config-kasane"] }
 ```
 
 ```bash
@@ -494,3 +494,5 @@ npx stylelint "src/**/*.css"
 | `kasane/use-tokens` | 角丸、余白、文字の大きさ、動きの長さの直接指定 |
 | `kasane/no-outline-none` | `outline: none` / `outline: 0` |
 | `kasane/font-family-token` | トークン以外の `font-family` |
+
+CSS を変更したら、作業の最後に `npx stylelint "src/**/*.css"` を実行し、出たものをすべて直してください(Stylelint が入っているプロジェクトの場合)。

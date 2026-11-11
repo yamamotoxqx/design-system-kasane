@@ -562,7 +562,7 @@ function setTheme(theme) {
 .k-badge-accent { background: var(--accent-soft); color: var(--accent-ink); }
 .k-badge-ok { background: var(--ok-soft); color: var(--ok); }
 .k-badge-danger { background: var(--danger-soft); color: var(--danger); }
-.k-badge-info { background: var(--info-soft); color: var(--info); }</code></pre></div></section></article><article class="page" data-page="tabs" hidden><div class="page-head"><div class="crumbs">コンポーネント / タブ</div><h1>タブ</h1><p class="lead">同じ場所で表示を切り替える部品です。選択中の項目だけ、面の色を変えます。</p></div><section class="sec"><h2>タブ</h2><p><code>.k-seg</code> は <code>--surface</code> の面の上に置きます。</p><div class="ex"><div class="ex-demo ex-stack"><div class="k-card">
+.k-badge-info { background: var(--info-soft); color: var(--info); }</code></pre></div></section></article><article class="page" data-page="tabs" hidden><div class="page-head"><div class="crumbs">コンポーネント / タブ</div><h1>タブ</h1><p class="lead">同じ場所で表示を切り替える部品です。選択中の項目だけ、面の色を変えます。</p></div><section class="sec"><h2>タブ</h2><p><code>.k-seg</code> は <code>--surface</code> の面の上に置きます。選ぶと、選択中の背景がスイッチのつまみのように横へ動きます(項目は5つまで)。</p><div class="ex"><div class="ex-demo ex-stack"><div class="k-card">
   <div><div class="k-seg" role="tablist" aria-label="説明">
     <button type="button" role="tab" id="tab-a" aria-controls="panel-a" aria-selected="true">概要</button>
     <button type="button" role="tab" id="tab-b" aria-controls="panel-b" aria-selected="false" tabindex="-1">使い方</button>
@@ -599,14 +599,43 @@ function setTheme(theme) {
 </div></div></div><div class="code"><div class="code-head"><span>HTML</span><button class="copy" type="button">コピー</button></div><pre><code>&lt;div class=&quot;k-card&quot;&gt;&lt;div class=&quot;k-seg&quot; role=&quot;group&quot; aria-label=&quot;並び順&quot;&gt;
   &lt;button type=&quot;button&quot; aria-pressed=&quot;true&quot;&gt;新しい順&lt;/button&gt;
   &lt;button type=&quot;button&quot; aria-pressed=&quot;false&quot;&gt;古い順&lt;/button&gt;
-&lt;/div&gt;&lt;/div&gt;</code></pre></div></div></section><section class="sec"><h2>CSS</h2><div class="code"><div class="code-head"><span>CSS</span><button class="copy" type="button">コピー</button></div><pre><code>.k-seg { display: inline-flex; gap: 2px; padding: 4px; border-radius: var(--r-full); background: var(--surface-2); }
+&lt;/div&gt;&lt;/div&gt;</code></pre></div></div></section><section class="sec"><h2>CSS</h2><div class="code"><div class="code-head"><span>CSS</span><button class="copy" type="button">コピー</button></div><pre><code>.k-seg {
+  position: relative; isolation: isolate;
+  display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 2px;
+  padding: 4px; border-radius: var(--r-full); background: var(--surface-2);
+}
 .k-seg button {
   min-height: 36px; padding: 6px var(--space-4); border: 0; border-radius: var(--r-full);
   background: transparent; color: var(--muted);
   font: inherit; font-weight: 700; font-size: var(--text-sm); cursor: pointer; white-space: nowrap;
+  transition: color var(--motion-fast);
 }
 .k-seg button:hover { color: var(--ink); }
-.k-seg button[aria-selected=&quot;true&quot;], .k-seg button[aria-pressed=&quot;true&quot;] { background: var(--surface); color: var(--ink); }</code></pre></div></section></article><article class="page" data-page="progress" hidden><div class="page-head"><div class="crumbs">コンポーネント / 進捗バー</div><h1>進捗バー</h1><p class="lead">作業がどこまで進んだかを示す部品です。</p></div><section class="sec"><h2>進捗バー</h2><p>バーの長さだけでなく、数字でも進み具合を伝えます。数字は <code>.k-num</code> にします。</p><div class="ex"><div class="ex-demo ex-stack"><div class="k-card">
+.k-seg button[aria-selected=&quot;true&quot;], .k-seg button[aria-pressed=&quot;true&quot;] { background: var(--surface); color: var(--ink); }
+
+/* Sliding thumb: the selected background moves like a switch (up to 5 items, browsers with :has) */
+@supports selector(:has(*)) {
+  .k-seg { --n: 1; --i: 0; }
+  .k-seg:has(&gt; :nth-child(2):last-child) { --n: 2; }
+  .k-seg:has(&gt; :nth-child(3):last-child) { --n: 3; }
+  .k-seg:has(&gt; :nth-child(4):last-child) { --n: 4; }
+  .k-seg:has(&gt; :nth-child(5):last-child) { --n: 5; }
+  .k-seg:has(&gt; :nth-child(2)[aria-selected=&quot;true&quot;], &gt; :nth-child(2)[aria-pressed=&quot;true&quot;]) { --i: 1; }
+  .k-seg:has(&gt; :nth-child(3)[aria-selected=&quot;true&quot;], &gt; :nth-child(3)[aria-pressed=&quot;true&quot;]) { --i: 2; }
+  .k-seg:has(&gt; :nth-child(4)[aria-selected=&quot;true&quot;], &gt; :nth-child(4)[aria-pressed=&quot;true&quot;]) { --i: 3; }
+  .k-seg:has(&gt; :nth-child(5)[aria-selected=&quot;true&quot;], &gt; :nth-child(5)[aria-pressed=&quot;true&quot;]) { --i: 4; }
+  .k-seg::before {
+    content: &quot;&quot;; position: absolute; z-index: -1; top: 4px; bottom: 4px; left: 4px;
+    width: calc((100% - 8px - (var(--n) - 1) * 2px) / var(--n));
+    border-radius: var(--r-full); background: var(--surface);
+    transform: translateX(calc(var(--i) * (100% + 2px)));
+    transition: transform var(--motion-base) var(--ease-out);
+    opacity: 0;
+  }
+  .k-seg:has(&gt; [aria-selected=&quot;true&quot;], &gt; [aria-pressed=&quot;true&quot;])::before { opacity: 1; }
+  .k-seg button[aria-selected=&quot;true&quot;], .k-seg button[aria-pressed=&quot;true&quot;] { background: transparent; }
+}
+@media (prefers-reduced-motion: reduce) { .k-seg::before, .k-seg button { transition: none; } }</code></pre></div></section></article><article class="page" data-page="progress" hidden><div class="page-head"><div class="crumbs">コンポーネント / 進捗バー</div><h1>進捗バー</h1><p class="lead">作業がどこまで進んだかを示す部品です。</p></div><section class="sec"><h2>進捗バー</h2><p>バーの長さだけでなく、数字でも進み具合を伝えます。数字は <code>.k-num</code> にします。</p><div class="ex"><div class="ex-demo ex-stack"><div class="k-card">
   <div class="k-bar-head"><span>部品</span><span class="k-num">72%</span></div>
   <div class="k-bar" role="progressbar" aria-label="部品" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"><i style="width:72%"></i></div>
 </div></div><div class="code"><div class="code-head"><span>HTML</span><button class="copy" type="button">コピー</button></div><pre><code>&lt;div class=&quot;k-card&quot;&gt;
@@ -659,10 +688,10 @@ https://kasane.y-n0.de/v1/kasane.md
 CSSは次を読み込む。
 https://kasane.y-n0.de/v1/kasane.min.css
 
-作業の最後に、仕様書の「作業の最後に確かめること」をすべて確かめること。</code></pre></div><p>URLを読むたびに許可を求められる場合は、配信先のドメインを Claude Code の設定で許可しておくと、聞かれなくなります。</p></section><section class="sec"><h2>Codex で使う</h2><p>プロジェクトの <code>AGENTS.md</code> に、上と同じ内容を書きます。Codex をネットにつながらない設定で使っているとURLを読めないので、その場合は <code>kasane.md</code> をリポジトリに置き、そのファイルを読むように書きます。</p></section><section class="sec"><h2>ほかの AI で使う</h2><p>チャットで使う場合は、<code>kasane.md</code> の内容を貼るか、ファイルとして添付します。プロジェクトの指示に入れておくと、毎回貼る必要がなくなります。</p></section><section class="sec"><h2>自動でチェックする</h2><p>AI は長い指示の一部を読み落とすことがあります。Stylelint のプラグインを入れると、色の直接指定、影、入力の部品以外の枠線、トークン以外の角丸や余白などを、機械的に見つけられます。</p><div class="code"><div class="code-head"><span>bash</span><button class="copy" type="button">コピー</button></div><pre><code>npm install --save-dev stylelint github:yamamotoxqx/design-system-kasane</code></pre></div><div class="code"><div class="code-head"><span>JSON</span><button class="copy" type="button">コピー</button></div><pre><code>{
-  &quot;extends&quot;: [&quot;design-system-kasane/stylelint&quot;]
-}</code></pre></div><div class="code"><div class="code-head"><span>bash</span><button class="copy" type="button">コピー</button></div><pre><code>npx stylelint &quot;src/**/*.css&quot;</code></pre></div><div class="tbl"><table><thead><tr><th>ルール</th><th>見つけるもの</th></tr></thead><tbody><tr><td><code>kasane/no-raw-color</code></td><td>色の直接指定(<code>#fff</code>、<code>rgb()</code>、色の名前など)</td></tr><tr><td><code>kasane/no-shadow</code></td><td><code>box-shadow</code> などの影</td></tr><tr><td><code>kasane/border-only-on-inputs</code></td><td>入力の部品以外への枠線と区切り線</td></tr><tr><td><code>kasane/use-tokens</code></td><td>角丸、余白、文字の大きさ、動きの長さの直接指定(警告)</td></tr><tr><td><code>kasane/no-outline-none</code></td><td><code>outline: none</code></td></tr><tr><td><code>kasane/font-family-token</code></td><td>トークン以外の書体の指定</td></tr></tbody></table></div><p>自分で作った入力欄のクラスに枠を付けたいときは、設定で許可できます。</p><div class="code"><div class="code-head"><span>JSON</span><button class="copy" type="button">コピー</button></div><pre><code>{
-  &quot;extends&quot;: [&quot;design-system-kasane/stylelint&quot;],
+作業の最後に、仕様書の「作業の最後に確かめること」をすべて確かめること。</code></pre></div><p>URLを読むたびに許可を求められる場合は、配信先のドメインを Claude Code の設定で許可しておくと、聞かれなくなります。</p></section><section class="sec"><h2>Codex で使う</h2><p>プロジェクトの <code>AGENTS.md</code> に、上と同じ内容を書きます。Codex をネットにつながらない設定で使っているとURLを読めないので、その場合は <code>kasane.md</code> をリポジトリに置き、そのファイルを読むように書きます。</p></section><section class="sec"><h2>ほかの AI で使う</h2><p>チャットで使う場合は、<code>kasane.md</code> の内容を貼るか、ファイルとして添付します。プロジェクトの指示に入れておくと、毎回貼る必要がなくなります。</p></section><section class="sec"><h2>自動でチェックする</h2><p>AI は長い指示の一部を読み落とすことがあります。Stylelint のプラグインを入れると、色の直接指定、影、入力の部品以外の枠線、トークン以外の角丸や余白などを、機械的に見つけられます。</p><p>ルールは、CSSと同じ配信先からパッケージとして入れられます。GitHub のアカウントや認証は要りません。</p><div class="code"><div class="code-head"><span>bash</span><button class="copy" type="button">コピー</button></div><pre><code>npm install --save-dev stylelint https://kasane.y-n0.de/v1/stylelint-config-kasane-1.0.0.tgz</code></pre></div><p>プロジェクトに <code>.stylelintrc.json</code> を作ります。</p><div class="code"><div class="code-head"><span>JSON</span><button class="copy" type="button">コピー</button></div><pre><code>{
+  &quot;extends&quot;: [&quot;stylelint-config-kasane&quot;]
+}</code></pre></div><div class="code"><div class="code-head"><span>bash</span><button class="copy" type="button">コピー</button></div><pre><code>npx stylelint &quot;src/**/*.css&quot;</code></pre></div><p>URLのファイル名には版の番号が入っています。ルールを更新するときは新しい番号のファイルを出すので、入れたものが勝手に変わることはありません。</p><p>AI に自分で直してもらうには、<code>CLAUDE.md</code> や <code>AGENTS.md</code> に次の1行を足します。</p><div class="code"><div class="code-head"><span>Markdown</span><button class="copy" type="button">コピー</button></div><pre><code>CSSを変更したら、作業の最後に npx stylelint &quot;src/**/*.css&quot; を実行し、出たものをすべて直すこと。</code></pre></div><div class="tbl"><table><thead><tr><th>ルール</th><th>見つけるもの</th></tr></thead><tbody><tr><td><code>kasane/no-raw-color</code></td><td>色の直接指定(<code>#fff</code>、<code>rgb()</code>、色の名前など)</td></tr><tr><td><code>kasane/no-shadow</code></td><td><code>box-shadow</code> などの影</td></tr><tr><td><code>kasane/border-only-on-inputs</code></td><td>入力の部品以外への枠線と区切り線</td></tr><tr><td><code>kasane/use-tokens</code></td><td>角丸、余白、文字の大きさ、動きの長さの直接指定(警告)</td></tr><tr><td><code>kasane/no-outline-none</code></td><td><code>outline: none</code></td></tr><tr><td><code>kasane/font-family-token</code></td><td>トークン以外の書体の指定</td></tr></tbody></table></div><p>自分で作った入力欄のクラスに枠を付けたいときは、設定で許可できます。</p><div class="code"><div class="code-head"><span>JSON</span><button class="copy" type="button">コピー</button></div><pre><code>{
+  &quot;extends&quot;: [&quot;stylelint-config-kasane&quot;],
   &quot;rules&quot;: {
     &quot;kasane/border-only-on-inputs&quot;: [true, { &quot;inputSelectors&quot;: [&quot;\\.app-search&quot;] }]
   }
@@ -688,17 +717,27 @@ function showPage(id) {
   document.querySelectorAll(&quot;.page&quot;).forEach((p) =&gt; { p.hidden = p.dataset.page !== id; });
   window.scrollTo(0, 0);
 }</code></pre></div></section><section class="sec"><h2>開く・閉じる</h2><p>ダイアログは、背景をふわっと暗くし、本体を下から浮かび上がらせます。閉じるときは動かさず、すぐに消します。</p><div class="ex"><div class="ex-demo"><button class="k-btn" type="button" data-open-demo>ダイアログを開く</button></div><div class="code"><div class="code-head"><span>CSS</span><button class="copy" type="button">コピー</button></div><pre><code>.k-scrim  { animation: k-fade var(--motion-base); }
-.k-dialog { animation: k-enter var(--motion-base) var(--ease-out); }</code></pre></div></div><div class="k-scrim" id="demo-dialog" hidden><div class="k-dialog" role="dialog" aria-modal="true" aria-labelledby="demo-dialog-title"><h3 class="k-dialog-title" id="demo-dialog-title">このメモを削除しますか?</h3><p class="k-dialog-text">これは動きの見本です。どちらを押しても、何も削除されません。</p><div class="k-dialog-actions"><button class="k-btn k-btn-quiet" type="button" data-close-demo>キャンセル</button><button class="k-btn k-btn-danger" type="button" data-close-demo>削除する</button></div></div></div></section><section class="sec"><h2>操作に反応する</h2><p>ボタンは、押すと1pxだけ沈みます。スイッチは、つまみが150msで動きます。押した瞬間に反応が返ることを優先して、短くしています。</p><div class="ex"><div class="ex-demo"><button class="k-btn k-btn-primary" type="button">押してみる</button>
+.k-dialog { animation: k-enter var(--motion-base) var(--ease-out); }</code></pre></div></div><div class="k-scrim" id="demo-dialog" hidden><div class="k-dialog" role="dialog" aria-modal="true" aria-labelledby="demo-dialog-title"><h3 class="k-dialog-title" id="demo-dialog-title">このメモを削除しますか?</h3><p class="k-dialog-text">これは動きの見本です。どちらを押しても、何も削除されません。</p><div class="k-dialog-actions"><button class="k-btn k-btn-quiet" type="button" data-close-demo>キャンセル</button><button class="k-btn k-btn-danger" type="button" data-close-demo>削除する</button></div></div></div></section><section class="sec"><h2>操作に反応する</h2><p>ボタンは、押すと1pxだけ沈みます。スイッチは、つまみが150msで動きます。タブや2択の切り替えでは、選択中の背景が220msで横へ動きます。押した瞬間に反応が返ることを優先して、短くしています。</p><div class="ex"><div class="ex-demo"><button class="k-btn k-btn-primary" type="button">押してみる</button>
 <label class="k-switch">
   <input type="checkbox" checked>
   <span class="k-switch-track" aria-hidden="true"></span>
   切り替えてみる
-</label></div><div class="code"><div class="code-head"><span>HTML</span><button class="copy" type="button">コピー</button></div><pre><code>&lt;button class=&quot;k-btn k-btn-primary&quot; type=&quot;button&quot;&gt;押してみる&lt;/button&gt;
+</label>
+<div class="k-seg" role="group" aria-label="表示">
+  <button type="button" aria-pressed="true" data-seg-demo>週</button>
+  <button type="button" aria-pressed="false" data-seg-demo>月</button>
+  <button type="button" aria-pressed="false" data-seg-demo>年</button>
+</div></div><div class="code"><div class="code-head"><span>HTML</span><button class="copy" type="button">コピー</button></div><pre><code>&lt;button class=&quot;k-btn k-btn-primary&quot; type=&quot;button&quot;&gt;押してみる&lt;/button&gt;
 &lt;label class=&quot;k-switch&quot;&gt;
   &lt;input type=&quot;checkbox&quot; checked&gt;
   &lt;span class=&quot;k-switch-track&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;
   切り替えてみる
-&lt;/label&gt;</code></pre></div></div><div class="code"><div class="code-head"><span>CSS</span><button class="copy" type="button">コピー</button></div><pre><code>.k-btn { transition: background-color var(--motion-fast), transform var(--motion-fast); }
+&lt;/label&gt;
+&lt;div class=&quot;k-seg&quot; role=&quot;group&quot; aria-label=&quot;表示&quot;&gt;
+  &lt;button type=&quot;button&quot; aria-pressed=&quot;true&quot; data-seg-demo&gt;週&lt;/button&gt;
+  &lt;button type=&quot;button&quot; aria-pressed=&quot;false&quot; data-seg-demo&gt;月&lt;/button&gt;
+  &lt;button type=&quot;button&quot; aria-pressed=&quot;false&quot; data-seg-demo&gt;年&lt;/button&gt;
+&lt;/div&gt;</code></pre></div></div><div class="code"><div class="code-head"><span>CSS</span><button class="copy" type="button">コピー</button></div><pre><code>.k-btn { transition: background-color var(--motion-fast), transform var(--motion-fast); }
 .k-btn:active { transform: translateY(1px); }
 .k-switch-track::after { transition: transform var(--motion-fast); }</code></pre></div></section><section class="sec"><h2>動きを減らす設定</h2><p>端末で「視差効果を減らす」が有効なときは、すべての動きを止めます。動きがなくても、内容と状態はすべて分かるようにします。</p><div class="code"><div class="code-head"><span>CSS</span><button class="copy" type="button">コピー</button></div><pre><code>@media (prefers-reduced-motion: reduce) {
   .k-enter, .k-scrim, .k-dialog { animation: none; }
@@ -854,6 +893,12 @@ function showPage(id) {
       tab.addEventListener('click',function(){select(tab);});
       tab.addEventListener('keydown',function(e){var d=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(!d)return;var n=tabs[(i+d+tabs.length)%tabs.length];select(n);n.focus();});
     });
+  });
+
+  /* ---------- Pressed-style segmented controls in the examples ---------- */
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.ex-demo .k-seg[role="group"] button');if(!b)return;
+    all('button',b.parentNode).forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});
   });
 
   /* ---------- Replay a motion example ---------- */

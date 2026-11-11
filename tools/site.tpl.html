@@ -430,6 +430,12 @@ a.k-btn{text-decoration:none}
     });
   });
 
+  /* ---------- Pressed-style segmented controls in the examples ---------- */
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.ex-demo .k-seg[role="group"] button');if(!b)return;
+    all('button',b.parentNode).forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});
+  });
+
   /* ---------- Replay a motion example ---------- */
   document.addEventListener('click',function(e){
     var b=e.target.closest('[data-replay]');if(!b)return;

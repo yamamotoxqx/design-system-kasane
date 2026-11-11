@@ -45,12 +45,14 @@ https://kasane.y-n0.de/v1/kasane.min.css
 ## 自動チェック(Stylelint)
 
 ```bash
-npm install --save-dev stylelint github:yamamotoxqx/design-system-kasane
+npm install --save-dev stylelint https://kasane.y-n0.de/v1/stylelint-config-kasane-1.0.0.tgz
 ```
 
 ```json
-{ "extends": ["design-system-kasane/stylelint"] }
+{ "extends": ["stylelint-config-kasane"] }
 ```
+
+ルールを変えたら `stylelint/package.json` の `version` を上げます。ファイル名に版が入るので、入れている側の内容が勝手に変わることはありません。
 
 色の直接指定、影、入力の部品以外の枠線、トークン以外の角丸・余白・文字の大きさ・動きの長さ、`outline: none`、トークン以外の書体を見つけます。
 
@@ -64,7 +66,7 @@ npm install --save-dev stylelint github:yamamotoxqx/design-system-kasane
 | `v1/fonts/` | LINE Seed JP(文字の範囲ごとに分割) |
 | `index.html` | ドキュメントサイト |
 | `llms.txt` | AI に仕様書の場所を知らせる案内 |
-| `stylelint/` | Stylelint のプラグインと設定 |
+| `stylelint/` | Stylelint のプラグインと設定(`npm run dist` で `v1/stylelint-config-kasane-<版>.tgz` として配信) |
 | `tools/` | 上のファイルを生成するソース |
 
 ## 開発
