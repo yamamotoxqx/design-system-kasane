@@ -488,7 +488,7 @@ TOKENS = [('--bg', 'ページの背景'), ('--surface', 'カード、パネル')
           ('--info', '情報の文字'), ('--info-soft', '情報の面')]
 page('color', '色はすべてトークンで指定します。アクセントは9色のパレットから選べて、ライトとダークの値はパレットごとに決まっています。',
   sec('パレット', '<p>押すと、このサイト全体の色が切り替わります。<code>data-accent</code> には、下の英字の名前を書きます。</p><div class="pals">' + pal_btns + '</div>'
-      + code('HTML', '<html data-accent="fuji">'))
+      + code('HTML', '<html data-accent="yamabuki">').replace('&quot;yamabuki&quot;', '&quot;<span data-accent-code>yamabuki</span>&quot;'))
   + sec('面の重なり', '<p>Kasane は枠や影を使わず、面の色の差で区切ります。内側に入るほど、面の色を一段ずつ変えます。下の値は、いま表示しているパレットとテーマのものです。</p>' + LAYER_VIZ)
   + sec('トークンの一覧', '<p>値は、いま表示しているパレットとテーマのものです。</p>'
       + table_fixed(['32%', '43%', '25%'], ['トークン', '用途', 'いまの値'], [['<code>%s</code>' % k, d, '<span class="sw"><i style="background:var(%s)"></i><span data-token="%s">%s</span></span>' % (k, k, PAL[0]['light'][k])] for k, d in TOKENS]))

@@ -561,6 +561,7 @@ html[data-first-visit] .modal,.modal.open{display:grid}
     root.dataset.accent=id;if(save)store.set('kasane-accent',id);
     all('[data-accent-set]').forEach(function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-accent-set')===id));});
     all('.k-palette input[type=radio]').forEach(function(r){r.checked=r.value===id;});
+    all('[data-accent-code]').forEach(function(el){el.textContent=id;});
     paintTokens();
   }
   function paintTokens(){
