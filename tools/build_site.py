@@ -389,6 +389,20 @@ def sec(title, body):
     return '<section class="sec"><h2>%s</h2>%s</section>' % (title, body)
 
 # ---------------------------------------------------------------- pages
+def _lv(name, tok, inner=''):
+    return ('<div class="lv" style="background:var(%s)"><div class="lv-h"><b>%s <code>%s</code></b><span class="lv-val" data-token="%s">%s</span></div>%s</div>'
+            % (tok, name, tok[2:], tok, PAL[0]['light'][tok], inner))
+def _chip(name, tok):
+    return ('<div class="lv-chip"><i style="background:var(%s)"></i><b>%s <code>%s</code></b><span class="lv-val" data-token="%s">%s</span></div>'
+            % (tok, name, tok[2:], tok, PAL[0]['light'][tok]))
+LAYER_VIZ = ('<div class="layer-viz"><figure class="lv-panel"><figcaption>面の重なり</figcaption>'
+             + _lv('背景', '--bg', _lv('カード', '--surface', _lv('中の面', '--surface-2', _lv('押したとき', '--surface-3'))))
+             + '<p class="lv-note">ページ → カード → カードの中の行 → 押したとき、の順に一段ずつ変わります。</p></figure>'
+             '<figure class="lv-panel"><figcaption>文字とアクセント</figcaption><div class="lv-chips">'
+             + ''.join(_chip(n, t) for n, t in [('文字', '--ink'), ('補足', '--muted'), ('アクセント', '--accent'), ('アクセント文字', '--accent-ink'),
+                                                ('アクセント薄', '--accent-soft'), ('入力欄の枠', '--line')])
+             + '</div></figure></div>')
+
 # "このサイトの構成" on the about page: same order as the sidebar and the footer (built from NAV)
 SITEMAP_DESC = {
     'start': 'CSSの読み込みと、色の決め方',
@@ -402,13 +416,21 @@ SITEMAP_DESC = {
 SITEMAP = [(p, t) for p, t in NAV[0][2] if p != 'about'] + [(ps[0][0], label) for _, label, ps in NAV[1:]]
 SITEMAP_DESC.update({ps[0][0]: SITEMAP_DESC[sid] for sid, _, ps in NAV[1:]})
 
+FEAT_SW = ''.join('<button class="feat-sw" type="button" data-accent-set="%s" aria-pressed="false" aria-label="%s" style="background:%s"></button>' % (p['id'], p['name'], p['light']['--accent']) for p in PAL)
+FEAT_CHECKS = ''.join('<li>%s<span>%s</span><b class="k-num">%s</b></li>' % (I_OK, a_, b_) for a_, b_ in
+                      [('CSS のルール(Stylelint)', '0件'), ('HTML のルール(kasane-check)', '0件'), ('画像の画質(SSIM)', '0.99以上'), ('Lighthouse', '最低点クリア')])
 page('about', 'Kasane(かさね)は、Webサイトと Webアプリのためのデザインシステムです。面を重ねて情報を区切り、アクセントの色を9色から選べます。',
-  sec('名前の由来', '<p>「かさね」には2つの意味があります。1つは、背景・カード・中の面と、面を重ねて画面を組み立てること。もう1つは、色の組み合わせを楽しむ「襲(かさね)の色目」です。パレットの名前も、山吹、藤、藍など日本の色の名前から取っています。</p>')
+  sec('ひと目でわかる Kasane', '<p>Kasane の画面は、枠や影ではなく、面の色の差でできています。外側から背景、カード、中の面と、一段ずつ色が変わります。色は、いま表示しているパレットとテーマのものです。</p>' + LAYER_VIZ)
   + sec('特徴', '<div class="cards two">'
-        '<div class="tile"><h3>枠も影も使わない</h3><p>カードやリストは、面の色の差だけで区切ります。枠を持つのは入力欄だけです。</p></div>'
-        '<div class="tile"><h3>9色から選べる</h3><p>アクセントの色を変えても、文字の読みやすさは同じ基準を守ります。</p></div>'
-        '<div class="tile"><h3>CSSだけで使える</h3><p>トークンと部品は1つのCSSファイルで、URLから読み込めます。ビルドや JavaScript のライブラリは要りません。</p></div>'
-        '<div class="tile"><h3>AI だけでも品質を保てる</h3><p>自動チェックを充実させているので、AI だけでコーディングしても十分な品質を保てます。CSS と HTML のルール、画像の画質、Lighthouse の点数を機械で確かめ、見つかった問題は AI が自分で直します。<a href="#with-ai">AI と使う</a></p></div></div>')
+        '<div class="tile feat"><div class="feat-vis" aria-hidden="true"><div class="fv-card"><b>今週の予定</b><span class="fv-row">図書館の本を返す</span><span class="fv-row">資料を見直す</span></div></div>'
+        '<h3>枠も影も使わない</h3><p>カードやリストは、面の色の差だけで区切ります。枠を持つのは入力欄だけです。</p></div>'
+        '<div class="tile feat"><div class="feat-vis feat-sws" role="group" aria-label="アクセントの色">' + FEAT_SW + '</div>'
+        '<h3>9色から選べる</h3><p>押すと、このサイトの色が変わります。どの色でも、文字の読みやすさは同じ基準を守ります。</p></div>'
+        '<div class="tile feat"><div class="feat-vis feat-code" aria-hidden="true"><code>&lt;link rel="stylesheet"<br>&nbsp; href="…/v1/kasane.min.css"&gt;</code></div>'
+        '<h3>CSSだけで使える</h3><p>トークンと部品は1つのCSSファイルで、URLから読み込めます。ビルドや JavaScript のライブラリは要りません。</p></div>'
+        '<div class="tile feat"><div class="feat-vis"><ul class="feat-checks" aria-label="自動チェックの結果の例">' + FEAT_CHECKS + '</ul></div>'
+        '<h3>AI だけでも品質を保てる</h3><p>自動チェックを充実させているので、AI だけでコーディングしても十分な品質を保てます。CSS と HTML のルール、画像の画質、Lighthouse の点数を機械で確かめ、見つかった問題は AI が自分で直します。<a href="#with-ai">AI と使う</a></p></div></div>')
+  + sec('名前の由来', '<p>「かさね」には2つの意味があります。1つは、背景・カード・中の面と、面を重ねて画面を組み立てること。もう1つは、色の組み合わせを楽しむ「襲(かさね)の色目」です。パレットの名前も、山吹、藤、藍など日本の色の名前から取っています。</p>')
   + sec('このサイトの構成', '<ul class="site-map">' + ''.join(
         '<li><a href="#%s"><span class="sm-text"><b>%s</b><span>%s</span></span>%s</a></li>' % (pid, label, SITEMAP_DESC[pid], icon('chevron-right', 'go'))
         for pid, label in SITEMAP) + '</ul>'))
@@ -464,20 +486,6 @@ TOKENS = [('--bg', 'ページの背景'), ('--surface', 'カード、パネル')
           ('--accent-soft', '薄いアクセントの面'), ('--accent-ink', 'アクセント色の文字、リンク'), ('--focus', 'フォーカスのリング'),
           ('--ok', '成功の文字'), ('--ok-soft', '成功の面'), ('--danger', 'エラー・削除の文字'), ('--danger-soft', 'エラー・削除の面'),
           ('--info', '情報の文字'), ('--info-soft', '情報の面')]
-def _lv(name, tok, inner=''):
-    return ('<div class="lv" style="background:var(%s)"><div class="lv-h"><b>%s <code>%s</code></b><span class="lv-val" data-token="%s">%s</span></div>%s</div>'
-            % (tok, name, tok[2:], tok, PAL[0]['light'][tok], inner))
-def _chip(name, tok):
-    return ('<div class="lv-chip"><i style="background:var(%s)"></i><b>%s <code>%s</code></b><span class="lv-val" data-token="%s">%s</span></div>'
-            % (tok, name, tok[2:], tok, PAL[0]['light'][tok]))
-LAYER_VIZ = ('<div class="layer-viz"><figure class="lv-panel"><figcaption>面の重なり</figcaption>'
-             + _lv('背景', '--bg', _lv('カード', '--surface', _lv('中の面', '--surface-2', _lv('押したとき', '--surface-3'))))
-             + '<p class="lv-note">ページ → カード → カードの中の行 → 押したとき、の順に一段ずつ変わります。</p></figure>'
-             '<figure class="lv-panel"><figcaption>文字とアクセント</figcaption><div class="lv-chips">'
-             + ''.join(_chip(n, t) for n, t in [('文字', '--ink'), ('補足', '--muted'), ('アクセント', '--accent'), ('アクセント文字', '--accent-ink'),
-                                                ('アクセント薄', '--accent-soft'), ('入力欄の枠', '--line')])
-             + '</div></figure></div>')
-
 page('color', '色はすべてトークンで指定します。アクセントは9色のパレットから選べて、ライトとダークの値はパレットごとに決まっています。',
   sec('パレット', '<p>押すと、このサイト全体の色が切り替わります。<code>data-accent</code> には、下の英字の名前を書きます。</p><div class="pals">' + pal_btns + '</div>'
       + code('HTML', '<html data-accent="fuji">'))

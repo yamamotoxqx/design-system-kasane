@@ -126,6 +126,20 @@ html.navigated .page{animation:k-enter var(--motion-slow) var(--ease-out)}
 .tile{display:flex;flex-direction:column;gap:8px;background:var(--surface-2);border-radius:var(--r-md);padding:20px;text-align:left;border:0;text-decoration:none}
 .tile h3,.tile .tile-h{font-size:18px;font-weight:800;font-family:var(--font-body);line-height:1.4}
 .tile p{font-size:15px;color:var(--muted)}
+/* Feature tiles with a small picture on top */
+.feat-vis{background:var(--bg);border-radius:14px;padding:14px;min-height:132px;display:flex;flex-direction:column;justify-content:center;margin-bottom:6px}
+.fv-card{background:var(--surface);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:6px;font-size:13px}
+.fv-row{background:var(--surface-2);border-radius:10px;padding:6px 10px}
+.feat-sws{flex-direction:row;flex-wrap:wrap;align-content:center;justify-content:center;gap:10px}
+.feat-sw{width:32px;height:32px;border-radius:50%;border:0;padding:0;cursor:pointer;transition:transform var(--motion-fast) var(--ease-out)}
+.feat-sw:hover{transform:scale(1.12)}
+.feat-sw[aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:3px}
+.feat-code code{background:none;padding:0;font-size:12.5px;line-height:1.7;color:var(--ink);word-break:break-all}
+.feat-checks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:13px}
+.feat-checks li{display:flex;align-items:center;gap:8px;background:var(--surface);border-radius:10px;padding:5px 10px}
+.feat-checks svg{width:16px;height:16px;color:var(--ok);flex:none}
+.feat-checks span{flex:1}
+.feat-checks b{font-weight:700;color:var(--ok)}
 .tile-link{cursor:pointer}
 .tile-link:hover{background:var(--surface-3)}
 .num-tag{display:inline-grid;place-items:center;flex:none;width:36px;height:36px;border-radius:50%;background:var(--accent);color:var(--on-accent);font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
