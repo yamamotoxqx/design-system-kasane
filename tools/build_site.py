@@ -276,8 +276,10 @@ def minify(c):
     c = c.replace(';}', '}')
     return keep + '\n' + c.strip() + '\n'
 os.makedirs(os.path.join(ROOT, VERSION), exist_ok=True)
-open(os.path.join(ROOT, VERSION, 'kasane.css'), 'w', encoding='utf-8').write(FULL_CSS)
-open(os.path.join(ROOT, VERSION, 'kasane.min.css'), 'w', encoding='utf-8').write(minify(FULL_CSS))
+# @charset first: a page in another encoding (e.g. Shift_JIS) still reads the Japanese in this file correctly
+CHARSET = '@charset "UTF-8";\n'
+open(os.path.join(ROOT, VERSION, 'kasane.css'), 'w', encoding='utf-8').write(CHARSET + FULL_CSS)
+open(os.path.join(ROOT, VERSION, 'kasane.min.css'), 'w', encoding='utf-8').write(CHARSET + minify(FULL_CSS))
 
 # Data for the HTML check: Kasane class names and Lucide icon names
 k_classes = sorted(set(re.findall(r'\.(k-[a-z0-9-]+)', FULL_CSS)))

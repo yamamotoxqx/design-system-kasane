@@ -8,6 +8,16 @@
   Cache-Control: public, max-age=31536000, immutable
 
 # Text files: say they are UTF-8, or browsers show Japanese as garbled text
+/v1/kasane.css
+  Content-Type: text/css; charset=utf-8
+/v1/kasane.min.css
+  Content-Type: text/css; charset=utf-8
+/v1/fonts/line-seed-jp.css
+  Content-Type: text/css; charset=utf-8
+/v1/tokens.json
+  Content-Type: application/json; charset=utf-8
+/site.webmanifest
+  Content-Type: application/manifest+json; charset=utf-8
 /v1/kasane.md
   Content-Type: text/markdown; charset=utf-8
 
