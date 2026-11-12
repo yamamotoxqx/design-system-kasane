@@ -253,6 +253,13 @@ td svg.lucide{width:20px;height:20px;vertical-align:middle}
 .hero-art i:nth-child(1){right:0;top:0;background:var(--accent)}
 .hero-art i:nth-child(2){right:60px;top:60px;background:var(--accent-soft)}
 .hero-art i:nth-child(3){right:120px;top:120px;background:var(--surface-3)}
+/* The three squares stack one by one when the home page appears (Kasane = layering) */
+@keyframes hero-stack{from{opacity:0;transform:translate(36px,-36px) scale(.92)}}
+.hero-art i{animation:hero-stack var(--motion-slow) var(--ease-out) both;transition:background-color var(--motion-base)}
+.hero-art i:nth-child(1){animation-delay:120ms}
+.hero-art i:nth-child(2){animation-delay:260ms}
+.hero-art i:nth-child(3){animation-delay:400ms}
+@media (prefers-reduced-motion:reduce){.hero-art i{animation:none}}
 a.k-btn{text-decoration:none}
 
 /* Footer */
