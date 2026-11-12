@@ -601,11 +601,14 @@ html[data-first-visit] .modal,.modal.open{display:grid}
   });
 
   /* ---------- Live dialog example ---------- */
+  /* The main column has its own stacking layer (for the page transition), so a full-screen
+     layer inside it would sit under the header and the table of contents: move it to <body>. */
   var demoDlg=$('demo-dialog'),demoFrom=null;
-  function closeDemo(){if(demoDlg.hidden)return;demoDlg.hidden=true;if(demoFrom)demoFrom.focus();}
+  if(demoDlg)document.body.appendChild(demoDlg);
+  function closeDemo(){if(!demoDlg||demoDlg.hidden)return;demoDlg.hidden=true;if(demoFrom)demoFrom.focus();}
   document.addEventListener('click',function(e){
     var o=e.target.closest('[data-open-demo]');
-    if(o){demoFrom=o;demoDlg.hidden=false;demoDlg.querySelector('button').focus();return;}
+    if(o&&demoDlg){demoFrom=o;demoDlg.hidden=false;demoDlg.querySelector('button').focus();return;}
     if(e.target.closest('[data-close-demo]')||e.target===demoDlg)closeDemo();
   });
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeDemo();});
