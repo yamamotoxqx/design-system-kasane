@@ -378,20 +378,29 @@ def sec(title, body):
     return '<section class="sec"><h2>%s</h2>%s</section>' % (title, body)
 
 # ---------------------------------------------------------------- pages
+# "このサイトの構成" on the about page: same order as the sidebar and the footer (built from NAV)
+SITEMAP_DESC = {
+    'start': 'CSSの読み込みと、色の決め方',
+    'integrate': '既定の色の決め方、利用者が色を変える場所、パレットごとの使用例',
+    'with-ai': 'Claude Code などに Kasane のルールを渡す方法と、自動チェック',
+    'updates': 'Kasane の変更の記録',
+    'principle': '設計の考え方、アクセシビリティ、パフォーマンス、文章の書き方',
+    'style': 'カラー、タイポグラフィ、角丸と余白、レイアウト、アイコン、動き',
+    'component': '部品の見本とサンプルコード',
+}
+SITEMAP = [(p, t) for p, t in NAV[0][2] if p != 'about'] + [(ps[0][0], label) for _, label, ps in NAV[1:]]
+SITEMAP_DESC.update({ps[0][0]: SITEMAP_DESC[sid] for sid, _, ps in NAV[1:]})
+
 page('about', 'Kasane(かさね)は、Webサイトと Webアプリのためのデザインシステムです。面を重ねて情報を区切り、アクセントの色を9色から選べます。',
   sec('名前の由来', '<p>「かさね」には2つの意味があります。1つは、背景・カード・中の面と、面を重ねて画面を組み立てること。もう1つは、色の組み合わせを楽しむ「襲(かさね)の色目」です。パレットの名前も、山吹、藤、藍など日本の色の名前から取っています。</p>')
-  + sec('特徴', '<div class="cards">'
+  + sec('特徴', '<div class="cards two">'
         '<div class="tile"><h3>枠も影も使わない</h3><p>カードやリストは、面の色の差だけで区切ります。枠を持つのは入力欄だけです。</p></div>'
         '<div class="tile"><h3>9色から選べる</h3><p>アクセントの色を変えても、文字の読みやすさは同じ基準を守ります。</p></div>'
-        '<div class="tile"><h3>CSSだけで使える</h3><p>トークンと部品は1つのCSSファイルで、URLから読み込めます。ビルドや JavaScript のライブラリは要りません。</p></div></div>')
-  + sec('このサイトの構成', '<ul class="site-map">'
-        '<li><a href="#start"><span class="sm-text"><b>使い始める</b><span>CSSの読み込みと、色の決め方</span></span>' + icon('chevron-right', 'go') + '</a></li>'
-        '<li><a href="#integrate"><span class="sm-text"><b>組み込み方と使用例</b><span>既定の色の決め方、利用者が色を変える場所、パレットごとの使用例</span></span>' + icon('chevron-right', 'go') + '</a></li>'
-        '<li><a href="#with-ai"><span class="sm-text"><b>AI と使う</b><span>Claude Code などに Kasane のルールを渡す方法</span></span>' + icon('chevron-right', 'go') + '</a></li>'
-        '<li><a href="#principles"><span class="sm-text"><b>原則</b><span>設計の考え方、アクセシビリティ、パフォーマンス、文章の書き方</span></span>' + icon('chevron-right', 'go') + '</a></li>'
-        '<li><a href="#color"><span class="sm-text"><b>スタイル</b><span>カラー、タイポグラフィ、角丸と余白、レイアウト、アイコン、動き</span></span>' + icon('chevron-right', 'go') + '</a></li>'
-        '<li><a href="#button"><span class="sm-text"><b>コンポーネント</b><span>部品の見本とサンプルコード</span></span>' + icon('chevron-right', 'go') + '</a></li>'
-        '</ul>'))
+        '<div class="tile"><h3>CSSだけで使える</h3><p>トークンと部品は1つのCSSファイルで、URLから読み込めます。ビルドや JavaScript のライブラリは要りません。</p></div>'
+        '<div class="tile"><h3>AI だけでも品質を保てる</h3><p>自動チェックを充実させているので、AI だけでコーディングしても十分な品質を保てます。CSS と HTML のルール、画像の画質、Lighthouse の点数を機械で確かめ、見つかった問題は AI が自分で直します。<a href="#with-ai">AI と使う</a></p></div></div>')
+  + sec('このサイトの構成', '<ul class="site-map">' + ''.join(
+        '<li><a href="#%s"><span class="sm-text"><b>%s</b><span>%s</span></span>%s</a></li>' % (pid, label, SITEMAP_DESC[pid], icon('chevron-right', 'go'))
+        for pid, label in SITEMAP) + '</ul>'))
 
 page('start', 'CSSを読み込み、<code>&lt;html&gt;</code> に色の名前を付けるだけで使えます。ファイルはURLで配信しているので、手元に置く必要はありません。',
   sec('1. CSSと書体を読み込む', '<p><code>kasane.css</code> に、色のトークン(9色)、書体・角丸・余白のトークン、部品のスタイルがすべて入っています。軽い縮小版の <code>kasane.min.css</code> もあります。</p>'
