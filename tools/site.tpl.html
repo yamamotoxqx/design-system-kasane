@@ -279,7 +279,8 @@ td svg.lucide{width:20px;height:20px;vertical-align:middle}
 .hero-art{position:absolute;right:-30px;top:-30px;width:260px;height:260px}
 .hero-art i{position:absolute;border-radius:36px;width:150px;height:150px}
 .hero-art i:nth-child(1){right:0;top:0;background:var(--accent)}
-.hero-art i:nth-child(2){right:60px;top:60px;background:var(--accent-soft)}
+/* Between the accent and the hero surface, so the three squares always differ (accent-soft can match surface-3, e.g. sumi in dark) */
+.hero-art i:nth-child(2){right:60px;top:60px;background:var(--accent-soft);background:color-mix(in oklab,var(--accent) 45%,var(--surface-2))}
 .hero-art i:nth-child(3){right:120px;top:120px;background:var(--surface-3)}
 /* The three squares stack one by one when the home page appears (Kasane = layering) */
 @keyframes hero-stack{from{opacity:0;transform:translate(36px,-36px) scale(.92)}}
