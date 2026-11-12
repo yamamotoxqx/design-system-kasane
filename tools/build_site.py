@@ -400,7 +400,7 @@ page('color', '色はすべてトークンで指定します。アクセント�
   + sec('面の重なり', '<p>内側に入るほど、面の色を一段ずつ変えます。</p>'
       '<div class="layers L0"><span>--bg</span><div class="layers L1"><span>--surface</span><div class="layers L2"><span>--surface-2</span><div class="layers L3"><span>--surface-3</span></div></div></div></div>')
   + sec('トークンの一覧', '<p>値は、いま表示しているパレットとテーマのものです。</p>'
-      + table(['トークン', '用途', 'いまの値'], [['<code>%s</code>' % k, d, '<span class="sw"><i style="background:var(%s)"></i><span data-token="%s"></span></span>' % (k, k)] for k, d in TOKENS]))
+      + table(['トークン', '用途', 'いまの値'], [['<code>%s</code>' % k, d, '<span class="sw"><i style="background:var(%s)"></i><span data-token="%s">%s</span></span>' % (k, k, PAL[0]['light'][k])] for k, d in TOKENS]))
   + sec('アクセントの使い分け', '<p>アクセントには、塗り用と文字用の2つのトークンがあります。黄色や水色のような明るい色は、そのまま文字にすると読めないためです。</p>'
       + code('CSS', '.button-primary { background: var(--accent); color: var(--on-accent); }\n.link           { color: var(--accent-ink); }\n.highlight      { background: var(--accent-soft); color: var(--accent-ink); }'))
   + sec('状態の色', '<p>成功は緑、エラーは赤、情報は落ち着いた青灰色で、どのパレットでも同じです。文字の色は、対応する <code>-soft</code> の面に重ねて使い、アイコンを必ず添えます。</p>'
