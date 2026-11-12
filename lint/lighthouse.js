@@ -37,6 +37,16 @@ function runOnce(bin, url, preset) {
   });
 }
 
+// Chrome sometimes fails to start on CI machines; try again a couple of times before giving up.
+async function withRetry(fn, tries = 3) {
+  for (let i = 1; ; i++) {
+    try { return await fn(); } catch (e) {
+      if (i >= tries || !/debugging port|ECONNREFUSED|Chrome|launch/i.test(e.message)) throw e;
+      await new Promise((r) => setTimeout(r, 2000 * i));
+    }
+  }
+}
+
 const median = (xs) => { const s = [...xs].sort((a, b) => a - b); return s[Math.floor(s.length / 2)]; };
 
 /** Run Lighthouse for each URL and preset. Returns results with scores (0-100) and failing audits. */
@@ -47,7 +57,7 @@ export async function audit(urls, { presets = ['mobile', 'desktop'], runs = 1, m
   for (const url of urls) {
     for (const preset of presets) {
       const reports = [];
-      for (let i = 0; i < runs; i++) reports.push(await runOnce(bin, url, preset));
+      for (let i = 0; i < runs; i++) reports.push(await withRetry(() => runOnce(bin, url, preset)));
       // use the run with the median performance score; other categories rarely vary
       const perf = reports.map((r) => r.categories.performance.score);
       const lhr = reports[perf.indexOf(median(perf))];
