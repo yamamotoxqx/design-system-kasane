@@ -316,9 +316,14 @@ open(os.path.join(ROOT, 'llms.txt'), 'w', encoding='utf-8').write(
     '- [Source](https://github.com/yamamotoxqx/design-system-kasane): GitHub repository (MIT License)\n' % (VERSION, BASE, VERSION, BASE, BASE, BASE))
 
 # ---------------------------------------------------------------- helpers
+CODE_FOLD = 14   # longer code starts folded, with a button to show all of it
 def code(lang, src):
-    return ('<div class="code"><div class="code-head"><span>%s</span><button class="copy" type="button">コピー</button></div>'
-            '<pre><code>%s</code></pre></div>') % (lang, esc(src.strip('\n')))
+    src = src.strip('\n'); n = src.count('\n') + 1
+    if n <= CODE_FOLD:
+        return ('<div class="code"><div class="code-head"><span>%s</span><button class="copy" type="button">コピー</button></div>'
+                '<pre><code>%s</code></pre></div>') % (lang, esc(src))
+    return ('<div class="code long"><div class="code-head"><span>%s <small>%d行</small></span><button class="copy" type="button">コピー</button></div>'
+            '<pre><code>%s</code></pre><button class="code-more" type="button" aria-expanded="false">すべて表示</button></div>') % (lang, n, esc(src))
 
 def ex(src, stack=False):
     """Live demo + the same HTML as sample code."""
@@ -327,6 +332,12 @@ def ex(src, stack=False):
 def dd(do_html, do_text, dont_html, dont_text):
     return ('<div class="dd"><figure class="dd-item dd-do"><div class="dd-demo">%s</div><figcaption class="dd-cap"><span class="dd-label">%sDo</span>%s</figcaption></figure>'
             '<figure class="dd-item dd-dont"><div class="dd-demo">%s</div><figcaption class="dd-cap"><span class="dd-label">%sDon\'t</span>%s</figcaption></figure></div>') % (do_html, I_OK, do_text, dont_html, I_NG, dont_text)
+
+def palette_src(name='accent', compact=False, legend='テーマカラー', selected='yamabuki'):
+    """The colour picker as readable sample code, all 9 palettes."""
+    items = ''.join('    <label class="k-palette-item">\n      <input type="radio" name="%s" value="%s"%s>\n      <span class="k-palette-swatch" data-swatch="%s"></span>\n      <span class="k-palette-name">%s</span>\n    </label>\n'
+                    % (name, p['id'], ' checked' if p['id'] == selected else '', p['id'], p['name']) for p in PAL)
+    return '<fieldset class="k-palette%s">\n  <legend>%s</legend>\n  <div class="k-palette-items">\n%s  </div>\n</fieldset>' % (' k-palette-compact' if compact else '', legend, items)
 
 def palette_html(name='accent', compact=False, legend='テーマカラー', selected='yamabuki', ids=None):
     items = ''.join('<label class="k-palette-item"><input type="radio" name="%s" value="%s"%s><span class="k-palette-swatch" data-swatch="%s"></span><span class="k-palette-name">%s</span></label>'
@@ -453,11 +464,24 @@ TOKENS = [('--bg', 'ページの背景'), ('--surface', 'カード、パネル')
           ('--accent-soft', '薄いアクセントの面'), ('--accent-ink', 'アクセント色の文字、リンク'), ('--focus', 'フォーカスのリング'),
           ('--ok', '成功の文字'), ('--ok-soft', '成功の面'), ('--danger', 'エラー・削除の文字'), ('--danger-soft', 'エラー・削除の面'),
           ('--info', '情報の文字'), ('--info-soft', '情報の面')]
+def _lv(name, tok, inner=''):
+    return ('<div class="lv" style="background:var(%s)"><div class="lv-h"><b>%s <code>%s</code></b><span class="lv-val" data-token="%s">%s</span></div>%s</div>'
+            % (tok, name, tok[2:], tok, PAL[0]['light'][tok], inner))
+def _chip(name, tok):
+    return ('<div class="lv-chip"><i style="background:var(%s)"></i><b>%s <code>%s</code></b><span class="lv-val" data-token="%s">%s</span></div>'
+            % (tok, name, tok[2:], tok, PAL[0]['light'][tok]))
+LAYER_VIZ = ('<div class="layer-viz"><figure class="lv-panel"><figcaption>面の重なり</figcaption>'
+             + _lv('背景', '--bg', _lv('カード', '--surface', _lv('中の面', '--surface-2', _lv('押したとき', '--surface-3'))))
+             + '<p class="lv-note">ページ → カード → カードの中の行 → 押したとき、の順に一段ずつ変わります。</p></figure>'
+             '<figure class="lv-panel"><figcaption>文字とアクセント</figcaption><div class="lv-chips">'
+             + ''.join(_chip(n, t) for n, t in [('文字', '--ink'), ('補足', '--muted'), ('アクセント', '--accent'), ('アクセント文字', '--accent-ink'),
+                                                ('アクセント薄', '--accent-soft'), ('入力欄の枠', '--line')])
+             + '</div></figure></div>')
+
 page('color', '色はすべてトークンで指定します。アクセントは9色のパレットから選べて、ライトとダークの値はパレットごとに決まっています。',
   sec('パレット', '<p>押すと、このサイト全体の色が切り替わります。<code>data-accent</code> には、下の英字の名前を書きます。</p><div class="pals">' + pal_btns + '</div>'
       + code('HTML', '<html data-accent="fuji">'))
-  + sec('面の重なり', '<p>内側に入るほど、面の色を一段ずつ変えます。</p>'
-      '<div class="layers L0"><span>--bg</span><div class="layers L1"><span>--surface</span><div class="layers L2"><span>--surface-2</span><div class="layers L3"><span>--surface-3</span></div></div></div></div>')
+  + sec('面の重なり', '<p>Kasane は枠や影を使わず、面の色の差で区切ります。内側に入るほど、面の色を一段ずつ変えます。下の値は、いま表示しているパレットとテーマのものです。</p>' + LAYER_VIZ)
   + sec('トークンの一覧', '<p>値は、いま表示しているパレットとテーマのものです。</p>'
       + table_fixed(['32%', '43%', '25%'], ['トークン', '用途', 'いまの値'], [['<code>%s</code>' % k, d, '<span class="sw"><i style="background:var(%s)"></i><span data-token="%s">%s</span></span>' % (k, k, PAL[0]['light'][k])] for k, d in TOKENS]))
   + sec('アクセントの使い分け', '<p>アクセントには、塗り用と文字用の2つのトークンがあります。黄色や水色のような明るい色は、そのまま文字にすると読めないためです。</p>'
@@ -515,7 +539,8 @@ page('input', '文字の入力欄、チェックボックス、スイッチ、�
         + ex('<label class="k-switch">\n  <input type="checkbox" checked>\n  <span class="k-switch-track" aria-hidden="true"></span>\n  自動で保存する\n</label>'))
   + sec('色の選択', '<p>利用者がアクセントの色を選ぶための部品です。中身はラジオボタンなので、キーボードの矢印キーでも選べます。色の丸だけを並べる <code>.k-palette-compact</code> もあります。置き場所と保存の仕方は <a href="#integrate">組み込み方と使用例</a> にあります。押すと、このサイトの色も変わります。</p>'
         + '<div class="ex"><div class="ex-demo ex-stack"><div class="wide">' + palette_html(name='accent-input') + '</div></div>'
-        + code('HTML', '<fieldset class="k-palette">  <!-- 丸だけにするときは k-palette-compact を足す -->\n  <legend>テーマカラー</legend>\n  <div class="k-palette-items">\n    <label class="k-palette-item">\n      <input type="radio" name="accent" value="yamabuki" checked>\n      <span class="k-palette-swatch" data-swatch="yamabuki"></span>\n      <span class="k-palette-name">山吹</span>\n    </label>\n    <!-- 残りの8色も同じ形で並べる -->\n  </div>\n</fieldset>') + '</div>')
+        + code('HTML', palette_src()) + '</div>'
+        + '<p>色の丸だけを並べるときは、<code>k-palette</code> に <code>k-palette-compact</code> を足します。名前は見えなくなりますが、読み上げのために <code>k-palette-name</code> は残します。</p>')
   + sec('CSS', code('CSS', CSS['input'] + '\n\n' + CSS['palette'])))
 
 page('card', '情報のまとまりを作る面です。枠線も影も使わず、面の色で区切ります。',

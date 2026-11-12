@@ -57,6 +57,7 @@ page('with-ai', 'Claude Code や Codex などの AI にUIを作ってもらう�
 
 page('updates', 'Kasane の変更の記録です。',
   sec('2026年11月', '<ul class="log">'
+      '<li><time class="k-num">11.12</time><div><b>面の重なりを図で説明、長いコードをたためるように</b><span>カラーのページで、面と文字の色をいまの値つきで見られます。長いサンプルコードは最初たたんで表示し、「すべて表示」で全文を開けます。</span></div></li>'
       '<li><time class="k-num">11.12</time><div><b>ページごとのURLとファビコンを用意</b><span>各ページを /color/ のような別のURLで開けるようにし、検索エンジン向けの情報(説明文、共有用の画像、サイトマップ)を加えました。タブのアイコンは選んだ色に変わります。</span></div></li>'
       '<li><time class="k-num">11.12</time><div><b>組み込み方と使用例のページ、色の選択の部品を追加</b><span>製品では既定の色を決めておき、利用者は設定ページかページ下部で色を変えます。ライト・ダークは端末の設定に従います。</span></div></li>'
       '<li><time class="k-num">11.12</time><div><b>仕様書の英語版を追加</b><span>kasane.en.md は日本語版と同じ内容で、AI が読むときのトークンが少なく済みます。</span></div></li>'
@@ -268,9 +269,7 @@ def _demo(acc, title, why, head, rows, cta):
             '<div class="inline start"><button class="k-btn k-btn-primary" type="button" tabindex="-1">%s</button><a class="demo-link" tabindex="-1">詳しく見る</a></div></div>'
             '<p class="show-why">%s</p></figure>' % (acc, title, p['name'], acc, head, lis, cta, why))
 
-PALETTE_SRC = '<fieldset class="k-palette">\n  <legend>テーマカラー</legend>\n  <div class="k-palette-items">\n' + ''.join(
-    '    <label class="k-palette-item">\n      <input type="radio" name="accent" value="%s"%s>\n      <span class="k-palette-swatch" data-swatch="%s"></span>\n      <span class="k-palette-name">%s</span>\n    </label>\n'
-    % (p['id'], ' checked' if p['id'] == 'yamabuki' else '', p['id'], p['name']) for p in PAL if p['id'] in ('yamabuki', 'ai')) + '    <!-- 9色すべてを同じ形で並べる。value はパレットの名前 -->\n  </div>\n</fieldset>'
+PALETTE_SRC = palette_src()
 
 PICKER_JS = '''// 設定ページやページ下部の色の選択(.k-palette)を、<html data-accent> と保存につなぐ
 const root = document.documentElement;
@@ -305,7 +304,7 @@ page('integrate', 'Kasane は、色をデザイナーが決めることも、利
       + code('HTML', PALETTE_SRC) + '</div>')
   + sec('ページ下部に置く', '<p>設定ページがないときは、ページ下部に小さく置きます。色の丸だけを並べ、名前は読み上げ用に残します。</p>'
       + '<div class="ex"><div class="ex-demo ex-stack"><div class="demo-footer wide"><span>© 2026 サンプル</span>' + palette_html(name='accent-footer', compact=True, legend='テーマカラー') + '</div></div>'
-      + code('HTML', '<fieldset class="k-palette k-palette-compact">\n  <legend>テーマカラー</legend>\n  <div class="k-palette-items">…設定ページと同じ…</div>\n</fieldset>') + '</div>')
+      + code('HTML', palette_src(compact=True)) + '</div>')
   + sec('選んだ色を保存する', '<p>選択を <code>&lt;html data-accent&gt;</code> と保存につなぐ JavaScript です。設定ページでもページ下部でも同じです。</p>'
       + code('JavaScript', PICKER_JS))
   + sec('使い方', dd('<div class="stack" style="font-size:14px"><span>開いたらすぐ既定の色</span><span class="k-badge k-badge-accent">設定 › 表示 › テーマカラー</span></div>', '既定の色ですぐに始め、変えたい人は設定から変えられます。',

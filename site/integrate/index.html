@@ -199,8 +199,25 @@ td code{background:var(--surface-3)}
 .pal[aria-pressed="true"] small{color:inherit;opacity:.75}
 
 /* Style pages */
-.layers{border-radius:var(--r-md);padding:12px 14px 14px;display:flex;flex-direction:column;gap:8px;font-family:var(--font-mono);font-size:13px}
-.L0{background:var(--bg)}.L1{background:var(--surface)}.L2{background:var(--surface-2)}.L3{background:var(--surface-3)}
+.layer-viz{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px;align-items:start}
+.lv-panel{margin:0;display:flex;flex-direction:column;gap:12px}
+.lv-panel figcaption{font-size:16px;font-weight:800}
+.lv{border-radius:var(--r-lg);padding:14px 14px 16px;display:flex;flex-direction:column;gap:12px;color:var(--ink)}
+.lv .lv{border-radius:var(--r-md)}
+.lv-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;padding:0 4px;font-size:14px}
+.lv-h code,.lv-chip code{background:none;padding:0;font-family:var(--font-body);font-weight:700;font-size:inherit}
+.lv-val{font-family:var(--font-num);font-variant-numeric:tabular-nums;font-size:13px;color:var(--muted);text-transform:uppercase}
+.lv .lv .lv .lv .lv-val{color:var(--ink)}
+.lv-note{margin:0;font-size:14px;color:var(--muted)}
+.lv-chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.lv-chip{background:var(--surface-2);border-radius:var(--r-md);padding:10px 10px 12px;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.lv-chip i{display:block;height:44px;border-radius:12px;margin-bottom:6px}
+/* Long code starts folded */
+.code.long pre{max-height:calc(13.6em + 24px);overflow-y:hidden;-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)}
+.code.long.open pre{max-height:none;-webkit-mask-image:none;mask-image:none}
+.code-head small{font-weight:400;margin-left:4px}
+.code-more{display:block;margin:0 auto 10px;border:0;background:var(--surface-3);color:var(--ink);border-radius:999px;min-height:36px;padding:0 18px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.code-more:hover{background:var(--accent-soft);color:var(--accent-ink)}
 .type-list{display:flex;flex-direction:column;gap:6px}
 .type-row{display:grid;grid-template-columns:130px 1fr auto;gap:8px 16px;align-items:baseline;background:var(--surface-2);border-radius:var(--r-md);padding:12px 16px}
 .type-row code{background:var(--surface-3);justify-self:start}
@@ -402,7 +419,7 @@ html[data-first-visit] .modal,.modal.open{display:grid}
     } catch (e) {}
   &lt;/script&gt;
   &lt;link rel=&quot;stylesheet&quot; href=&quot;https://kasane.y-n0.de/v1/kasane.min.css&quot;&gt;
-&lt;/head&gt;</code></pre></div><div class="tbl"><table><thead><tr><th>こんなとき</th><th>選ぶパレット</th></tr></thead><tbody><tr><td>ブランドの色がある</td><td>その色相に一番近いパレット</td></tr><tr><td>信頼感、落ち着き</td><td>藍、空</td></tr><tr><td>明るさ、親しみやすさ</td><td>山吹、橘、萌黄</td></tr><tr><td>やさしさ、交流</td><td>紅梅、藤</td></tr><tr><td>情報に集中してほしい、業務の画面</td><td>墨</td></tr></tbody></table></div></section><section class="sec" id="integrate-s4"><h2>設定ページに置く</h2><p>設定ページがあるなら、そこに色の選択を置きます。色の名前も見えるので、選びやすくなります。下の例を押すと、このサイトの色も変わります。</p><div class="ex"><div class="ex-demo ex-stack"><div class="k-card wide"><h3 class="k-card-title">表示の設定</h3><fieldset class="k-palette"><legend>テーマカラー</legend><div class="k-palette-items"><label class="k-palette-item"><input type="radio" name="accent-settings" value="yamabuki" checked><span class="k-palette-swatch" data-swatch="yamabuki"></span><span class="k-palette-name">山吹</span></label><label class="k-palette-item"><input type="radio" name="accent-settings" value="tachibana"><span class="k-palette-swatch" data-swatch="tachibana"></span><span class="k-palette-name">橘</span></label><label class="k-palette-item"><input type="radio" name="accent-settings" value="kobai"><span class="k-palette-swatch" data-swatch="kobai"></span><span class="k-palette-name">紅梅</span></label><label class="k-palette-item"><input type="radio" name="accent-settings" value="fuji"><span class="k-palette-swatch" data-swatch="fuji"></span><span class="k-palette-name">藤</span></label><label class="k-palette-item"><input type="radio" name="accent-settings" value="ai"><span class="k-palette-swatch" data-swatch="ai"></span><span class="k-palette-name">藍</span></label><label class="k-palette-item"><input type="radio" name="accent-settings" value="sora"><span class="k-palette-swatch" data-swatch="sora"></span><span class="k-palette-name">空</span></label><label class="k-palette-item"><input type="radio" name="accent-settings" value="seiji"><span class="k-palette-swatch" data-swatch="seiji"></span><span class="k-palette-name">青磁</span></label><label class="k-palette-item"><input type="radio" name="accent-settings" value="moegi"><span class="k-palette-swatch" data-swatch="moegi"></span><span class="k-palette-name">萌黄</span></label><label class="k-palette-item"><input type="radio" name="accent-settings" value="sumi"><span class="k-palette-swatch" data-swatch="sumi"></span><span class="k-palette-name">墨</span></label></div></fieldset></div></div><div class="code"><div class="code-head"><span>HTML</span><button class="copy" type="button">コピー</button></div><pre><code>&lt;fieldset class=&quot;k-palette&quot;&gt;
+&lt;/head&gt;</code></pre></div><div class="tbl"><table><thead><tr><th>こんなとき</th><th>選ぶパレット</th></tr></thead><tbody><tr><td>ブランドの色がある</td><td>その色相に一番近いパレット</td></tr><tr><td>信頼感、落ち着き</td><td>藍、空</td></tr><tr><td>明るさ、親しみやすさ</td><td>山吹、橘、萌黄</td></tr><tr><td>やさしさ、交流</td><td>紅梅、藤</td></tr><tr><td>情報に集中してほしい、業務の画面</td><td>墨</td></tr></tbody></table></div></section><section class="sec" id="integrate-s4"><h2>設定ページに置く</h2><p>設定ページがあるなら、そこに色の選択を置きます。色の名前も見えるので、選びやすくなります。下の例を押すと、このサイトの色も変わります。</p><div class="ex"><div class="ex-demo ex-stack"><div class="k-card wide"><h3 class="k-card-title">表示の設定</h3><fieldset class="k-palette"><legend>テーマカラー</legend><div class="k-palette-items"><label class="k-palette-item"><input type="radio" name="accent-settings" value="yamabuki" checked><span class="k-palette-swatch" data-swatch="yamabuki"></span><span class="k-palette-name">山吹</span></label><label class="k-palette-item"><input type="radio" name="accent-settings" value="tachibana"><span class="k-palette-swatch" data-swatch="tachibana"></span><span class="k-palette-name">橘</span></label><label class="k-palette-item"><input type="radio" name="accent-settings" value="kobai"><span class="k-palette-swatch" data-swatch="kobai"></span><span class="k-palette-name">紅梅</span></label><label class="k-palette-item"><input type="radio" name="accent-settings" value="fuji"><span class="k-palette-swatch" data-swatch="fuji"></span><span class="k-palette-name">藤</span></label><label class="k-palette-item"><input type="radio" name="accent-settings" value="ai"><span class="k-palette-swatch" data-swatch="ai"></span><span class="k-palette-name">藍</span></label><label class="k-palette-item"><input type="radio" name="accent-settings" value="sora"><span class="k-palette-swatch" data-swatch="sora"></span><span class="k-palette-name">空</span></label><label class="k-palette-item"><input type="radio" name="accent-settings" value="seiji"><span class="k-palette-swatch" data-swatch="seiji"></span><span class="k-palette-name">青磁</span></label><label class="k-palette-item"><input type="radio" name="accent-settings" value="moegi"><span class="k-palette-swatch" data-swatch="moegi"></span><span class="k-palette-name">萌黄</span></label><label class="k-palette-item"><input type="radio" name="accent-settings" value="sumi"><span class="k-palette-swatch" data-swatch="sumi"></span><span class="k-palette-name">墨</span></label></div></fieldset></div></div><div class="code long"><div class="code-head"><span>HTML <small>50行</small></span><button class="copy" type="button">コピー</button></div><pre><code>&lt;fieldset class=&quot;k-palette&quot;&gt;
   &lt;legend&gt;テーマカラー&lt;/legend&gt;
   &lt;div class=&quot;k-palette-items&quot;&gt;
     &lt;label class=&quot;k-palette-item&quot;&gt;
@@ -411,16 +428,96 @@ html[data-first-visit] .modal,.modal.open{display:grid}
       &lt;span class=&quot;k-palette-name&quot;&gt;山吹&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class=&quot;k-palette-item&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;tachibana&quot;&gt;
+      &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;tachibana&quot;&gt;&lt;/span&gt;
+      &lt;span class=&quot;k-palette-name&quot;&gt;橘&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class=&quot;k-palette-item&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;kobai&quot;&gt;
+      &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;kobai&quot;&gt;&lt;/span&gt;
+      &lt;span class=&quot;k-palette-name&quot;&gt;紅梅&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class=&quot;k-palette-item&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;fuji&quot;&gt;
+      &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;fuji&quot;&gt;&lt;/span&gt;
+      &lt;span class=&quot;k-palette-name&quot;&gt;藤&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class=&quot;k-palette-item&quot;&gt;
       &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;ai&quot;&gt;
       &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;ai&quot;&gt;&lt;/span&gt;
       &lt;span class=&quot;k-palette-name&quot;&gt;藍&lt;/span&gt;
     &lt;/label&gt;
-    &lt;!-- 9色すべてを同じ形で並べる。value はパレットの名前 --&gt;
+    &lt;label class=&quot;k-palette-item&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;sora&quot;&gt;
+      &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;sora&quot;&gt;&lt;/span&gt;
+      &lt;span class=&quot;k-palette-name&quot;&gt;空&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class=&quot;k-palette-item&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;seiji&quot;&gt;
+      &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;seiji&quot;&gt;&lt;/span&gt;
+      &lt;span class=&quot;k-palette-name&quot;&gt;青磁&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class=&quot;k-palette-item&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;moegi&quot;&gt;
+      &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;moegi&quot;&gt;&lt;/span&gt;
+      &lt;span class=&quot;k-palette-name&quot;&gt;萌黄&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class=&quot;k-palette-item&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;sumi&quot;&gt;
+      &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;sumi&quot;&gt;&lt;/span&gt;
+      &lt;span class=&quot;k-palette-name&quot;&gt;墨&lt;/span&gt;
+    &lt;/label&gt;
   &lt;/div&gt;
-&lt;/fieldset&gt;</code></pre></div></div></section><section class="sec" id="integrate-s5"><h2>ページ下部に置く</h2><p>設定ページがないときは、ページ下部に小さく置きます。色の丸だけを並べ、名前は読み上げ用に残します。</p><div class="ex"><div class="ex-demo ex-stack"><div class="demo-footer wide"><span>© 2026 サンプル</span><fieldset class="k-palette k-palette-compact"><legend>テーマカラー</legend><div class="k-palette-items"><label class="k-palette-item"><input type="radio" name="accent-footer" value="yamabuki" checked><span class="k-palette-swatch" data-swatch="yamabuki"></span><span class="k-palette-name">山吹</span></label><label class="k-palette-item"><input type="radio" name="accent-footer" value="tachibana"><span class="k-palette-swatch" data-swatch="tachibana"></span><span class="k-palette-name">橘</span></label><label class="k-palette-item"><input type="radio" name="accent-footer" value="kobai"><span class="k-palette-swatch" data-swatch="kobai"></span><span class="k-palette-name">紅梅</span></label><label class="k-palette-item"><input type="radio" name="accent-footer" value="fuji"><span class="k-palette-swatch" data-swatch="fuji"></span><span class="k-palette-name">藤</span></label><label class="k-palette-item"><input type="radio" name="accent-footer" value="ai"><span class="k-palette-swatch" data-swatch="ai"></span><span class="k-palette-name">藍</span></label><label class="k-palette-item"><input type="radio" name="accent-footer" value="sora"><span class="k-palette-swatch" data-swatch="sora"></span><span class="k-palette-name">空</span></label><label class="k-palette-item"><input type="radio" name="accent-footer" value="seiji"><span class="k-palette-swatch" data-swatch="seiji"></span><span class="k-palette-name">青磁</span></label><label class="k-palette-item"><input type="radio" name="accent-footer" value="moegi"><span class="k-palette-swatch" data-swatch="moegi"></span><span class="k-palette-name">萌黄</span></label><label class="k-palette-item"><input type="radio" name="accent-footer" value="sumi"><span class="k-palette-swatch" data-swatch="sumi"></span><span class="k-palette-name">墨</span></label></div></fieldset></div></div><div class="code"><div class="code-head"><span>HTML</span><button class="copy" type="button">コピー</button></div><pre><code>&lt;fieldset class=&quot;k-palette k-palette-compact&quot;&gt;
+&lt;/fieldset&gt;</code></pre><button class="code-more" type="button" aria-expanded="false">すべて表示</button></div></div></section><section class="sec" id="integrate-s5"><h2>ページ下部に置く</h2><p>設定ページがないときは、ページ下部に小さく置きます。色の丸だけを並べ、名前は読み上げ用に残します。</p><div class="ex"><div class="ex-demo ex-stack"><div class="demo-footer wide"><span>© 2026 サンプル</span><fieldset class="k-palette k-palette-compact"><legend>テーマカラー</legend><div class="k-palette-items"><label class="k-palette-item"><input type="radio" name="accent-footer" value="yamabuki" checked><span class="k-palette-swatch" data-swatch="yamabuki"></span><span class="k-palette-name">山吹</span></label><label class="k-palette-item"><input type="radio" name="accent-footer" value="tachibana"><span class="k-palette-swatch" data-swatch="tachibana"></span><span class="k-palette-name">橘</span></label><label class="k-palette-item"><input type="radio" name="accent-footer" value="kobai"><span class="k-palette-swatch" data-swatch="kobai"></span><span class="k-palette-name">紅梅</span></label><label class="k-palette-item"><input type="radio" name="accent-footer" value="fuji"><span class="k-palette-swatch" data-swatch="fuji"></span><span class="k-palette-name">藤</span></label><label class="k-palette-item"><input type="radio" name="accent-footer" value="ai"><span class="k-palette-swatch" data-swatch="ai"></span><span class="k-palette-name">藍</span></label><label class="k-palette-item"><input type="radio" name="accent-footer" value="sora"><span class="k-palette-swatch" data-swatch="sora"></span><span class="k-palette-name">空</span></label><label class="k-palette-item"><input type="radio" name="accent-footer" value="seiji"><span class="k-palette-swatch" data-swatch="seiji"></span><span class="k-palette-name">青磁</span></label><label class="k-palette-item"><input type="radio" name="accent-footer" value="moegi"><span class="k-palette-swatch" data-swatch="moegi"></span><span class="k-palette-name">萌黄</span></label><label class="k-palette-item"><input type="radio" name="accent-footer" value="sumi"><span class="k-palette-swatch" data-swatch="sumi"></span><span class="k-palette-name">墨</span></label></div></fieldset></div></div><div class="code long"><div class="code-head"><span>HTML <small>50行</small></span><button class="copy" type="button">コピー</button></div><pre><code>&lt;fieldset class=&quot;k-palette k-palette-compact&quot;&gt;
   &lt;legend&gt;テーマカラー&lt;/legend&gt;
-  &lt;div class=&quot;k-palette-items&quot;&gt;…設定ページと同じ…&lt;/div&gt;
-&lt;/fieldset&gt;</code></pre></div></div></section><section class="sec" id="integrate-s6"><h2>選んだ色を保存する</h2><p>選択を <code>&lt;html data-accent&gt;</code> と保存につなぐ JavaScript です。設定ページでもページ下部でも同じです。</p><div class="code"><div class="code-head"><span>JavaScript</span><button class="copy" type="button">コピー</button></div><pre><code>// 設定ページやページ下部の色の選択(.k-palette)を、&lt;html data-accent&gt; と保存につなぐ
+  &lt;div class=&quot;k-palette-items&quot;&gt;
+    &lt;label class=&quot;k-palette-item&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;yamabuki&quot; checked&gt;
+      &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;yamabuki&quot;&gt;&lt;/span&gt;
+      &lt;span class=&quot;k-palette-name&quot;&gt;山吹&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class=&quot;k-palette-item&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;tachibana&quot;&gt;
+      &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;tachibana&quot;&gt;&lt;/span&gt;
+      &lt;span class=&quot;k-palette-name&quot;&gt;橘&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class=&quot;k-palette-item&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;kobai&quot;&gt;
+      &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;kobai&quot;&gt;&lt;/span&gt;
+      &lt;span class=&quot;k-palette-name&quot;&gt;紅梅&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class=&quot;k-palette-item&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;fuji&quot;&gt;
+      &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;fuji&quot;&gt;&lt;/span&gt;
+      &lt;span class=&quot;k-palette-name&quot;&gt;藤&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class=&quot;k-palette-item&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;ai&quot;&gt;
+      &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;ai&quot;&gt;&lt;/span&gt;
+      &lt;span class=&quot;k-palette-name&quot;&gt;藍&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class=&quot;k-palette-item&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;sora&quot;&gt;
+      &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;sora&quot;&gt;&lt;/span&gt;
+      &lt;span class=&quot;k-palette-name&quot;&gt;空&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class=&quot;k-palette-item&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;seiji&quot;&gt;
+      &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;seiji&quot;&gt;&lt;/span&gt;
+      &lt;span class=&quot;k-palette-name&quot;&gt;青磁&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class=&quot;k-palette-item&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;moegi&quot;&gt;
+      &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;moegi&quot;&gt;&lt;/span&gt;
+      &lt;span class=&quot;k-palette-name&quot;&gt;萌黄&lt;/span&gt;
+    &lt;/label&gt;
+    &lt;label class=&quot;k-palette-item&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;sumi&quot;&gt;
+      &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;sumi&quot;&gt;&lt;/span&gt;
+      &lt;span class=&quot;k-palette-name&quot;&gt;墨&lt;/span&gt;
+    &lt;/label&gt;
+  &lt;/div&gt;
+&lt;/fieldset&gt;</code></pre><button class="code-more" type="button" aria-expanded="false">すべて表示</button></div></div></section><section class="sec" id="integrate-s6"><h2>選んだ色を保存する</h2><p>選択を <code>&lt;html data-accent&gt;</code> と保存につなぐ JavaScript です。設定ページでもページ下部でも同じです。</p><div class="code"><div class="code-head"><span>JavaScript</span><button class="copy" type="button">コピー</button></div><pre><code>// 設定ページやページ下部の色の選択(.k-palette)を、&lt;html data-accent&gt; と保存につなぐ
 const root = document.documentElement;
 const current = root.dataset.accent || &quot;yamabuki&quot;;
 document.querySelectorAll(&#x27;.k-palette input[name=&quot;accent&quot;]&#x27;).forEach((radio) =&gt; {
@@ -599,6 +696,14 @@ document.querySelectorAll(&#x27;.k-palette input[name=&quot;accent&quot;]&#x27;)
     if(e.target.closest('[data-close-demo]')||e.target===demoDlg)closeDemo();
   });
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeDemo();});
+
+  /* ---------- Fold / unfold long code ---------- */
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.code-more');if(!b)return;
+    var box=b.closest('.code'),open=box.classList.toggle('open');
+    b.setAttribute('aria-expanded',String(open));b.textContent=open?'たたむ':'すべて表示';
+    if(!open&&box.getBoundingClientRect().top<0)box.scrollIntoView({block:'start'});
+  });
 
   /* ---------- Copy buttons ---------- */
   document.addEventListener('click',function(e){

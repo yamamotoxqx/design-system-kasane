@@ -199,8 +199,25 @@ td code{background:var(--surface-3)}
 .pal[aria-pressed="true"] small{color:inherit;opacity:.75}
 
 /* Style pages */
-.layers{border-radius:var(--r-md);padding:12px 14px 14px;display:flex;flex-direction:column;gap:8px;font-family:var(--font-mono);font-size:13px}
-.L0{background:var(--bg)}.L1{background:var(--surface)}.L2{background:var(--surface-2)}.L3{background:var(--surface-3)}
+.layer-viz{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px;align-items:start}
+.lv-panel{margin:0;display:flex;flex-direction:column;gap:12px}
+.lv-panel figcaption{font-size:16px;font-weight:800}
+.lv{border-radius:var(--r-lg);padding:14px 14px 16px;display:flex;flex-direction:column;gap:12px;color:var(--ink)}
+.lv .lv{border-radius:var(--r-md)}
+.lv-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;padding:0 4px;font-size:14px}
+.lv-h code,.lv-chip code{background:none;padding:0;font-family:var(--font-body);font-weight:700;font-size:inherit}
+.lv-val{font-family:var(--font-num);font-variant-numeric:tabular-nums;font-size:13px;color:var(--muted);text-transform:uppercase}
+.lv .lv .lv .lv .lv-val{color:var(--ink)}
+.lv-note{margin:0;font-size:14px;color:var(--muted)}
+.lv-chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.lv-chip{background:var(--surface-2);border-radius:var(--r-md);padding:10px 10px 12px;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.lv-chip i{display:block;height:44px;border-radius:12px;margin-bottom:6px}
+/* Long code starts folded */
+.code.long pre{max-height:calc(13.6em + 24px);overflow-y:hidden;-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)}
+.code.long.open pre{max-height:none;-webkit-mask-image:none;mask-image:none}
+.code-head small{font-weight:400;margin-left:4px}
+.code-more{display:block;margin:0 auto 10px;border:0;background:var(--surface-3);color:var(--ink);border-radius:999px;min-height:36px;padding:0 18px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.code-more:hover{background:var(--accent-soft);color:var(--accent-ink)}
 .type-list{display:flex;flex-direction:column;gap:6px}
 .type-row{display:grid;grid-template-columns:130px 1fr auto;gap:8px 16px;align-items:baseline;background:var(--surface-2);border-radius:var(--r-md);padding:12px 16px}
 .type-row code{background:var(--surface-3);justify-self:start}
@@ -405,7 +422,7 @@ html[data-first-visit] .modal,.modal.open{display:grid}
 <button class="k-btn" type="button" disabled>使えません</button></div><div class="code"><div class="code-head"><span>HTML</span><button class="copy" type="button">コピー</button></div><pre><code>&lt;button class=&quot;k-btn k-btn-primary k-btn-sm&quot; type=&quot;button&quot;&gt;小さいボタン&lt;/button&gt;
 &lt;button class=&quot;k-btn k-btn-primary&quot; type=&quot;button&quot;&gt;標準のボタン&lt;/button&gt;
 &lt;button class=&quot;k-btn k-btn-primary k-btn-lg&quot; type=&quot;button&quot;&gt;大きいボタン&lt;/button&gt;
-&lt;button class=&quot;k-btn&quot; type=&quot;button&quot; disabled&gt;使えません&lt;/button&gt;</code></pre></div></div></section><section class="sec" id="button-s3"><h2>使い方</h2><div class="dd"><figure class="dd-item dd-do"><div class="dd-demo"><div class="inline"><button class="k-btn k-btn-quiet" type="button">キャンセル</button><button class="k-btn k-btn-primary" type="button">保存する</button></div></div><figcaption class="dd-cap"><span class="dd-label"><svg aria-hidden="true" class="lucide lucide-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" ><path d="M20 6 9 17l-5-5" /></svg>Do</span>主ボタンは1つの画面に1つまでにします。</figcaption></figure><figure class="dd-item dd-dont"><div class="dd-demo"><div class="inline"><button class="k-btn k-btn-primary" type="button">キャンセル</button><button class="k-btn k-btn-primary" type="button">保存する</button></div></div><figcaption class="dd-cap"><span class="dd-label"><svg aria-hidden="true" class="lucide lucide-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" ><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>Don't</span>主ボタンを並べません。どちらが主な操作か分からなくなります。</figcaption></figure></div></section><section class="sec" id="button-s4"><h2>CSS</h2><div class="code"><div class="code-head"><span>CSS</span><button class="copy" type="button">コピー</button></div><pre><code>.k-btn {
+&lt;button class=&quot;k-btn&quot; type=&quot;button&quot; disabled&gt;使えません&lt;/button&gt;</code></pre></div></div></section><section class="sec" id="button-s3"><h2>使い方</h2><div class="dd"><figure class="dd-item dd-do"><div class="dd-demo"><div class="inline"><button class="k-btn k-btn-quiet" type="button">キャンセル</button><button class="k-btn k-btn-primary" type="button">保存する</button></div></div><figcaption class="dd-cap"><span class="dd-label"><svg aria-hidden="true" class="lucide lucide-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" ><path d="M20 6 9 17l-5-5" /></svg>Do</span>主ボタンは1つの画面に1つまでにします。</figcaption></figure><figure class="dd-item dd-dont"><div class="dd-demo"><div class="inline"><button class="k-btn k-btn-primary" type="button">キャンセル</button><button class="k-btn k-btn-primary" type="button">保存する</button></div></div><figcaption class="dd-cap"><span class="dd-label"><svg aria-hidden="true" class="lucide lucide-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" ><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>Don't</span>主ボタンを並べません。どちらが主な操作か分からなくなります。</figcaption></figure></div></section><section class="sec" id="button-s4"><h2>CSS</h2><div class="code long"><div class="code-head"><span>CSS <small>20行</small></span><button class="copy" type="button">コピー</button></div><pre><code>.k-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
   min-height: 44px; padding: 0 var(--space-5); border: 0; border-radius: var(--r-full);
   background: var(--surface-2); color: var(--ink);
@@ -424,7 +441,7 @@ html[data-first-visit] .modal,.modal.open{display:grid}
 .k-btn-icon { width: 44px; padding: 0; }
 .k-btn-icon svg { width: 22px; height: 22px; }
 .k-btn[disabled] { opacity: .45; cursor: not-allowed; transform: none; }
-@media (prefers-reduced-motion: reduce) { .k-btn { transition: none; } }</code></pre></div></section><nav class="pager" aria-label="前後のページ"><a class="prev" href="/motion/"><small>前のページ</small>動き</a><a class="next" href="/input/"><small>次のページ</small>入力欄</a></nav></article>
+@media (prefers-reduced-motion: reduce) { .k-btn { transition: none; } }</code></pre><button class="code-more" type="button" aria-expanded="false">すべて表示</button></div></section><nav class="pager" aria-label="前後のページ"><a class="prev" href="/motion/"><small>前のページ</small>動き</a><a class="next" href="/input/"><small>次のページ</small>入力欄</a></nav></article>
   </main>
   <aside class="toc" id="toc"><nav class="toc-page" data-page="button" aria-label="このページの目次"><div class="toc-title">このページの内容</div><button type="button" data-scroll="button-s1">種類</button><button type="button" data-scroll="button-s2">大きさと無効</button><button type="button" data-scroll="button-s3">使い方</button><button type="button" data-scroll="button-s4">CSS</button></nav></aside>
 </div>
@@ -592,6 +609,14 @@ html[data-first-visit] .modal,.modal.open{display:grid}
     if(e.target.closest('[data-close-demo]')||e.target===demoDlg)closeDemo();
   });
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeDemo();});
+
+  /* ---------- Fold / unfold long code ---------- */
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.code-more');if(!b)return;
+    var box=b.closest('.code'),open=box.classList.toggle('open');
+    b.setAttribute('aria-expanded',String(open));b.textContent=open?'たたむ':'すべて表示';
+    if(!open&&box.getBoundingClientRect().top<0)box.scrollIntoView({block:'start'});
+  });
 
   /* ---------- Copy buttons ---------- */
   document.addEventListener('click',function(e){
