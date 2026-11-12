@@ -1,0 +1,15 @@
+// Cloudflare Workers (static assets) that serves https://kasane.y-n0.de
+// Workers Builds runs `npx wrangler deploy`: it builds dist/ with `npm run dist`, then uploads it.
+// Without this file, Cloudflare guesses the folder (it picked site/ and left out v1/ and llms.txt).
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "design-system-kasane",
+  "compatibility_date": "2026-10-01",
+  "build": { "command": "npm run dist" },
+  "assets": {
+    "directory": "./dist",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  "routes": [{ "pattern": "kasane.y-n0.de", "custom_domain": true }]
+}

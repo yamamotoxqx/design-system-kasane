@@ -10,7 +10,7 @@ Kasane デザインシステム本体のリポジトリ。
   - アイコンと共有用の画像(`site/favicon.*`、`apple-touch-icon.png`、`icon-*.png`、`og.png`): `npm run icons`(`tools/icons.py`、Python の Playwright と Pillow が必要)。`npm run build` では作り直さない
   - AI 用の仕様書: `tools/kasane.md.tpl`(日本語)と `tools/kasane.en.md.tpl`(英語版)。**片方を変えたら、もう片方も同じように変える**(`npm test` で見出し・コード・表・クラス・トークンがそろっているかを確かめる)
 - 変更したら `npm run build` → `npm test`。CI も同じことをして、生成物が古いと失敗する。
-- 配信先は https://kasane.y-n0.de(Cloudflare Pages、`npm run dist` → `dist/`)。`main` に push すると配信も更新される。配信先を変えるときは `KASANE_BASE_URL=https://… npm run build`。
+- 配信先は https://kasane.y-n0.de(Cloudflare Workers の静的アセット。設定は `wrangler.jsonc` で、Workers Builds が `npm run dist` → `dist/` を配信する。**配信するフォルダはこのファイルで固定する**。ないと Cloudflare が `site/` を選んで `v1/` が 404 になった)。`main` に push すると配信も更新される。配信先を変えるときは `KASANE_BASE_URL=https://… npm run build`。
 - 自動チェック `kasane-lint` は `lint/`(Stylelint のルール `plugin.js`、HTML のチェック `check.js`、画像の軽量化と SSIM `image.js`、Lighthouse の最低点 `lighthouse.js`)。`lint/data/` はビルドで生成。ルールを変えたら `lint/package.json` の `version` を上げる(配信ファイル名に版が入る)。
 - `v1/fonts/` は `npm run fonts`(`tools/fonts.py`)で作る。LINE Seed JP を字の使われる頻度ごとに 18 グループ × 3 ウェイトに分けたもの(`@font-face` が多すぎるとスマートフォンで重くなるため)。`npm run build` では作り直さない。
 - アイコンは Lucide(`lucide-static`、devDependency)。ドキュメントでは `icon('名前')` で埋め込む。

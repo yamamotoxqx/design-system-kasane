@@ -33,7 +33,8 @@
     "lucide-static": "^1.71.0",
     "sharp": "^0.35.5",
     "ssim.js": "^3.5.0",
-    "stylelint": "^16.10.0"
+    "stylelint": "^16.10.0",
+    "wrangler": "^4.160.1"
   },
   "license": "MIT"
 }

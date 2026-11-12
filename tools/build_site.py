@@ -4,7 +4,7 @@ os.chdir(HERE)
 ROOT = os.path.join(HERE, '..')
 OUT = os.path.join(HERE, '.out')
 VERSION = 'v1'
-# Where v1/ is served from (Cloudflare Pages). Override with KASANE_BASE_URL if it moves.
+# Where v1/ is served from (Cloudflare Workers, see wrangler.jsonc). Override with KASANE_BASE_URL if it moves.
 BASE = os.environ.get('KASANE_BASE_URL', 'https://kasane.y-n0.de').rstrip('/') + '/' + VERSION
 EMBED = '--embed' in sys.argv
 LINT_VER = json.load(open(os.path.join(ROOT, 'lint', 'package.json'), encoding='utf-8'))['version']

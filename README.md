@@ -102,7 +102,7 @@ npm test        # Stylelint・kasane-check のルール、kasane-image、全パ�
 npm run dist && npm run lighthouse   # ドキュメントサイトが Lighthouse の最低点を満たすか
 ```
 
-配信は Cloudflare Pages(ビルドコマンド `npm run dist`、出力ディレクトリ `dist`)で、`main` に push すると更新されます。配信先を変えるときは `KASANE_BASE_URL=https://… npm run build` で作り直します。
+配信は Cloudflare Workers の静的アセット(設定は `wrangler.jsonc`。`npm run dist` で作った `dist/` をそのまま配信)で、`main` に push すると更新されます。配信先を変えるときは `KASANE_BASE_URL=https://… npm run build` で作り直します。
 
 ## ライセンス
 
