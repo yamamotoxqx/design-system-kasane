@@ -6,11 +6,14 @@
 <title>Kasane ドキュメント</title>
 <script>
 /* Apply the saved palette and theme before first paint (no flash). */
-try{var a=localStorage.getItem('kasane-accent'),t=localStorage.getItem('kasane-theme');if(a)document.documentElement.dataset.accent=a;if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}
+try{var a=localStorage.getItem('kasane-accent'),t=localStorage.getItem('kasane-theme');if(a)document.documentElement.dataset.accent=a;else document.documentElement.dataset.firstVisit='';if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}
+/* Show the page named in the hash before first paint. */
+window.KASANE_PAGES=/*@@PAGESEC@@*/;(function(d){var h=location.hash.slice(1);if(!(h in KASANE_PAGES))h='home';d.dataset.page=h;d.dataset.sec=KASANE_PAGES[h];})(document.documentElement);
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
 <!--@@HEADLINKS@@-->
 <style>
 /* ============ 0. LINE Seed JP (subset, embedded for this page) ============ */
@@ -57,12 +60,11 @@ code{font-family:var(--font-mono);font-size:.875em;background:var(--surface-2);b
 
 /* Shell */
 .shell{display:grid;grid-template-columns:var(--side-w) minmax(0,1fr) var(--toc-w);gap:24px;max-width:1360px;margin:0 auto;padding:8px 16px 56px;align-items:start}
-.shell.is-home{grid-template-columns:minmax(0,1fr);max-width:960px}
-.shell.is-home .sidebar,.shell.is-home .toc{display:none}
+html[data-page="home"] .shell{grid-template-columns:minmax(0,1fr);max-width:960px}
+html[data-page="home"] .sidebar,html[data-page="home"] .toc{display:none}
 .sidebar,.toc{position:sticky;top:calc(var(--header-h) + 8px);max-height:calc(100vh - var(--header-h) - 24px);overflow-y:auto}
 .sidebar{display:flex;flex-direction:column;gap:20px;padding:8px 4px}
 .nav-group{display:none;flex-direction:column;gap:2px}
-.nav-group.current{display:flex}
 .nav-title{font-size:12px;font-weight:700;color:var(--muted);padding:0 12px 4px}
 .nav-link{display:flex;align-items:center;min-height:40px;padding:0 12px;border-radius:12px;text-decoration:none;font-size:15px;font-weight:700}
 .nav-link:hover{background:var(--surface-2)}
@@ -70,9 +72,10 @@ code{font-family:var(--font-mono);font-size:.875em;background:var(--surface-2);b
 .drawer-scrim{display:none}
 
 .main{background:var(--surface);border-radius:var(--r-lg);padding:clamp(20px,5vw,48px);min-width:0}
-.page{display:flex;flex-direction:column;gap:48px}
-.page:not([hidden]),.pager{animation:k-enter var(--motion-slow) var(--ease-out)}
-@media (prefers-reduced-motion:reduce){.page:not([hidden]),.pager{animation:none}}
+.page{display:none;flex-direction:column;gap:48px}
+/* Animate only when moving between pages, not on the first load */
+html.navigated .page{animation:k-enter var(--motion-slow) var(--ease-out)}
+@media (prefers-reduced-motion:reduce){html.navigated .page{animation:none}}
 .crumbs{font-size:13px;color:var(--muted);font-weight:700}
 .page-head{display:flex;flex-direction:column;gap:12px}
 .page-head h1{font-size:clamp(28px,6vw,40px)}
@@ -83,13 +86,15 @@ code{font-family:var(--font-mono);font-size:.875em;background:var(--surface-2);b
 .sec a,.links a{color:var(--accent-ink);font-weight:700;text-underline-offset:3px}
 .a-ink{color:var(--accent-ink);font-weight:700;text-decoration:underline;text-underline-offset:3px}
 
-.toc{display:flex;flex-direction:column;gap:4px;padding:8px 4px;font-size:14px}
+.toc{padding:8px 4px;font-size:14px}
+.toc-page{display:none;flex-direction:column;gap:4px}
 .toc-title{font-size:12px;font-weight:700;color:var(--muted);padding:0 12px 4px}
 .toc button{display:block;width:100%;text-align:left;border:0;background:none;padding:6px 12px;border-radius:10px;color:var(--muted);font-weight:700;line-height:1.5;cursor:pointer}
 .toc button:hover,.toc button[aria-current="true"]{background:var(--surface-2);color:var(--ink)}
 
 /* Pager */
-.pager{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:48px}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pager:empty{display:none}
 .pager a{display:flex;flex-direction:column;background:var(--surface-2);border-radius:var(--r-md);padding:14px 18px;text-decoration:none;font-weight:800;line-height:1.5}
 .pager a:hover{background:var(--surface-3)}
 .pager small{font-weight:700;color:var(--muted);font-size:12px}
@@ -99,7 +104,7 @@ code{font-family:var(--font-mono);font-size:.875em;background:var(--surface-2);b
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px}
 .cards.two{grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
 .tile{display:flex;flex-direction:column;gap:8px;background:var(--surface-2);border-radius:var(--r-md);padding:20px;text-align:left;border:0;text-decoration:none}
-.tile h3{font-size:18px;font-weight:800}
+.tile h3,.tile .tile-h{font-size:18px;font-weight:800;font-family:var(--font-body);line-height:1.4}
 .tile p{font-size:15px;color:var(--muted)}
 .tile-link{cursor:pointer}
 .tile-link:hover{background:var(--surface-3)}
@@ -248,8 +253,10 @@ a.k-btn{text-decoration:none}
 .f-theme{display:flex;align-items:center;gap:12px;font-weight:700;font-size:14px}
 .footer .k-seg{background:var(--surface-3)}
 
-/* First-visit chooser */
-.modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.5);display:grid;place-items:center;padding:16px;overflow-y:auto}
+/* First-visit chooser: shown by CSS from the first paint on a first visit, then controlled by script */
+.modal{display:none}
+html[data-first-visit] .modal,.modal.open{display:grid}
+.modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.5);place-items:center;padding:16px;overflow-y:auto}
 .dialog{background:var(--surface);border-radius:var(--r-lg);padding:clamp(20px,5vw,32px);width:100%;max-width:560px;display:flex;flex-direction:column;gap:16px}
 .dialog h2{font-size:22px}
 .dialog p{color:var(--muted);font-size:15px}
@@ -265,7 +272,7 @@ a.k-btn{text-decoration:none}
   .topnav{display:none}
   .brand{margin-right:0}
   .shell{grid-template-columns:minmax(0,1fr)}
-  .shell.is-home .sidebar{display:flex}
+  html[data-page="home"] .sidebar{display:flex}
   .sidebar{position:fixed;z-index:40;top:0;left:0;bottom:0;width:min(84vw,300px);max-height:none;background:var(--surface);padding:20px 12px;border-radius:0 var(--r-lg) var(--r-lg) 0;transform:translateX(-102%);visibility:hidden;transition:transform .2s,visibility .2s}
   .sidebar.open{transform:none;visibility:visible}
   .nav-group{display:flex}
@@ -299,9 +306,8 @@ a.k-btn{text-decoration:none}
   <nav class="sidebar" id="sidebar" aria-label="ページ"><!--@@SIDEBAR@@--></nav>
   <main class="main" id="main">
     <!--@@PAGES@@-->
-    <nav class="pager" id="pager" aria-label="前後のページ"></nav>
   </main>
-  <aside class="toc" id="toc" aria-label="このページの目次"></aside>
+  <aside class="toc" id="toc"><!--@@TOC@@--></aside>
 </div>
 
 <footer class="footer">
@@ -321,7 +327,7 @@ a.k-btn{text-decoration:none}
   </div>
 </footer>
 
-<div class="modal" id="chooser" hidden>
+<div class="modal" id="chooser">
   <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="chooser-title">
     <h2 id="chooser-title">アクセントカラーを選ぶ</h2>
     <p>このサイトを、選んだ色で表示します。色はあとからでも、右上の「色を変える」で選び直せます。</p>
@@ -339,39 +345,21 @@ a.k-btn{text-decoration:none}
   var store={get:function(k){try{return localStorage.getItem(k);}catch(e){return null;}},set:function(k,v){try{localStorage.setItem(k,v);}catch(e){}}};
   var FLAT=[];NAV.forEach(function(s){s.pages.forEach(function(p){FLAT.push({id:p[0],title:p[1],sec:s.id,secLabel:s.label});});});
 
-  /* ---------- Router (plain #name) ---------- */
-  var tocBtns=[],tocSecs=[];
+  /* ---------- Router (plain #name). The first page is already shown by the <head> script and CSS. ---------- */
+  var tocBtns=[],tocSecs=[],first=true;
   function route(){
-    var id=location.hash.slice(1)||'home';
+    var id=location.hash.slice(1);if(!(id in window.KASANE_PAGES))id='home';
     var cur=FLAT.filter(function(p){return p.id===id;})[0];
-    if(!cur&&id!=='home'){id='home';}
-    all('.page').forEach(function(p){p.hidden=true;});
-    var shown=document.querySelector('.page[data-page="'+id+'"]');void shown.offsetWidth;shown.hidden=false;
-    var pg=$('pager');pg.style.animation='none';void pg.offsetWidth;pg.style.animation='';
-    $('shell').classList.toggle('is-home',id==='home');
+    if(!first)root.classList.add('navigated');
+    root.dataset.page=id;root.dataset.sec=window.KASANE_PAGES[id];
     all('.nav-link').forEach(function(a){if(a.getAttribute('href')==='#'+id)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
-    all('.nav-group').forEach(function(g){g.classList.toggle('current',!!cur&&g.getAttribute('data-sec')===cur.sec);});
     all('.topnav a').forEach(function(a){if(cur&&a.getAttribute('data-sec')===cur.sec)a.setAttribute('aria-current','true');else a.removeAttribute('aria-current');});
     document.title=cur?cur.title+' | Kasane':'Kasane ドキュメント';
-
-    /* pager */
-    var i=FLAT.indexOf(cur),h='';
-    if(cur){
-      if(i>0)h+='<a class="prev" href="#'+FLAT[i-1].id+'"><small>前のページ</small>'+FLAT[i-1].title+'</a>';
-      if(i<FLAT.length-1)h+='<a class="next" href="#'+FLAT[i+1].id+'"><small>次のページ</small>'+FLAT[i+1].title+'</a>';
-    }
-    $('pager').innerHTML=h;$('pager').hidden=!h;
-
-    /* on this page */
-    var page=document.querySelector('.page:not([hidden])');
-    tocSecs=cur?all('.sec',page):[];
-    $('toc').innerHTML=tocSecs.length?'<div class="toc-title">このページの内容</div>':'';
-    tocBtns=tocSecs.map(function(s){
-      var b=document.createElement('button');b.type='button';b.textContent=s.querySelector('h2').textContent;
-      b.addEventListener('click',function(){s.scrollIntoView({block:'start'});});
-      $('toc').appendChild(b);return b;});
+    var tp=document.querySelector('.toc-page[data-page="'+id+'"]');
+    tocBtns=tp?all('button',tp):[];tocSecs=tocBtns.map(function(b){return $(b.getAttribute('data-scroll'));});
     setDrawer(false);
-    window.scrollTo(0,0);
+    if(!first)window.scrollTo(0,0);
+    first=false;
     paintTokens();spy();
   }
   function spy(){
@@ -409,22 +397,23 @@ a.k-btn{text-decoration:none}
     all('[data-token]').forEach(function(el){el.textContent=cs.getPropertyValue(el.getAttribute('data-token')).trim();});
   }
   var chooser=$('chooser'),opener=null;
+  function isChooserOpen(){return chooser.classList.contains('open')||('firstVisit' in root.dataset);}
   function openChooser(from){
-    opener=from||null;chooser.hidden=false;
+    opener=from||null;chooser.classList.add('open');
     var sel=chooser.querySelector('[aria-pressed="true"]')||chooser.querySelector('.pal');sel.focus();
   }
-  function closeChooser(){chooser.hidden=true;store.set('kasane-accent',currentAccent());if(opener)opener.focus();}
+  function closeChooser(){chooser.classList.remove('open');delete root.dataset.firstVisit;store.set('kasane-accent',currentAccent());if(opener)opener.focus();}
   document.addEventListener('click',function(e){
     var p=e.target.closest('[data-accent-set]');
-    if(p){setAccent(p.getAttribute('data-accent-set'),chooser.hidden);return;}
+    if(p){setAccent(p.getAttribute('data-accent-set'),!isChooserOpen());return;}
     var o=e.target.closest('[data-open-chooser]');
     if(o)openChooser(o);
   });
   $('chooser-ok').addEventListener('click',closeChooser);
   chooser.addEventListener('click',function(e){if(e.target===chooser)closeChooser();});
   document.addEventListener('keydown',function(e){
-    if(e.key==='Escape'){if(!chooser.hidden)closeChooser();else if(side.classList.contains('open')){setDrawer(false);menu.focus();}}
-    if(e.key==='Tab'&&!chooser.hidden){
+    if(e.key==='Escape'){if(isChooserOpen())closeChooser();else if(side.classList.contains('open')){setDrawer(false);menu.focus();}}
+    if(e.key==='Tab'&&isChooserOpen()){
       var f=all('button',chooser),first=f[0],last=f[f.length-1];
       if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
       else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
@@ -482,7 +471,7 @@ a.k-btn{text-decoration:none}
   setAccent(currentAccent(),false);
   paintTheme();
   route();
-  if(!store.get('kasane-accent'))openChooser(null);
+  if('firstVisit' in root.dataset)openChooser(null);
 })();
 </script>
 </body>

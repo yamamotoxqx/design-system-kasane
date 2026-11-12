@@ -40,7 +40,35 @@ badSrc.split('\n').forEach((text, i) => {
 const expected = (badSrc.match(/expect /g) || []).length;
 if (badHtml.length !== expected) fail(`bad.html: ${badHtml.length} reports, expected ${expected}: ` + badHtml.map((w) => w.line + ' ' + w.rule).join(', '));
 
-// ---------------------------------------------------------------- 3. contrast
+// ---------------------------------------------------------------- 3. image optimisation
+console.log('\nImage optimisation (kasane-image)');
+{
+  const { optimize, compare, SSIM_MIN } = await import('../lint/image.js');
+  const sharp = (await import('sharp')).default;
+  const { mkdtempSync } = await import('node:fs');
+  const { tmpdir } = await import('node:os');
+  const { join } = await import('node:path');
+  const dir = mkdtempSync(join(tmpdir(), 'kasane-img-'));
+  // a test picture: smooth gradient with a few shapes and some noise
+  const W = 800, H = 500, px = Buffer.alloc(W * H * 3);
+  let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const i = (y * W + x) * 3, ring = Math.hypot(x - 300, y - 250) < 120 ? 60 : 0;
+    px[i] = 90 + (120 * x) / W + ring + rnd() * 10; px[i + 1] = 70 + (140 * y) / H + rnd() * 10; px[i + 2] = 180 - (80 * x) / W - ring + rnd() * 10;
+  }
+  const src = join(dir, 'sample.png');
+  await sharp(px, { raw: { width: W, height: H, channels: 3 } }).png().toFile(src);
+  const [r] = await optimize([src], { out: join(dir, 'out'), widths: [400, 800], formats: ['avif', 'webp'] });
+  const srcKb = r.original.kb;
+  for (const o of r.outputs) {
+    const label = `${o.width}px ${o.format}: q=${o.quality}${o.lossless ? '' : ''} SSIM ${o.ssim.toFixed(4)} ${o.kb.toFixed(1)} KB`;
+    o.ok && o.ssim >= SSIM_MIN && o.kb < srcKb ? pass(label) : fail(label + ' (expected SSIM >= ' + SSIM_MIN + ' and smaller than the source)');
+  }
+  const s = await compare(src, r.outputs.find((o) => o.width === 800).path);
+  s >= SSIM_MIN ? pass(`--compare: SSIM ${s.toFixed(4)}`) : fail(`--compare: SSIM ${s.toFixed(4)}`);
+}
+
+// ---------------------------------------------------------------- 4. contrast
 console.log('\nPalette contrast (v1/tokens.json)');
 const tokens = JSON.parse(readFileSync(here('../v1/tokens.json'), 'utf8'));
 const lin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);

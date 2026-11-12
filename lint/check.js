@@ -21,6 +21,9 @@ export const RULES = {
   'lucide-icon': 'アイコンは Lucide から取ってきて貼ってください(class="lucide lucide-名前" を残す)。',
   'dialog-label': 'role="dialog" には aria-labelledby(見出しの id)か aria-label が必要です。',
   'tab-aria': 'role="tab" には aria-selected と aria-controls が必要です。',
+  'img-alt': '<img> には alt を付けてください(飾りの画像なら alt="")。',
+  'img-size': '<img> には width と height を付けてください(読み込み中に画面がずれるのを防ぎます)。',
+  'img-format': 'JPEG・PNG・GIF をそのまま使わず、kasane-image で AVIF / WebP に軽量化して <picture> で出してください(GIF のアニメーションは動画にします)。',
 };
 
 // ------------------------------------------------------------ helpers
@@ -115,6 +118,16 @@ export function checkHtml(src) {
     }
     // dialog-label
     if (attr(el, 'role') === 'dialog' && !attr(el, 'aria-labelledby') && !attr(el, 'aria-label')) report('dialog-label', el);
+    // images
+    if (el.name === 'img') {
+      if (attr(el, 'alt') === undefined) report('img-alt', el);
+      if (attr(el, 'width') === undefined || attr(el, 'height') === undefined) report('img-size', el);
+      const srcs = [attr(el, 'src') || '', attr(el, 'srcset') || ''].join(' ');
+      const legacy = /\.(?:jpe?g|png|gif)(?:[?#\s,]|$)/i.test(srcs + ' ');
+      const pic = el.parent && el.parent.name === 'picture'
+        && find(el.parent.children, (e) => e.name === 'source' && /image\/(?:avif|webp)/.test(attr(e, 'type') || '')).length;
+      if (legacy && !pic) report('img-format', el);
+    }
     // tab-aria
     if (attr(el, 'role') === 'tab' && (attr(el, 'aria-selected') === undefined || attr(el, 'aria-controls') === undefined)) report('tab-aria', el);
   }

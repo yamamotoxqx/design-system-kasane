@@ -16,14 +16,18 @@
   "scripts": {
     "build": "node tools/gen.cjs && python3 tools/build_site.py",
     "test": "node test/run.js",
-    "dist": "rm -rf dist && mkdir dist && cp -r index.html llms.txt robots.txt _headers LICENSE v1 dist/ && npm pack ./lint --pack-destination dist/v1 --silent"
+    "dist": "rm -rf dist && mkdir dist && cp -r index.html llms.txt robots.txt _headers LICENSE v1 dist/ && npm pack ./lint --pack-destination dist/v1 --silent",
+    "lighthouse": "node tools/lighthouse-site.mjs"
   },
   "peerDependencies": {
     "stylelint": ">=16"
   },
   "devDependencies": {
     "htmlparser2": "^12.0.0",
+    "lighthouse": "^13.6.0",
     "lucide-static": "^1.71.0",
+    "sharp": "^0.35.5",
+    "ssim.js": "^3.5.0",
     "stylelint": "^16.10.0"
   },
   "license": "MIT"

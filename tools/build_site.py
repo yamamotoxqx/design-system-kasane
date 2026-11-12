@@ -297,7 +297,7 @@ def table(head, rows):
 
 NAV = [
     ('intro', 'はじめに', [('about', 'Kasane とは'), ('start', '使い始める'), ('with-ai', 'AI と使う'), ('updates', '更新情報')]),
-    ('principle', '原則', [('principles', 'デザイン原則'), ('accessibility', 'アクセシビリティ'), ('writing', '文章')]),
+    ('principle', '原則', [('principles', 'デザイン原則'), ('accessibility', 'アクセシビリティ'), ('performance', 'パフォーマンス'), ('writing', '文章')]),
     ('style', 'スタイル', [('color', 'カラー'), ('typography', 'タイポグラフィ'), ('shape', '角丸と余白'), ('layout', 'レイアウト'), ('icons', 'アイコン'), ('motion', '動き')]),
     ('component', 'コンポーネント', [('button', 'ボタン'), ('input', '入力欄'), ('card', 'カードとリスト'), ('badge', 'バッジ'), ('tabs', 'タブ'), ('progress', '進捗バー'), ('dialog', 'ダイアログとトースト')]),
 ]
@@ -305,9 +305,24 @@ SEC_OF = {pid: label for _, label, pages in NAV for pid, _ in pages}
 TITLE_OF = {pid: t for _, _, pages in NAV for pid, t in pages}
 
 PAGES = []
+TOCS = []
+FLAT = [(pid, t) for _, _, pages in NAV for pid, t in pages]
 def page(pid, lead, body):
-    PAGES.append('<article class="page" data-page="%s" hidden><div class="page-head"><div class="crumbs">%s / %s</div><h1>%s</h1><p class="lead">%s</p></div>%s</article>'
-                 % (pid, SEC_OF[pid], TITLE_OF[pid], TITLE_OF[pid], lead, body))
+    # give every section an id, and build this page's on-this-page list and pager at build time
+    n = [0]
+    def add_id(m):
+        n[0] += 1
+        return m.group(0) if 'id=' in m.group(0) else '<section class="sec" id="%s-s%d">' % (pid, n[0])
+    body = re.sub(r'<section class="sec"[^>]*>', add_id, body)
+    toc = ''.join('<button type="button" data-scroll="%s">%s</button>' % (sid, re.sub(r'<[^>]+>', '', h2).strip())
+                  for sid, h2 in re.findall(r'<section class="sec" id="([^"]+)"><h2>(.*?)</h2>', body))
+    TOCS.append('<nav class="toc-page" data-page="%s" aria-label="このページの目次"><div class="toc-title">このページの内容</div>%s</nav>' % (pid, toc))
+    i = [p for p, _ in FLAT].index(pid)
+    pager = ''
+    if i > 0: pager += '<a class="prev" href="#%s"><small>前のページ</small>%s</a>' % FLAT[i - 1]
+    if i < len(FLAT) - 1: pager += '<a class="next" href="#%s"><small>次のページ</small>%s</a>' % FLAT[i + 1]
+    PAGES.append('<article class="page" data-page="%s"><div class="page-head"><div class="crumbs">%s / %s</div><h1>%s</h1><p class="lead">%s</p></div>%s<nav class="pager" aria-label="前後のページ">%s</nav></article>'
+                 % (pid, SEC_OF[pid], TITLE_OF[pid], TITLE_OF[pid], lead, body, pager))
 
 def sec(title, body):
     return '<section class="sec"><h2>%s</h2>%s</section>' % (title, body)
@@ -322,7 +337,7 @@ page('about', 'Kasane(かさね)は、Webサイトと Webアプリのための�
   + sec('このサイトの構成', '<ul class="site-map">'
         '<li><a href="#start"><span class="sm-text"><b>使い始める</b><span>CSSの読み込みと、色とテーマの切り替え方</span></span>' + icon('chevron-right', 'go') + '</a></li>'
         '<li><a href="#with-ai"><span class="sm-text"><b>AI と使う</b><span>Claude Code などに Kasane のルールを渡す方法</span></span>' + icon('chevron-right', 'go') + '</a></li>'
-        '<li><a href="#principles"><span class="sm-text"><b>原則</b><span>設計の考え方、アクセシビリティの基準、文章の書き方</span></span>' + icon('chevron-right', 'go') + '</a></li>'
+        '<li><a href="#principles"><span class="sm-text"><b>原則</b><span>設計の考え方、アクセシビリティ、パフォーマンス、文章の書き方</span></span>' + icon('chevron-right', 'go') + '</a></li>'
         '<li><a href="#color"><span class="sm-text"><b>スタイル</b><span>カラー、タイポグラフィ、角丸と余白、レイアウト、アイコン、動き</span></span>' + icon('chevron-right', 'go') + '</a></li>'
         '<li><a href="#button"><span class="sm-text"><b>コンポーネント</b><span>部品の見本とサンプルコード</span></span>' + icon('chevron-right', 'go') + '</a></li>'
         '</ul>'))
@@ -356,7 +371,7 @@ page('principles', 'どの色を選んでも同じ使い心地になるように
        '枠線、影、区切り線でカードやリストを区切りません。') + '</section>'
   + '<section class="sec" id="pcolor"><h2><span class="num-tag">2</span>色は選べる、読みやすさは変えない</h2><p>色は必ずトークンで指定します。塗りには <code>--accent</code>、その上の文字には <code>--on-accent</code>、アクセント色の文字やリンクには <code>--accent-ink</code> を使います。こうすると、どのパレットでも文字は4.5:1以上のコントラストになります。</p>'
   + dd('<div class="stack"><button class="k-btn k-btn-primary" type="button">保存する</button><span class="a-ink">詳しく見る</span></div>', '塗りと文字で、別のトークンを使い分けます。',
-       '<div class="stack"><button class="k-btn bad-on-accent" type="button">保存する</button><span style="color:var(--accent);font-weight:700;text-decoration:underline">詳しく見る</span></div>',
+       '<div class="stack"><span class="k-btn bad-on-accent" role="img" aria-label="悪い例: 読みにくい色の保存ボタン" data-label="保存する"></span><span class="bad-link" role="img" aria-label="悪い例: 読みにくい色のリンク" data-label="詳しく見る"></span></div>',
        '塗りの上の文字を白などに決め打ちしたり、塗り用の <code>--accent</code> を文字に使ったりしません。パレットやテーマによっては読めなくなります。') + '</section>'
   + '<section class="sec" id="beyond"><h2><span class="num-tag">3</span>色だけで伝えない</h2><p>成功は緑、エラーは赤で固定していますが、色の見え方は人や画面によって変わります。状態にはアイコンと文字を必ず添えます。チェックは印、スイッチはつまみの位置でも状態が分かるようにします。</p>'
   + dd('<div class="inline"><span class="k-badge k-badge-ok">%s保存しました</span><span class="k-badge k-badge-danger">%s送信できません</span></div>' % (I_OK, I_WARN), '色に加えて、アイコンと文字で状態を伝えます。',
@@ -370,23 +385,7 @@ page('principles', 'どの色を選んでも同じ使い心地になるように
   + dd('<div class="k-card mini"><b>今月の支出</b><div class="k-num" style="text-align:right;line-height:1.7">1,280<br>12,400<br>980</div></div>', '縦に並ぶ数字は <code>.k-num</code> で桁をそろえます。',
        '<div class="k-card mini"><b>今月の支出</b><div style="text-align:right;line-height:1.7">1,280<br>12,400<br>980</div></div>', '数字の列を基本の書体のままにしません。桁の位置がずれて比べにくくなります。') + '</section>')
 
-page('accessibility', '色を選べるシステムでは、どの色でも読めて操作できることが土台になります。Kasane が守る基準をまとめます。',
-  sec('コントラストの基準', '<p>9色すべてで、ライトとダークの両方がこの基準を満たすことを、パレットを作るときに検査しています。</p>'
-      + table(['対象', '使うトークン', '基準'], [
-          ['本文の文字', '<code>--ink</code>、<code>--muted</code>', '面に対して 4.5:1 以上'],
-          ['主ボタンの上の文字', '<code>--on-accent</code>', '<code>--accent</code> に対して 4.5:1 以上'],
-          ['アクセント色の文字・リンク', '<code>--accent-ink</code>', '面と <code>--accent-soft</code> に対して 4.5:1 以上'],
-          ['状態の文字', '<code>--ok</code>、<code>--danger</code>、<code>--info</code>', '対応する <code>-soft</code> の面に対して 4.5:1 以上'],
-          ['入力欄の枠、スイッチのオフ', '<code>--line</code>', '<code>--surface</code> に対して 3:1 以上'],
-          ['フォーカスのリング', '<code>--focus</code>', '面に対して 3:1 以上']]))
-  + sec('アクセントの塗りは、差が小さいことがある', '<p>山吹や青磁など明るいパレットでは、ライトのときに <code>--accent</code> の塗りと面の差が 3:1 に届きません。塗りの色だけで「選ばれている」「オンになっている」を伝えないでください。チェックの印、スイッチのつまみの位置、文字の太さなどを組み合わせます。</p>'
-      + dd('<label class="k-switch"><input type="checkbox" checked id="a11y-sw1"><span class="k-switch-track" aria-hidden="true"></span>通知 オン</label>', 'つまみの位置と文字でも、オンだと分かります。',
-           '<div class="inline"><span style="width:44px;height:24px;border-radius:999px;background:var(--accent);display:block"></span><span style="width:44px;height:24px;border-radius:999px;background:var(--surface-3);display:block"></span></div>', '色の違いだけでオンとオフを表しません。'))
-  + sec('キーボードとフォーカス', '<p>操作できる部品はすべて、Tab キーで移動できるようにします。フォーカスが当たったときは、<code>--focus</code> の3pxのリングを表示します。</p>'
-      + code('CSS', ':focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }'))
-  + sec('押せる場所の大きさ', '<p>ボタンや選択肢は、高さ44px以上を基本にします。小さいボタン(<code>.k-btn-sm</code>)でも36pxです。</p>')
-  + sec('動きを減らす設定', '<p>端末で「視差効果を減らす」が有効なときは、切り替えの動きを止めます。</p>'
-      + code('CSS', '@media (prefers-reduced-motion: reduce) {\n  .k-switch-track::after { transition: none; }\n}')))
+# accessibility and performance pages live in pages_extra.py
 
 pal_btns = ''.join('<button class="pal" type="button" data-accent-set="%s" aria-pressed="false"><i style="background:linear-gradient(135deg,%s 50%%,%s 50%%)"></i><b>%s</b><small>%s</small></button>' % (p['id'], p['light']['--accent'], p['dark']['--accent'], p['name'], p['id']) for p in PAL)
 TOKENS = [('--bg', 'ページの背景'), ('--surface', 'カード、パネル'), ('--surface-2', '中の面、リストの行、通常のボタン'), ('--surface-3', 'ホバー、押下'),
@@ -497,14 +496,14 @@ page('dialog', '確認が必要な操作と、操作の結果を伝える部品�
 
 exec(open('pages_extra.py', encoding='utf-8').read())
 
-HOME = ('<article class="page home" data-page="home" hidden><div class="hero"><div class="hero-art" aria-hidden="true"><i></i><i></i><i></i></div>'
+HOME = ('<article class="page home" data-page="home"><div class="hero"><div class="hero-art" aria-hidden="true"><i></i><i></i><i></i></div>'
         '<h1>Kasane</h1><p class="lead">面を重ねて区切り、色を選べるデザインシステム。</p><p class="hero-ai">AI で UI を作るときは、<a href="' + BASE + '/kasane.md">仕様書(kasane.md)</a>を読ませてください。</p>'
         '<div class="inline start"><a class="k-btn k-btn-primary" href="#start">使い始める</a><button class="k-btn" type="button" data-open-chooser>色を選び直す</button></div></div>'
         '<div class="cards two">'
-        '<a class="tile tile-link" href="#about"><h3>はじめに</h3><p>Kasane の概要、使い始め方、AI との使い方。</p></a>'
-        '<a class="tile tile-link" href="#principles"><h3>原則</h3><p>設計の考え方、アクセシビリティ、文章の書き方。</p></a>'
-        '<a class="tile tile-link" href="#color"><h3>スタイル</h3><p>カラー、タイポグラフィ、レイアウト、アイコン、動き。</p></a>'
-        '<a class="tile tile-link" href="#button">\n<h3>コンポーネント</h3><p>部品の見本とサンプルコード。</p></a></div></article>')
+        '<a class="tile tile-link" href="#about"><h2 class="tile-h">はじめに</h2><p>Kasane の概要、使い始め方、AI との使い方。</p></a>'
+        '<a class="tile tile-link" href="#principles"><h2 class="tile-h">原則</h2><p>設計の考え方、アクセシビリティ、パフォーマンス、文章の書き方。</p></a>'
+        '<a class="tile tile-link" href="#color"><h2 class="tile-h">スタイル</h2><p>カラー、タイポグラフィ、レイアウト、アイコン、動き。</p></a>'
+        '<a class="tile tile-link" href="#button">\n<h2 class="tile-h">コンポーネント</h2><p>部品の見本とサンプルコード。</p></a></div></article>')
 
 sidebar = ''.join('<div class="nav-group" data-sec="%s"><div class="nav-title">%s</div>%s</div>' % (sid, label, ''.join('<a class="nav-link" href="#%s">%s</a>' % (pid, t) for pid, t in pages)) for sid, label, pages in NAV)
 topnav = ''.join('<a href="#%s" data-sec="%s">%s</a>' % (pages[0][0], sid, label) for sid, label, pages in NAV)
@@ -529,7 +528,7 @@ for p in PAL:
     DOCS_EXTRA += '%s%s{--bad-on-accent:%s}\n' % (sel, ',:root:not([data-accent])' if first else '', l)
     DOCS_EXTRA += '@media (prefers-color-scheme:dark){%s:not([data-theme="light"])%s{--bad-on-accent:%s}}\n' % (sel, ',:root:not([data-accent]):not([data-theme="light"])' if first else '', d)
     DOCS_EXTRA += '%s[data-theme="dark"]%s{--bad-on-accent:%s}\n' % (sel, ',:root:not([data-accent])[data-theme="dark"]' if first else '', d)
-DOCS_EXTRA += '.bad-on-accent,.bad-on-accent:hover{background:var(--accent);color:var(--bad-on-accent)}\n'
+DOCS_EXTRA += '.bad-on-accent,.bad-on-accent:hover{background:var(--accent);color:var(--bad-on-accent);cursor:default}.bad-on-accent::after{content:attr(data-label)}.bad-link{color:var(--accent);font-weight:700;text-decoration:underline;text-underline-offset:3px}.bad-link::after{content:attr(data-label)}\n'
 
 # Point AI tools at the plain-text spec: <head> metadata and a footer column.
 AI_NOTE = ('Kasane デザインシステムのドキュメント。AI が UI を作るときは、このページではなく仕様書 %s/kasane.md を最初に全部読み、'
@@ -539,12 +538,22 @@ HEAD_META = ('<meta name="description" content="%s">\n<link rel="alternate" type
 footer_cols += ('<div class="f-col"><div class="f-title">AI 向け</div><a href="%s/kasane.md">仕様書(kasane.md)</a>'
                 '<a href="%s/llms.txt">llms.txt</a><a href="%s/tokens.json">tokens.json</a></div>' % (BASE, BASE.rsplit('/', 1)[0], BASE))
 
+# Routing without JavaScript at first paint: a tiny script in <head> sets html[data-page] and
+# html[data-sec] from the hash, and these rules show the right page, sidebar group and TOC.
+PAGE_SEC = {'home': ''}
+for sid, _, pages in NAV:
+    for pid, _ in pages: PAGE_SEC[pid] = sid
+ROUTE_CSS = ''.join('html[data-page="%s"] .page[data-page="%s"],html[data-page="%s"] .toc-page[data-page="%s"]{display:flex}' % (p, p, p, p) for p in PAGE_SEC)
+ROUTE_CSS += ''.join('html[data-sec="%s"] .nav-group[data-sec="%s"]{display:flex}' % (s, s) for s, _, _ in NAV)
+DOCS_EXTRA = ROUTE_CSS + '\n' + DOCS_EXTRA
+
 T = open('site.tpl.html', encoding='utf-8').read()
 T = re.sub(r'<!--@@ICON:([a-z0-9-]+)@@-->', lambda m: icon(m.group(1)), T)
 T = T.replace('<title>Kasane ドキュメント</title>', '<title>Kasane ドキュメント</title>\n' + HEAD_META, 1)
 T = T.replace('/* Log, icon grid */', DOCS_EXTRA + '\n/* Log, icon grid */', 1)
 out = (T.replace('<!--@@PAGES@@-->', HOME + ''.join(PAGES)).replace('<!--@@SIDEBAR@@-->', sidebar).replace('<!--@@TOPNAV@@-->', topnav)
-        .replace('<!--@@FOOTER@@-->', footer_cols).replace('<!--@@CHOOSER@@-->', chooser_btns).replace('/*@@NAV@@*/', nav_json))
+        .replace('<!--@@FOOTER@@-->', footer_cols).replace('<!--@@CHOOSER@@-->', chooser_btns).replace('/*@@NAV@@*/', nav_json)
+        .replace('<!--@@TOC@@-->', ''.join(TOCS)).replace('/*@@PAGESEC@@*/', json.dumps(PAGE_SEC)))
 if EMBED:
     # Single file for previews: inline the CSS and a subset of LINE Seed JP.
     import subprocess, base64
@@ -563,7 +572,7 @@ if EMBED:
     target = os.path.join(OUT, 'docs-embedded.html')
 else:
     # The docs site uses the same files it documents.
-    out = (out.replace('<!--@@HEADLINKS@@-->', '<link rel="stylesheet" href="%s/fonts/line-seed-jp.css">\n<link rel="stylesheet" href="%s/kasane.css">' % (VERSION, VERSION))
+    out = (out.replace('<!--@@HEADLINKS@@-->', '<link rel="preload" href="%s/fonts/line-seed-jp.css" as="style">\n<link rel="stylesheet" href="%s/fonts/line-seed-jp.css" media="print" onload="this.media=\'all\'">\n<noscript><link rel="stylesheet" href="%s/fonts/line-seed-jp.css"></noscript>\n<link rel="stylesheet" href="%s/kasane.css">' % (VERSION, VERSION, VERSION, VERSION))
               .replace('/*@@PALETTES@@*/', '').replace('/*@@COMPONENTS@@*/', '').replace('/*@@FONTS@@*/', ''))
     target = os.path.join(ROOT, 'index.html')
 assert '@@' not in out

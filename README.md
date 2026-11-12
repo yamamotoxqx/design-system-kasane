@@ -47,7 +47,7 @@ https://kasane.y-n0.de/v1/kasane.min.css
 CSS は Stylelint、HTML は `kasane-check` で、ルールを機械的に確かめます。
 
 ```bash
-npm install --save-dev stylelint https://kasane.y-n0.de/v1/kasane-lint-1.0.0.tgz
+npm install --save-dev stylelint https://kasane.y-n0.de/v1/kasane-lint-1.1.0.tgz
 ```
 
 ```json
@@ -61,6 +61,16 @@ npx kasane-check "src/**/*.html"
 
 - CSS: 色の直接指定、影、入力の部品以外の枠線、トークン以外の角丸・余白・文字の大きさ・動きの長さ、`outline: none`、トークン以外の書体
 - HTML: 主ボタンの数、状態のアイコン、`style` 属性の色、ラベル、スイッチの作り、Kasane にない `k-` クラス、Lucide に実在しないアイコン名、ダイアログやタブの属性
+
+画像と表示速度も、同じパッケージで確かめられます。
+
+```bash
+npm install --save-dev sharp ssim.js lighthouse
+npx kasane-image photo.jpg --out public/img        # AVIF / WebP に軽量化。SSIM 0.99 以上になる一番低い画質を自動で選ぶ
+npx kasane-lighthouse http://localhost:3000/       # Lighthouse CLI で評価(モバイル・デスクトップ)
+```
+
+Lighthouse の最低点は、パフォーマンス 90、アクセシビリティ 100、ベストプラクティス 95、SEO 90 です。
 
 ルールを変えたら `lint/package.json` の `version` を上げます。ファイル名に版が入るので、入れている側の内容が勝手に変わることはありません。
 
@@ -78,7 +88,7 @@ npx kasane-check "src/**/*.html"
 | `v1/fonts/` | LINE Seed JP(文字の範囲ごとに分割) |
 | `index.html` | ドキュメントサイト |
 | `llms.txt` | AI に仕様書の場所を知らせる案内 |
-| `lint/` | `kasane-lint`(Stylelint のルールと `kasane-check`)。`npm run dist` で `v1/kasane-lint-<版>.tgz` として配信 |
+| `lint/` | `kasane-lint`(Stylelint のルール、`kasane-check`、`kasane-image`、`kasane-lighthouse`)。`npm run dist` で `v1/kasane-lint-<版>.tgz` として配信 |
 | `tools/` | 上のファイルを生成するソース |
 
 ## 開発
@@ -86,7 +96,8 @@ npx kasane-check "src/**/*.html"
 ```bash
 npm install
 npm run build   # tools/ から v1/ と index.html を生成
-npm test        # Stylelint と kasane-check のルール、全パレットのコントラストを検査
+npm test        # Stylelint・kasane-check のルール、kasane-image、全パレットのコントラストを検査
+npm run dist && npm run lighthouse   # ドキュメントサイトが Lighthouse の最低点を満たすか
 ```
 
 配信は Cloudflare Pages(ビルドコマンド `npm run dist`、出力ディレクトリ `dist`)で、`main` に push すると更新されます。配信先を変えるときは `KASANE_BASE_URL=https://… npm run build` で作り直します。

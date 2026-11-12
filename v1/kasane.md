@@ -491,6 +491,8 @@ UI を作ったら、渡す前に次をすべて確かめてください。
 - [ ] `outline: none` がない。押せる場所が高さ44px以上
 - [ ] `data-theme="dark"` と `data-accent` を変えても読める
 - [ ] 幅375pxで横スクロールが出ない
+- [ ] 画像は `kasane-image` で軽くした(AVIF / WebP、SSIM 0.99 以上、`width` `height` `alt` あり)
+- [ ] `kasane-lighthouse` で最低点を満たした(パフォーマンス 90、アクセシビリティ 100、ベストプラクティス 95、SEO 90)
 
 ### 画面を撮って確かめる(できる場合)
 
@@ -542,7 +544,7 @@ await browser.close();
 `kasane-lint` で、ルールの多くを機械的に確かめられます。CSS は Stylelint、HTML は `kasane-check` が見ます。
 
 ```bash
-npm install --save-dev stylelint https://kasane.y-n0.de/v1/kasane-lint-1.0.0.tgz
+npm install --save-dev stylelint https://kasane.y-n0.de/v1/kasane-lint-1.1.0.tgz
 ```
 
 ```json
@@ -582,5 +584,58 @@ npx kasane-check "src/**/*.html"
 | `kasane/lucide-icon` | Lucide に実在しないアイコン名、部品の中の Lucide 以外のアイコン |
 | `kasane/dialog-label` | `role="dialog"` に名前がない |
 | `kasane/tab-aria` | `role="tab"` に `aria-selected` か `aria-controls` がない |
+| `kasane/img-alt` | `<img>` に `alt` がない(飾りの画像は `alt=""`) |
+| `kasane/img-size` | `<img>` に `width` と `height` がない |
+| `kasane/img-format` | JPEG・PNG・GIF をそのまま使っている(`<picture>` で AVIF / WebP を出していない) |
 
 理由があってルールから外れる所には `data-kasane-ignore="ルール名"`(空なら全ルール)を付けると、その要素と中身を検査から外せます。外した理由を作業の報告で伝えてください。
+
+---
+
+## 13. 画像とパフォーマンス
+
+表示が速く、読み込み中に画面がずれない状態を目指します。
+
+### Lighthouse の最低点
+
+作った画面は Lighthouse CLI で評価し、**モバイルとデスクトップの両方で**次の点数を下回らないようにします。
+
+| 項目 | 最低点 |
+|---|---|
+| パフォーマンス | 90 |
+| アクセシビリティ | 100 |
+| ベストプラクティス | 95 |
+| SEO | 90 |
+
+```bash
+npm install --save-dev lighthouse
+npx kasane-lighthouse http://localhost:3000/ http://localhost:3000/users   # --runs 3 で揺れを抑える
+```
+
+届かない項目があると、点数を下げている原因が表示されます。最低点に届くまで直してください。Chrome が見つからないときは `CHROME_PATH` を指定します。目標の指標は LCP 2.5 秒以内、INP 200 ミリ秒以内、CLS 0.1 以下です。
+
+### 画像
+
+画像はそのまま置かず、**必ず `kasane-image` で軽くしてから**使います。
+
+| 決まり | 内容 |
+|---|---|
+| 形式 | 写真・イラストは AVIF と WebP。アイコン・ロゴは SVG。動く画像は GIF ではなく動画 |
+| 大きさ | 表示する大きさの2倍まで。幅の種類は3つまで |
+| 画質 | 元の画像との SSIM 0.99 以上(`kasane-image` が自動で確かめる)。最後は目でも確かめる |
+| 容量 | 1枚 100 KB を超えたら、幅を小さくできないか見直す |
+| 属性 | `width` `height` `alt` を必ず書く。画面の外の画像は `loading="lazy"`、最初に見える大きな画像は `fetchpriority="high"` |
+
+```bash
+npm install --save-dev sharp ssim.js
+npx kasane-image photo.jpg --out public/img --widths 640,1280     # 書き出しと SSIM の確認、<picture> を表示
+npx kasane-image --compare original.png public/img/photo.avif     # SSIM だけを確かめる
+```
+
+`kasane-image` は幅ごと・形式ごとに、SSIM が 0.99 以上になる一番低い画質を選び、そのまま貼れる `<picture>` を表示します。
+
+### そのほか
+
+- フォントの CSS は表示を止めないように読み込む: `<link rel="stylesheet" href="https://kasane.y-n0.de/v1/fonts/line-seed-jp.css" media="print" onload="this.media='all'">`(`<noscript>` に通常の `<link>` も置く)
+- 読み込み中・0件・失敗のときも同じ大きさの場所を使い、あとから上に部品を差し込まない
+- 本番では `kasane.min.css` を使う。JavaScript には `defer` を付ける

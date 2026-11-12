@@ -21,3 +21,8 @@ jobs:
       - run: git diff --exit-code -- v1 index.html llms.txt lint/data
       # Lint rules work, and every palette meets the contrast rules.
       - run: npm test
+      # Docs site meets the Lighthouse minimums (performance 90, accessibility 100, best practices 95, SEO 90).
+      - run: npm run dist
+      - run: npm run lighthouse
+        env:
+          LH_RUNS: "3"
