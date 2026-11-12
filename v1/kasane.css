@@ -861,6 +861,59 @@ svg.lucide { flex: none; stroke-width: 2.5; }
 }
 @media (prefers-reduced-motion: reduce) { .k-scrim, .k-dialog { animation: none; } }
 
+/* Palette picker */
+.k-palette { margin: 0; padding: 0; border: 0; min-width: 0; }
+.k-palette legend { padding: 0; margin-bottom: var(--space-2); font-weight: 700; font-size: var(--text-sm); }
+.k-palette-items { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.k-palette-item {
+  position: relative; display: inline-flex; align-items: center; gap: var(--space-2);
+  min-height: 44px; padding: 0 var(--space-4) 0 var(--space-2); border-radius: var(--r-full);
+  background: var(--surface-2); font-weight: 700; font-size: var(--text-sm); cursor: pointer;
+}
+.k-palette-item:hover { background: var(--surface-3); }
+.k-palette-item input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.k-palette-swatch { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--sw); }
+.k-palette-item input:checked ~ .k-palette-swatch::after {
+  content: ""; width: 11px; height: 6px; margin-top: -3px;
+  border-left: 3px solid var(--sw-on); border-bottom: 3px solid var(--sw-on); transform: rotate(-45deg);
+}
+.k-palette-item:has(input:checked) { background: var(--accent-soft); color: var(--accent-ink); }
+.k-palette-item input:focus-visible ~ .k-palette-swatch { outline: 3px solid var(--focus); outline-offset: 3px; }
+/* Compact: swatches only, for a page footer. The name stays for screen readers. */
+.k-palette-compact .k-palette-items { gap: var(--space-1); }
+.k-palette-compact .k-palette-item, .k-palette-compact .k-palette-item:has(input:checked) { min-width: 44px; padding: 0; justify-content: center; background: transparent; }
+.k-palette-compact .k-palette-name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* Each swatch shows its own palette's accent (light / dark) */
+.k-palette-swatch[data-swatch="yamabuki"] { --sw: #eec96c; --sw-on: #201f1c; }
+.k-palette-swatch[data-swatch="tachibana"] { --sw: #e79a5d; --sw-on: #221f1c; }
+.k-palette-swatch[data-swatch="kobai"] { --sw: #d078a0; --sw-on: #221e1f; }
+.k-palette-swatch[data-swatch="fuji"] { --sw: #a187d8; --sw-on: #1f1f22; }
+.k-palette-swatch[data-swatch="ai"] { --sw: #659ae1; --sw-on: #1d1f22; }
+.k-palette-swatch[data-swatch="sora"] { --sw: #64c6ea; --sw-on: #1c2021; }
+.k-palette-swatch[data-swatch="seiji"] { --sw: #90e3d8; --sw-on: #1c2020; }
+.k-palette-swatch[data-swatch="moegi"] { --sw: #ceda88; --sw-on: #1f201c; }
+.k-palette-swatch[data-swatch="sumi"] { --sw: #2e2e2e; --sw-on: #ffffff; }
+@media (prefers-color-scheme: dark) {
+:root:not([data-theme="light"]) .k-palette-swatch[data-swatch="yamabuki"] { --sw: #ebca78; --sw-on: #181715; }
+:root:not([data-theme="light"]) .k-palette-swatch[data-swatch="tachibana"] { --sw: #e19c67; --sw-on: #191715; }
+:root:not([data-theme="light"]) .k-palette-swatch[data-swatch="kobai"] { --sw: #d282a5; --sw-on: #191617; }
+:root:not([data-theme="light"]) .k-palette-swatch[data-swatch="fuji"] { --sw: #a78fd9; --sw-on: #171719; }
+:root:not([data-theme="light"]) .k-palette-swatch[data-swatch="ai"] { --sw: #71a1e1; --sw-on: #161719; }
+:root:not([data-theme="light"]) .k-palette-swatch[data-swatch="sora"] { --sw: #6fc4e5; --sw-on: #151819; }
+:root:not([data-theme="light"]) .k-palette-swatch[data-swatch="seiji"] { --sw: #98e1d7; --sw-on: #151817; }
+:root:not([data-theme="light"]) .k-palette-swatch[data-swatch="moegi"] { --sw: #cfd990; --sw-on: #171715; }
+:root:not([data-theme="light"]) .k-palette-swatch[data-swatch="sumi"] { --sw: #d7d7d7; --sw-on: #171717; }
+}
+:root[data-theme="dark"] .k-palette-swatch[data-swatch="yamabuki"] { --sw: #ebca78; --sw-on: #181715; }
+:root[data-theme="dark"] .k-palette-swatch[data-swatch="tachibana"] { --sw: #e19c67; --sw-on: #191715; }
+:root[data-theme="dark"] .k-palette-swatch[data-swatch="kobai"] { --sw: #d282a5; --sw-on: #191617; }
+:root[data-theme="dark"] .k-palette-swatch[data-swatch="fuji"] { --sw: #a78fd9; --sw-on: #171719; }
+:root[data-theme="dark"] .k-palette-swatch[data-swatch="ai"] { --sw: #71a1e1; --sw-on: #161719; }
+:root[data-theme="dark"] .k-palette-swatch[data-swatch="sora"] { --sw: #6fc4e5; --sw-on: #151819; }
+:root[data-theme="dark"] .k-palette-swatch[data-swatch="seiji"] { --sw: #98e1d7; --sw-on: #151817; }
+:root[data-theme="dark"] .k-palette-swatch[data-swatch="moegi"] { --sw: #cfd990; --sw-on: #171715; }
+:root[data-theme="dark"] .k-palette-swatch[data-swatch="sumi"] { --sw: #d7d7d7; --sw-on: #171717; }
+
 /* Motion: short and quiet */
 :root { --motion-fast: 150ms; --motion-base: 220ms; --motion-slow: 450ms; --ease-out: cubic-bezier(.2, .7, .3, 1); }
 @keyframes k-enter { from { opacity: 0; transform: translateY(16px); } }

@@ -32,13 +32,11 @@ Kasane(かさね)は、Webサイトと Webアプリのためのデザインシ�
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- 保存した色とテーマを、描画の前に適用する(ちらつき防止) -->
+  <!-- 利用者が選んだ色を、描画の前に適用する(ちらつき防止) -->
   <script>
     try {
       var a = localStorage.getItem("kasane-accent");
-      var t = localStorage.getItem("kasane-theme");
       if (a) document.documentElement.dataset.accent = a;
-      if (t) document.documentElement.dataset.theme = t;
     } catch (e) {}
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -54,30 +52,15 @@ Kasane(かさね)は、Webサイトと Webアプリのためのデザインシ�
 | `https://kasane.y-n0.de/v1/fonts/line-seed-jp.css` | LINE Seed JP(400 / 700 / 800) |
 | `https://kasane.y-n0.de/v1/tokens.json` | トークンの値(W3C Design Tokens 形式) |
 
-### 色とテーマの切り替え
+### 色とテーマ
 
 | 属性 | 値 | 省略したとき |
 |---|---|---|
 | `<html data-accent="…">` | `yamabuki` `tachibana` `kobai` `fuji` `ai` `sora` `seiji` `moegi` `sumi` | `yamabuki` |
 | `<html data-theme="…">` | `light` `dark` | 端末の設定(`prefers-color-scheme`)に従う |
 
-テーマの切り替えは「ライト」「ダーク」の2択にします(「自動」は置きません)。初期状態は端末の設定に従います。
-
-```js
-const root = document.documentElement;
-function isDark() {
-  const t = root.dataset.theme;
-  return t ? t === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-}
-function setTheme(theme) {            // "light" か "dark"
-  root.dataset.theme = theme;
-  try { localStorage.setItem("kasane-theme", theme); } catch (e) {}
-}
-function setAccent(id) {              // パレットの名前
-  root.dataset.accent = id;
-  try { localStorage.setItem("kasane-accent", id); } catch (e) {}
-}
-```
+- `data-accent` には、デザイナーが決めた既定の色を書きます。利用者が色を変えられるようにする方法は「14. 製品に組み込むとき」にあります。
+- ライトとダークは端末の設定に任せます。**製品にはライト・ダークの切り替えボタンを置きません。** `data-theme` は、画面を撮って確かめるときなどに使います。
 
 ---
 
@@ -339,14 +322,35 @@ function setAccent(id) {              // パレットの名前
 <div class="k-nest" role="tabpanel" id="panel-a" aria-labelledby="tab-a">…</div>
 <div class="k-nest" role="tabpanel" id="panel-b" aria-labelledby="tab-b" hidden>…</div>
 
-<!-- 2択の切り替え(テーマの切り替えなど) -->
-<div class="k-seg" role="group" aria-label="テーマ">
-  <button type="button" aria-pressed="true">ライト</button>
-  <button type="button" aria-pressed="false">ダーク</button>
+<!-- 2択の切り替え(並び順など) -->
+<div class="k-seg" role="group" aria-label="並び順">
+  <button type="button" aria-pressed="true">新しい順</button>
+  <button type="button" aria-pressed="false">古い順</button>
 </div>
 ```
 
 タブは、左右の矢印キーで移動できるようにします。選択中の背景は、つまみのように横へ動きます(項目は5つまで)。
+
+### 色の選択
+
+利用者がアクセントの色を選ぶ部品です。置く場所と保存の仕方は「14. 製品に組み込むとき」に従います。
+
+```html
+<fieldset class="k-palette">            <!-- 丸だけにするときは k-palette-compact を足す -->
+  <legend>テーマカラー</legend>
+  <div class="k-palette-items">
+    <label class="k-palette-item">
+      <input type="radio" name="accent" value="yamabuki" checked>
+      <span class="k-palette-swatch" data-swatch="yamabuki"></span>
+      <span class="k-palette-name">山吹</span>
+    </label>
+    <!-- 9色すべてを同じ形で並べる(value と data-swatch はパレットの名前、名前は「3. 色」の表) -->
+  </div>
+</fieldset>
+```
+
+- 中身はラジオボタンです。チェックの印と面の色で選択中を示し、矢印キーでも選べます。
+- `.k-palette-compact` では名前が見えなくなりますが、読み上げ用に `.k-palette-name` は残してください。
 
 ### 進捗バー
 
@@ -490,6 +494,7 @@ UI を作ったら、渡す前に次をすべて確かめてください。
 - [ ] `.k-title` はページのタイトルと章の見出しだけ。縦に並ぶ数字に `.k-num`
 - [ ] `outline: none` がない。押せる場所が高さ44px以上
 - [ ] `data-theme="dark"` と `data-accent` を変えても読める
+- [ ] ライト・ダークの切り替えボタンを置いていない。最初に色を選ばせる画面を出していない
 - [ ] 幅375pxで横スクロールが出ない
 - [ ] 画像は `kasane-image` で軽くした(AVIF / WebP、SSIM 0.99 以上、`width` `height` `alt` あり)
 - [ ] `kasane-lighthouse` で最低点を満たした(パフォーマンス 90、アクセシビリティ 100、ベストプラクティス 95、SEO 90)
@@ -544,7 +549,7 @@ await browser.close();
 `kasane-lint` で、ルールの多くを機械的に確かめられます。CSS は Stylelint、HTML は `kasane-check` が見ます。
 
 ```bash
-npm install --save-dev stylelint https://kasane.y-n0.de/v1/kasane-lint-1.1.0.tgz
+npm install --save-dev stylelint https://kasane.y-n0.de/v1/kasane-lint-1.2.0.tgz
 ```
 
 ```json
@@ -639,3 +644,54 @@ npx kasane-image --compare original.png public/img/photo.avif     # SSIM だけ�
 - フォントの CSS は表示を止めないように読み込む: `<link rel="stylesheet" href="https://kasane.y-n0.de/v1/fonts/line-seed-jp.css" media="print" onload="this.media='all'">`(`<noscript>` に通常の `<link>` も置く)
 - 読み込み中・0件・失敗のときも同じ大きさの場所を使い、あとから上に部品を差し込まない
 - 本番では `kasane.min.css` を使う。JavaScript には `defer` を付ける
+
+---
+
+## 14. 製品に組み込むとき
+
+Kasane は、色をデザイナーが決めることも、利用者が変えることもできます。組み込むときは、次の2つを最初に決めます。依頼に書かれていなければ、既定の色は山吹、利用者は色を変えられない、として作り、そのことを報告で伝えます。
+
+| 決めること | やり方 |
+|---|---|
+| 既定の色 | `<html data-accent="…">` に書く |
+| 利用者が色を変えられるか | 変えられるなら、設定ページかページ下部に色の選択(`.k-palette`)を置く |
+
+### 既定の色の選び方
+
+| こんなとき | パレット |
+|---|---|
+| ブランドの色がある | その色相に一番近いパレット |
+| 信頼感、落ち着き(予約、金融、医療など) | `ai` `sora` |
+| 明るさ、親しみやすさ(学習、暮らしなど) | `yamabuki` `tachibana` `moegi` |
+| やさしさ、交流(コミュニティなど) | `kobai` `fuji` |
+| 情報に集中してほしい(業務の画面、管理画面) | `sumi` |
+
+### 色の選択を置く場所
+
+| 製品 | 置く場所 | 部品 |
+|---|---|---|
+| 設定ページがある | 設定ページの「表示」などのまとまりの中 | `.k-palette`(名前も見せる) |
+| 設定ページがない | ページ下部(フッター) | `.k-palette.k-palette-compact` |
+
+- 開いたらすぐ既定の色で表示します。最初に色を選ばせる画面やダイアログを出しません。
+- 色の選択は1か所だけに置きます。ヘッダーやすべての画面に置きません。
+- ライト・ダークの切り替えは置きません(端末の設定に従う)。
+
+### 選んだ色を保存する
+
+`<head>` には「1. 読み込み方」のスクリプトを置きます。色の選択には次の JavaScript をつなぎます。
+
+```js
+const root = document.documentElement;
+const current = root.dataset.accent || "yamabuki";
+document.querySelectorAll('.k-palette input[name="accent"]').forEach((radio) => {
+  radio.checked = radio.value === current;
+  radio.addEventListener("change", () => {
+    root.dataset.accent = radio.value;
+    try { localStorage.setItem("kasane-accent", radio.value); } catch (e) {}
+  });
+});
+```
+
+ログインのある製品では、選んだ色を利用者の設定としてサーバーにも保存し、HTML を返すときに `data-accent` へ書き込むと、別の端末でも同じ色になります。
+

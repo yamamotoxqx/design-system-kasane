@@ -1,10 +1,11 @@
 # Kasane
 
-> 面を重ねて区切り、アクセントの色を9色から選べる、Webサイトと Webアプリのためのデザインシステム。
+> A design system for websites and web apps: surfaces are layered to separate content, and the accent colour is chosen from 9 palettes. 面を重ねて区切り、アクセントの色を9色から選べるデザインシステム。
 
-UI を作るときは、まず次の仕様書を最後まで読んでください。
+Before building UI, read one of the specs below to the end. The English edition uses fewer tokens; both say the same thing.
 
-- [Kasane v1 仕様書](https://kasane.y-n0.de/v1/kasane.md): ルール、トークン、全部品の HTML、作業後のチェックリスト
-- [kasane.css](https://kasane.y-n0.de/v1/kasane.css): すべてのトークンと部品の CSS
-- [tokens.json](https://kasane.y-n0.de/v1/tokens.json): トークンの値(W3C Design Tokens 形式)
-- [ソースコード](https://github.com/yamamotoxqx/design-system-kasane): GitHub のリポジトリ(MIT License)
+- [Kasane v1 spec (English)](https://kasane.y-n0.de/v1/kasane.en.md): rules, tokens, HTML for every component, end-of-work checklist
+- [Kasane v1 仕様書(日本語)](https://kasane.y-n0.de/v1/kasane.md): 同じ内容の日本語版
+- [kasane.css](https://kasane.y-n0.de/v1/kasane.css): all tokens and component CSS
+- [tokens.json](https://kasane.y-n0.de/v1/tokens.json): token values (W3C Design Tokens format)
+- [Source](https://github.com/yamamotoxqx/design-system-kasane): GitHub repository (MIT License)

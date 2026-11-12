@@ -1,6 +1,6 @@
 {
   "name": "kasane-lint",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Automatic checks for the Kasane design system: Stylelint rules (CSS), kasane-check (HTML), kasane-image (image optimisation with SSIM), kasane-lighthouse (Lighthouse minimum scores).",
   "type": "module",
   "main": "stylelint.js",

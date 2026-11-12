@@ -97,5 +97,22 @@ for (const [id, pal] of Object.entries(tokens.palette)) {
   }
 }
 
+// ---------------------------------------------------------------- 5. ja / en specs say the same thing
+console.log('\nSpecs (v1/kasane.md, v1/kasane.en.md)');
+const shape = (file) => {
+  const t = readFileSync(here('../v1/' + file), 'utf8');
+  const fences = t.match(/^```\w*$/gm) || [];
+  return {
+    headings: (t.match(/^#{1,3} /gm) || []).join(''),
+    sections: (t.match(/^## (\d+)\./gm) || []).join(','),
+    code: fences.filter((_, i) => i % 2 === 0).join(','),
+    tables: (t.match(/^\|---/gm) || []).length,
+    classes: [...new Set(t.match(/\bk-[a-z0-9-]+/g) || [])].sort().join(' '),
+    tokens: [...new Set(t.match(/--[a-z][a-z0-9-]*/g) || [])].sort().join(' '),
+  };
+};
+const ja = shape('kasane.md'), en = shape('kasane.en.md');
+for (const k of Object.keys(ja)) (ja[k] === en[k] ? pass : fail)(`same ${k}` + (ja[k] === en[k] ? '' : `\n      ja: ${ja[k]}\n      en: ${en[k]}`));
+
 console.log(failed ? `\n${failed} check(s) failed` : '\nAll checks passed');
 process.exit(failed ? 1 : 0);

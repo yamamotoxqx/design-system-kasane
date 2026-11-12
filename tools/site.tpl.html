@@ -119,6 +119,7 @@ html.navigated .page{animation:k-enter var(--motion-slow) var(--ease-out)}
 .ex-demo{background:var(--bg);border-radius:var(--r-md);padding:28px 20px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center}
 .ex-demo.ex-stack{flex-direction:column;align-items:stretch;max-width:100%}
 .ex-demo.ex-stack>*{width:100%;max-width:420px;margin:0 auto}
+.ex-demo.ex-stack>.wide{max-width:600px}
 .code{background:var(--surface-2);border-radius:var(--r-md);overflow:hidden}
 .code-head{display:flex;justify-content:space-between;align-items:center;padding:6px 8px 0 16px;font-size:12px;font-weight:700;color:var(--muted)}
 .copy{border:0;background:transparent;border-radius:999px;min-height:32px;padding:0 12px;font-size:13px;font-weight:700;color:var(--accent-ink);cursor:pointer}
@@ -199,6 +200,20 @@ td code{background:var(--surface-3)}
 .sm-text span{font-size:14px;color:var(--muted)}
 .site-map .go{width:20px;height:20px;flex:none;color:var(--muted);transition:transform var(--motion-fast),color var(--motion-fast)}
 @media (prefers-reduced-motion:reduce){.site-map .go{transition:none}}
+
+/* Showcase and examples on the integration page */
+.showcase{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.show{margin:0;background:var(--bg);color:var(--ink);border-radius:var(--r-lg);padding:14px;display:flex;flex-direction:column;gap:10px}
+.show figcaption{display:flex;flex-direction:column;line-height:1.5;padding:4px 6px}
+.show figcaption b{font-size:16px;font-weight:800}
+.show figcaption span{font-size:13px;color:var(--muted)}
+.show .k-card{padding:18px;gap:10px;border-radius:22px}
+.show .k-list-item{padding:8px 12px;border-radius:14px;font-size:14px}
+.show .k-btn{min-height:40px;font-size:14px;padding:0 18px}
+.show-why{margin:0;padding:0 6px 4px;font-size:13px;color:var(--muted)}
+.demo-link{color:var(--accent-ink);font-weight:700;font-size:14px;text-decoration:underline;text-underline-offset:3px}
+.demo-footer{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;background:var(--surface-2);border-radius:var(--r-md);padding:12px 16px;font-size:13px;color:var(--muted)}
+.demo-footer legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
 /* Log, icon grid */
 .log{list-style:none;padding:0;display:flex;flex-direction:column;gap:6px}
@@ -392,6 +407,7 @@ html[data-first-visit] .modal,.modal.open{display:grid}
   function setAccent(id,save){
     root.dataset.accent=id;if(save)store.set('kasane-accent',id);
     all('[data-accent-set]').forEach(function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-accent-set')===id));});
+    all('.k-palette input[type=radio]').forEach(function(r){r.checked=r.value===id;});
     paintTokens();
   }
   function paintTokens(){
@@ -443,6 +459,11 @@ html[data-first-visit] .modal,.modal.open{display:grid}
   document.addEventListener('click',function(e){
     var b=e.target.closest('.ex-demo .k-seg[role="group"] button');if(!b)return;
     all('button',b.parentNode).forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});
+  });
+
+  /* ---------- Palette pickers in the examples change the site's accent ---------- */
+  document.addEventListener('change',function(e){
+    var r=e.target.closest('.k-palette input[type=radio]');if(r&&r.checked)setAccent(r.value,true);
   });
 
   /* ---------- Replay a motion example ---------- */

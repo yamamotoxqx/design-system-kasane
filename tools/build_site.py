@@ -232,7 +232,38 @@ CSS['motion'] = '''/* Motion: short and quiet */
 .k-enter { animation: k-enter var(--motion-slow) var(--ease-out); }
 @media (prefers-reduced-motion: reduce) { .k-enter { animation: none; } }'''
 
-COMPONENTS_CSS = BASE_CSS + '\n\n/* Button */\n' + CSS['button'] + '\n\n/* Input, checkbox, switch */\n' + CSS['input'] + '\n\n/* Card and list */\n' + CSS['card'] + '\n\n/* Badge */\n' + CSS['badge'] + '\n\n/* Segmented control, tabs */\n' + CSS['tabs'] + '\n\n/* Progress bar */\n' + CSS['progress'] + '\n\n/* Dialog and toast */\n' + CSS['dialog'] + '\n\n' + CSS['motion'] + '\n'
+def _palette_css():
+    rules = ['''.k-palette { margin: 0; padding: 0; border: 0; min-width: 0; }
+.k-palette legend { padding: 0; margin-bottom: var(--space-2); font-weight: 700; font-size: var(--text-sm); }
+.k-palette-items { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.k-palette-item {
+  position: relative; display: inline-flex; align-items: center; gap: var(--space-2);
+  min-height: 44px; padding: 0 var(--space-4) 0 var(--space-2); border-radius: var(--r-full);
+  background: var(--surface-2); font-weight: 700; font-size: var(--text-sm); cursor: pointer;
+}
+.k-palette-item:hover { background: var(--surface-3); }
+.k-palette-item input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.k-palette-swatch { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--sw); }
+.k-palette-item input:checked ~ .k-palette-swatch::after {
+  content: ""; width: 11px; height: 6px; margin-top: -3px;
+  border-left: 3px solid var(--sw-on); border-bottom: 3px solid var(--sw-on); transform: rotate(-45deg);
+}
+.k-palette-item:has(input:checked) { background: var(--accent-soft); color: var(--accent-ink); }
+.k-palette-item input:focus-visible ~ .k-palette-swatch { outline: 3px solid var(--focus); outline-offset: 3px; }
+/* Compact: swatches only, for a page footer. The name stays for screen readers. */
+.k-palette-compact .k-palette-items { gap: var(--space-1); }
+.k-palette-compact .k-palette-item, .k-palette-compact .k-palette-item:has(input:checked) { min-width: 44px; padding: 0; justify-content: center; background: transparent; }
+.k-palette-compact .k-palette-name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* Each swatch shows its own palette's accent (light / dark) */''']
+    light = ''.join('.k-palette-swatch[data-swatch="%s"] { --sw: %s; --sw-on: %s; }\n' % (p['id'], p['light']['--accent'], p['light']['--on-accent']) for p in PAL)
+    dark = ''.join('.k-palette-swatch[data-swatch="%s"] { --sw: %s; --sw-on: %s; }\n' % (p['id'], p['dark']['--accent'], p['dark']['--on-accent']) for p in PAL)
+    rules.append(light.rstrip())
+    rules.append('@media (prefers-color-scheme: dark) {\n' + dark.replace('.k-palette-swatch', ':root:not([data-theme="light"]) .k-palette-swatch').rstrip() + '\n}')
+    rules.append(dark.replace('.k-palette-swatch', ':root[data-theme="dark"] .k-palette-swatch').rstrip())
+    return '\n'.join(rules)
+CSS['palette'] = _palette_css()
+
+COMPONENTS_CSS = BASE_CSS + '\n\n/* Button */\n' + CSS['button'] + '\n\n/* Input, checkbox, switch */\n' + CSS['input'] + '\n\n/* Card and list */\n' + CSS['card'] + '\n\n/* Badge */\n' + CSS['badge'] + '\n\n/* Segmented control, tabs */\n' + CSS['tabs'] + '\n\n/* Progress bar */\n' + CSS['progress'] + '\n\n/* Dialog and toast */\n' + CSS['dialog'] + '\n\n/* Palette picker */\n' + CSS['palette'] + '\n\n' + CSS['motion'] + '\n'
 
 # ---------------------------------------------------------------- distributable files
 HEADER = '/*! Kasane %s — design tokens and components. Docs: index.html / kasane.md */\n' % VERSION
@@ -268,15 +299,21 @@ tokens['duration'] = {'fast': tok('150ms', 'duration'), 'base': tok('220ms', 'du
 json.dump(tokens, open(os.path.join(ROOT, VERSION, 'tokens.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
 
 # Rules and spec for AI tools and people
-md = open('kasane.md.tpl', encoding='utf-8').read().replace('{{BASE}}', BASE).replace('{{VERSION}}', VERSION).replace('{{LINT_URL}}', LINT_URL).replace('{{SITE}}', BASE.rsplit('/', 1)[0]).replace('{{LUCIDE_VER}}', LUCIDE_VER).replace('{{LUCIDE_URL}}', LUCIDE_URL)
+def spec(tpl):
+    return open(tpl, encoding='utf-8').read().replace('{{BASE}}', BASE).replace('{{VERSION}}', VERSION).replace('{{LINT_URL}}', LINT_URL).replace('{{SITE}}', BASE.rsplit('/', 1)[0]).replace('{{LUCIDE_VER}}', LUCIDE_VER).replace('{{LUCIDE_URL}}', LUCIDE_URL)
+md = spec('kasane.md.tpl')
 open(os.path.join(ROOT, VERSION, 'kasane.md'), 'w', encoding='utf-8').write(md)
+# English edition: same content, fewer tokens for AI tools
+open(os.path.join(ROOT, VERSION, 'kasane.en.md'), 'w', encoding='utf-8').write(spec('kasane.en.md.tpl'))
 open(os.path.join(ROOT, 'llms.txt'), 'w', encoding='utf-8').write(
-    '# Kasane\n\n> 面を重ねて区切り、アクセントの色を9色から選べる、Webサイトと Webアプリのためのデザインシステム。\n\n'
-    'UI を作るときは、まず次の仕様書を最後まで読んでください。\n\n'
-    '- [Kasane %s 仕様書](%s/kasane.md): ルール、トークン、全部品の HTML、作業後のチェックリスト\n'
-    '- [kasane.css](%s/kasane.css): すべてのトークンと部品の CSS\n'
-    '- [tokens.json](%s/tokens.json): トークンの値(W3C Design Tokens 形式)\n'
-    '- [ソースコード](https://github.com/yamamotoxqx/design-system-kasane): GitHub のリポジトリ(MIT License)\n' % (VERSION, BASE, BASE, BASE))
+    '# Kasane\n\n> A design system for websites and web apps: surfaces are layered to separate content, and the accent colour is chosen from 9 palettes. '
+    '面を重ねて区切り、アクセントの色を9色から選べるデザインシステム。\n\n'
+    'Before building UI, read one of the specs below to the end. The English edition uses fewer tokens; both say the same thing.\n\n'
+    '- [Kasane %s spec (English)](%s/kasane.en.md): rules, tokens, HTML for every component, end-of-work checklist\n'
+    '- [Kasane %s 仕様書(日本語)](%s/kasane.md): 同じ内容の日本語版\n'
+    '- [kasane.css](%s/kasane.css): all tokens and component CSS\n'
+    '- [tokens.json](%s/tokens.json): token values (W3C Design Tokens format)\n'
+    '- [Source](https://github.com/yamamotoxqx/design-system-kasane): GitHub repository (MIT License)\n' % (VERSION, BASE, VERSION, BASE, BASE, BASE))
 
 # ---------------------------------------------------------------- helpers
 def code(lang, src):
@@ -291,6 +328,11 @@ def dd(do_html, do_text, dont_html, dont_text):
     return ('<div class="dd"><figure class="dd-item dd-do"><div class="dd-demo">%s</div><figcaption class="dd-cap"><span class="dd-label">%sDo</span>%s</figcaption></figure>'
             '<figure class="dd-item dd-dont"><div class="dd-demo">%s</div><figcaption class="dd-cap"><span class="dd-label">%sDon\'t</span>%s</figcaption></figure></div>') % (do_html, I_OK, do_text, dont_html, I_NG, dont_text)
 
+def palette_html(name='accent', compact=False, legend='テーマカラー', selected='yamabuki', ids=None):
+    items = ''.join('<label class="k-palette-item"><input type="radio" name="%s" value="%s"%s><span class="k-palette-swatch" data-swatch="%s"></span><span class="k-palette-name">%s</span></label>'
+                    % (name, p['id'], ' checked' if p['id'] == selected else '', p['id'], p['name']) for p in PAL if not ids or p['id'] in ids)
+    return '<fieldset class="k-palette%s"><legend>%s</legend><div class="k-palette-items">%s</div></fieldset>' % (' k-palette-compact' if compact else '', legend, items)
+
 def table_fixed(widths, head, rows):
     # fixed column widths: the table keeps its size while fonts load
     cols = '<colgroup>%s</colgroup>' % ''.join('<col style="width:%s">' % w for w in widths)
@@ -301,7 +343,7 @@ def table(head, rows):
         ''.join('<th>%s</th>' % h for h in head), ''.join('<tr>%s</tr>' % ''.join('<td>%s</td>' % c for c in r) for r in rows))
 
 NAV = [
-    ('intro', 'はじめに', [('about', 'Kasane とは'), ('start', '使い始める'), ('with-ai', 'AI と使う'), ('updates', '更新情報')]),
+    ('intro', 'はじめに', [('about', 'Kasane とは'), ('start', '使い始める'), ('integrate', '組み込み方と使用例'), ('with-ai', 'AI と使う'), ('updates', '更新情報')]),
     ('principle', '原則', [('principles', 'デザイン原則'), ('accessibility', 'アクセシビリティ'), ('performance', 'パフォーマンス'), ('writing', '文章')]),
     ('style', 'スタイル', [('color', 'カラー'), ('typography', 'タイポグラフィ'), ('shape', '角丸と余白'), ('layout', 'レイアウト'), ('icons', 'アイコン'), ('motion', '動き')]),
     ('component', 'コンポーネント', [('button', 'ボタン'), ('input', '入力欄'), ('card', 'カードとリスト'), ('badge', 'バッジ'), ('tabs', 'タブ'), ('progress', '進捗バー'), ('dialog', 'ダイアログとトースト')]),
@@ -340,7 +382,8 @@ page('about', 'Kasane(かさね)は、Webサイトと Webアプリのための�
         '<div class="tile"><h3>9色から選べる</h3><p>アクセントの色を変えても、文字の読みやすさは同じ基準を守ります。</p></div>'
         '<div class="tile"><h3>CSSだけで使える</h3><p>トークンと部品は1つのCSSファイルで、URLから読み込めます。ビルドや JavaScript のライブラリは要りません。</p></div></div>')
   + sec('このサイトの構成', '<ul class="site-map">'
-        '<li><a href="#start"><span class="sm-text"><b>使い始める</b><span>CSSの読み込みと、色とテーマの切り替え方</span></span>' + icon('chevron-right', 'go') + '</a></li>'
+        '<li><a href="#start"><span class="sm-text"><b>使い始める</b><span>CSSの読み込みと、色の決め方</span></span>' + icon('chevron-right', 'go') + '</a></li>'
+        '<li><a href="#integrate"><span class="sm-text"><b>組み込み方と使用例</b><span>既定の色の決め方、利用者が色を変える場所、パレットごとの使用例</span></span>' + icon('chevron-right', 'go') + '</a></li>'
         '<li><a href="#with-ai"><span class="sm-text"><b>AI と使う</b><span>Claude Code などに Kasane のルールを渡す方法</span></span>' + icon('chevron-right', 'go') + '</a></li>'
         '<li><a href="#principles"><span class="sm-text"><b>原則</b><span>設計の考え方、アクセシビリティ、パフォーマンス、文章の書き方</span></span>' + icon('chevron-right', 'go') + '</a></li>'
         '<li><a href="#color"><span class="sm-text"><b>スタイル</b><span>カラー、タイポグラフィ、角丸と余白、レイアウト、アイコン、動き</span></span>' + icon('chevron-right', 'go') + '</a></li>'
@@ -353,11 +396,10 @@ page('start', 'CSSを読み込み、<code>&lt;html&gt;</code> に色の名前を
       + '<p>URLの <code>' + VERSION + '</code> は版の番号です。見た目が大きく変わる更新は新しい版として出すので、同じURLを使っている限り、見た目が急に変わることはありません。</p>')
   + sec('2. アクセントの色を選ぶ', '<p><code>data-accent</code> にパレットの名前を書きます。書かなければ山吹になります。使える名前は <a href="#color">カラー</a> のページにあります。</p>'
       + code('HTML', '<html lang="ja" data-accent="ai">'))
-  + sec('3. ライトとダークを切り替える', '<p>何も指定しなければ、端末の設定(<code>prefers-color-scheme</code>)に従います。利用者が切り替えられるようにするには、<code>data-theme</code> に <code>light</code> か <code>dark</code> を書きます。このサイトのページ下部にある切り替えも、この方法です。</p>'
-      + code('JavaScript', 'const root = document.documentElement;\n\n// いまダークかどうか(指定がなければ端末の設定)\nfunction isDark() {\n  const t = root.dataset.theme;\n  return t ? t === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;\n}\n\n// "light" か "dark" に切り替えて保存する\nfunction setTheme(theme) {\n  root.dataset.theme = theme;\n  try { localStorage.setItem("kasane-theme", theme); } catch (e) {}\n}')
-      + code('HTML', '<div class="k-seg" role="group" aria-label="テーマ">\n  <button type="button" aria-pressed="true" onclick="setTheme(\'light\')">ライト</button>\n  <button type="button" aria-pressed="false" onclick="setTheme(\'dark\')">ダーク</button>\n</div>'))
-  + sec('4. 選んだ色を保存する', '<p>色やテーマを保存している場合は、<code>&lt;head&gt;</code> の先頭で、CSSより前に適用します。こうすると、ページを開いた瞬間に別の色が見えるちらつきを防げます。</p>'
-      + code('HTML', '<head>\n  <script>\n    try {\n      var a = localStorage.getItem("kasane-accent");\n      var t = localStorage.getItem("kasane-theme");\n      if (a) document.documentElement.dataset.accent = a;\n      if (t) document.documentElement.dataset.theme = t;\n    } catch (e) {}\n  </script>\n  <link rel="stylesheet" href="' + BASE + '/kasane.min.css">\n</head>'))
+  + sec('3. ライトとダークは端末に任せる', '<p>何も指定しなければ、端末の設定(<code>prefers-color-scheme</code>)に従います。製品には、ライトとダークの切り替えボタンを置きません。利用者が変えられるのは色だけにします。</p>'
+      + '<p><code>data-theme</code> に <code>light</code> か <code>dark</code> を書くと固定できますが、画面の確認やこのサイトの見本のためのものです。</p>')
+  + sec('4. 利用者が色を変えられるようにする', '<p>色を変えられるようにするなら、設定ページか、ページ下部に色の選択を置きます。選んだ色は保存して、次に開いたとき <code>&lt;head&gt;</code> の先頭で、CSSより前に適用します。こうすると、別の色が一瞬見えるちらつきを防げます。置き方と見本は <a href="#integrate">組み込み方と使用例</a> にあります。</p>'
+      + code('HTML', '<head>\n  <script>\n    try {\n      var a = localStorage.getItem("kasane-accent");\n      if (a) document.documentElement.dataset.accent = a;\n    } catch (e) {}\n  </script>\n  <link rel="stylesheet" href="' + BASE + '/kasane.min.css">\n</head>'))
   + sec('5. 部品を使う', '<p>部品はクラスを付けるだけで使えます。独自の部品を作るときは、色を直接書かずにトークンを参照します。</p>'
       + ex('<button class="k-btn k-btn-primary" type="button">保存する</button>\n<button class="k-btn" type="button">下書き</button>')
       + code('CSS', '.my-banner {\n  background: var(--accent-soft);\n  color: var(--accent-ink);\n  border-radius: var(--r-md);\n  padding: var(--space-4);\n}')))
@@ -450,7 +492,7 @@ page('button', '操作のきっかけになる部品です。丸薬型で、枠�
                     '<div class="inline"><button class="k-btn k-btn-primary" type="button">キャンセル</button><button class="k-btn k-btn-primary" type="button">保存する</button></div>', '主ボタンを並べません。どちらが主な操作か分からなくなります。'))
   + sec('CSS', code('CSS', CSS['button'])))
 
-page('input', '文字の入力欄、チェックボックス、スイッチです。Kasane で枠線を持つのは、この入力の部品だけです。',
+page('input', '文字の入力欄、チェックボックス、スイッチ、色の選択です。Kasane で枠線を持つのは、この入力の部品だけです。',
   sec('文字の入力欄', ex('<label class="k-field">お名前\n  <input class="k-input" type="text" placeholder="例:山田 花子">\n  <span class="k-hint">本名でなくてもかまいません。</span>\n</label>', True))
   + sec('エラー', '<p>枠を赤くするだけでなく、何が問題で、どう直せばよいかを文で伝えます。</p>'
         + ex('<label class="k-field">メールアドレス\n  <input class="k-input" type="email" value="hanako@" aria-invalid="true" aria-describedby="mail-error">\n  <span class="k-error" id="mail-error">%s「@」のあとにドメインを入力してください。</span>\n</label>' % I_WARN, True))
@@ -459,7 +501,10 @@ page('input', '文字の入力欄、チェックボックス、スイッチで�
   + sec('ラジオボタン', ex('<label class="k-option"><input class="k-radio" type="radio" name="density" checked> ゆったり</label>\n<label class="k-option"><input class="k-radio" type="radio" name="density"> ふつう</label>\n<label class="k-option"><input class="k-radio" type="radio" name="density"> コンパクト</label>'))
   + sec('スイッチ', '<p>すぐに反映される設定に使います。オンとオフは、つまみの位置でも分かります。</p>'
         + ex('<label class="k-switch">\n  <input type="checkbox" checked>\n  <span class="k-switch-track" aria-hidden="true"></span>\n  自動で保存する\n</label>'))
-  + sec('CSS', code('CSS', CSS['input'])))
+  + sec('色の選択', '<p>利用者がアクセントの色を選ぶための部品です。中身はラジオボタンなので、キーボードの矢印キーでも選べます。色の丸だけを並べる <code>.k-palette-compact</code> もあります。置き場所と保存の仕方は <a href="#integrate">組み込み方と使用例</a> にあります。押すと、このサイトの色も変わります。</p>'
+        + '<div class="ex"><div class="ex-demo ex-stack"><div class="wide">' + palette_html(name='accent-input') + '</div></div>'
+        + code('HTML', '<fieldset class="k-palette">  <!-- 丸だけにするときは k-palette-compact を足す -->\n  <legend>テーマカラー</legend>\n  <div class="k-palette-items">\n    <label class="k-palette-item">\n      <input type="radio" name="accent" value="yamabuki" checked>\n      <span class="k-palette-swatch" data-swatch="yamabuki"></span>\n      <span class="k-palette-name">山吹</span>\n    </label>\n    <!-- 残りの8色も同じ形で並べる -->\n  </div>\n</fieldset>') + '</div>')
+  + sec('CSS', code('CSS', CSS['input'] + '\n\n' + CSS['palette'])))
 
 page('card', '情報のまとまりを作る面です。枠線も影も使わず、面の色で区切ります。',
   sec('カード', ex('<div class="k-card">\n  <h3 class="k-card-title">今週のおしらせ</h3>\n  <p class="k-card-text">金曜日は、図書館が17時に閉まります。</p>\n  <div><button class="k-btn" type="button">詳しく見る</button></div>\n</div>', True))
@@ -526,6 +571,13 @@ def _cr(a, b):
     x, y = _lum(a), _lum(b); return (max(x, y) + .05) / (min(x, y) + .05)
 def _bad(acc): return min(('#ffffff', '#1a1a1a'), key=lambda c: _cr(c, acc))
 DOCS_EXTRA = ''
+# Docs only: .demo-scope[data-accent] carries one palette's tokens, so several palettes can sit on one page.
+_ORDER = ['--bg', '--surface', '--surface-2', '--surface-3', '--ink', '--muted', '--line', '--accent', '--accent-soft', '--accent-ink', '--on-accent', '--focus', '--notice-head', '--ok', '--ok-soft', '--danger', '--danger-soft', '--info', '--info-soft']
+for p in PAL:
+    sel = '.demo-scope[data-accent="%s"]' % p['id']
+    lt = ';'.join('%s:%s' % (k, p['light'][k]) for k in _ORDER)
+    dk = ';'.join('%s:%s' % (k, p['dark'][k]) for k in _ORDER)
+    DOCS_EXTRA += '%s{%s}@media (prefers-color-scheme:dark){html:not([data-theme="light"]) %s{%s}}html[data-theme="dark"] %s{%s}\n' % (sel, lt, sel, dk, sel, dk)
 for p in PAL:
     sel = ':root[data-accent="%s"]' % p['id']
     first = p['id'] == PAL[0]['id']
@@ -540,8 +592,8 @@ AI_NOTE = ('Kasane デザインシステムのドキュメント。AI が UI を
            'CSS は %s/kasane.min.css を読み込むこと。' % (BASE, BASE))
 HEAD_META = ('<meta name="description" content="%s">\n<link rel="alternate" type="text/markdown" title="Kasane 仕様書" href="%s/kasane.md">\n'
              '<link rel="help" href="%s/kasane.md">' % (html.escape(AI_NOTE), BASE, BASE))
-footer_cols += ('<div class="f-col"><div class="f-title">AI 向け</div><a href="%s/kasane.md">仕様書(kasane.md)</a>'
-                '<a href="%s/llms.txt">llms.txt</a><a href="%s/tokens.json">tokens.json</a></div>' % (BASE, BASE.rsplit('/', 1)[0], BASE))
+footer_cols += ('<div class="f-col"><div class="f-title">AI 向け</div><a href="%s/kasane.md">仕様書(kasane.md)</a><a href="%s/kasane.en.md">英語版(kasane.en.md)</a>'
+                '<a href="%s/llms.txt">llms.txt</a><a href="%s/tokens.json">tokens.json</a></div>' % (BASE, BASE, BASE.rsplit('/', 1)[0], BASE))
 
 # Routing without JavaScript at first paint: a tiny script in <head> sets html[data-page] and
 # html[data-sec] from the hash, and these rules show the right page, sidebar group and TOC.

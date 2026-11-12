@@ -5,15 +5,17 @@ I_PLUS, I_MENU, I_CHEV = icon('plus'), icon('menu'), icon('chevron-right')
 # ---------------------------------------------------------------- はじめに
 page('with-ai', 'Claude Code や Codex などの AI にUIを作ってもらうときに、Kasane のルールを守ってもらう方法です。ファイルを手元に置かなくても、URLを伝えるだけで使えます。',
   sec('AI に読ませるもの', '<p>AI には、このドキュメントサイトではなく、仕様書の <code>kasane.md</code> を読ませます。動きのあるページや大きなファイルは、AI がうまく読み取れないためです。仕様書には、ルールとその理由、全トークン、全部品の HTML、Kasane にない部品の作り方、作業後のチェックリストが入っています。</p>'
+      + '<p>日本語版と英語版は同じ内容です。AI に読ませるなら、トークン(AI が文章を数える単位)が少なく済む英語版がおすすめです。英語版を読ませても、画面の文章は製品の言葉(日本語など)で書くよう仕様書に書いてあります。</p>'
       + table(['ファイル', '内容'], [
-          ['<code>' + BASE + '/kasane.md</code>', '仕様書(AI と人が読む)'],
+          ['<code>' + BASE + '/kasane.md</code>', '仕様書(日本語)'],
+          ['<code>' + BASE + '/kasane.en.md</code>', '仕様書の英語版。内容は同じで、AI が読むときのトークンが少なく済む'],
           ['<code>' + BASE + '/kasane.min.css</code>', 'すべてのトークンと部品の CSS'],
           ['<code>' + BASE + '/tokens.json</code>', 'トークンの値(W3C Design Tokens 形式)'],
           ['<code>llms.txt</code>', 'AI に仕様書の場所を知らせる案内(サイトの一番上に置く)']]))
   + sec('Claude Code で使う', '<p>プロジェクトの <code>CLAUDE.md</code> に、次の内容を書きます。作業のたびに自動で読み込まれます。</p>'
-      + code('Markdown', '## UI\n\nUIを作る・変更するときは、作業の前に次の仕様書を最後まで読み、そのルールに従うこと。\n' + BASE + '/kasane.md\n\nCSSは次を読み込む。\n' + BASE + '/kasane.min.css\n\n作業の最後に、仕様書の「作業の最後に確かめること」をすべて確かめること。')
+      + code('Markdown', '## UI\n\nUIを作る・変更するときは、作業の前に次の仕様書を最後まで読み、そのルールに従うこと。\n' + BASE + '/kasane.en.md\n\nCSSは次を読み込む。\n' + BASE + '/kasane.min.css\n\n作業の最後に、仕様書の「作業の最後に確かめること」をすべて確かめること。')
       + '<p>URLを読むたびに許可を求められる場合は、配信先のドメインを Claude Code の設定で許可しておくと、聞かれなくなります。</p>')
-  + sec('Codex で使う', '<p>プロジェクトの <code>AGENTS.md</code> に、上と同じ内容を書きます。Codex をネットにつながらない設定で使っているとURLを読めないので、その場合は <code>kasane.md</code> をリポジトリに置き、そのファイルを読むように書きます。</p>')
+  + sec('Codex で使う', '<p>プロジェクトの <code>AGENTS.md</code> に、上と同じ内容を書きます。Codex をネットにつながらない設定で使っているとURLを読めないので、その場合は <code>kasane.en.md</code>(または <code>kasane.md</code>)をリポジトリに置き、そのファイルを読むように書きます。</p>')
   + sec('ほかの AI で使う', '<p>チャットで使う場合は、<code>kasane.md</code> の内容を貼るか、ファイルとして添付します。プロジェクトの指示に入れておくと、毎回貼る必要がなくなります。</p>')
   + sec('自動でチェックする', '<p>AI は長い指示の一部を読み落とすことがあります。<code>kasane-lint</code> を入れると、ルールの多くを機械的に確かめられます。CSS は Stylelint、HTML は <code>kasane-check</code> が見ます。CSSと同じ配信先から入れられ、GitHub のアカウントは要りません。</p>'
       + code('bash', 'npm install --save-dev stylelint ' + LINT_URL)
@@ -55,6 +57,8 @@ page('with-ai', 'Claude Code や Codex などの AI にUIを作ってもらう�
 
 page('updates', 'Kasane の変更の記録です。',
   sec('2026年11月', '<ul class="log">'
+      '<li><time class="k-num">11.12</time><div><b>組み込み方と使用例のページ、色の選択の部品を追加</b><span>製品では既定の色を決めておき、利用者は設定ページかページ下部で色を変えます。ライト・ダークは端末の設定に従います。</span></div></li>'
+      '<li><time class="k-num">11.12</time><div><b>仕様書の英語版を追加</b><span>kasane.en.md は日本語版と同じ内容で、AI が読むときのトークンが少なく済みます。</span></div></li>'
       '<li><time class="k-num">11.12</time><div><b>アクセシビリティとパフォーマンスのページを追加</b><span>画像を軽くして SSIM を確かめる kasane-image と、Lighthouse の最低点を確かめる kasane-lighthouse を加えました。</span></div></li>'
       '<li><time class="k-num">11.11</time><div><b>アイコンを Lucide に統一、HTML のチェックを追加</b><span>アイコンは Lucide だけを使う決まりにしました。kasane-check で、HTML の使い方も自動で確かめられます。</span></div></li>'
       '<li><time class="k-num">11.11</time><div><b>URLでの配信と自動チェックを用意</b><span>CSSを1本にまとめ、AI用の仕様書(kasane.md)と Stylelint のプラグインを加えました。</span></div></li>'
@@ -247,3 +251,63 @@ page('performance', '表示が速く、動きが安定していて、思わぬ�
       '<li>' + REF_SPINDLE_PERF + '<span>目指す状態、画像やレイアウトのずれのチェックリスト</span></li>'
       '<li><a href="https://web.dev/articles/vitals">Web Vitals</a><span>LCP、INP、CLS の考え方と目標</span></li>'
       '<li><a href="https://developer.chrome.com/docs/lighthouse/overview">Lighthouse</a><span>評価に使う道具</span></li></ul>'))
+
+# ---------------------------------------------------------------- はじめに: 組み込み方と使用例
+SHOWCASE = [
+  ('ai', '予約サイト', '落ち着いた青で、信頼できる印象に。', '11月20日(水)の空き', [('14:00', '2席'), ('16:30', '残り1席')], '予約する'),
+  ('moegi', '学習アプリ', '明るい黄緑で、続けたくなる雰囲気に。', '今日の学習', [('英単語 20語', '完了'), ('文法ドリル', '残り5問')], '学習を始める'),
+  ('kobai', 'コミュニティ', 'やわらかいばら色で、話しかけやすく。', '新しい投稿', [('週末の写真', '12件'), ('おすすめの本', '8件')], '投稿する'),
+  ('sumi', '業務ツール', '色を主張しない墨で、情報に集中できる。', '今月の申請', [('交通費', '承認待ち'), ('備品購入', '承認済み')], '申請する'),
+]
+def _demo(acc, title, why, head, rows, cta):
+    p = [x for x in PAL if x['id'] == acc][0]
+    lis = ''.join('<li class="k-list-item"><span class="k-list-item-main">%s</span><span class="k-badge k-badge-accent">%s</span></li>' % (a, b) for a, b in rows)
+    return ('<figure class="demo-scope show" data-accent="%s"><figcaption><b>%s</b><span>%s ・ <code>data-accent="%s"</code></span></figcaption>'
+            '<div class="k-card"><h3 class="k-card-title">%s</h3><ul class="k-list">%s</ul>'
+            '<div class="inline start"><button class="k-btn k-btn-primary" type="button" tabindex="-1">%s</button><a class="demo-link" tabindex="-1">詳しく見る</a></div></div>'
+            '<p class="show-why">%s</p></figure>' % (acc, title, p['name'], acc, head, lis, cta, why))
+
+PALETTE_SRC = '<fieldset class="k-palette">\n  <legend>テーマカラー</legend>\n  <div class="k-palette-items">\n' + ''.join(
+    '    <label class="k-palette-item">\n      <input type="radio" name="accent" value="%s"%s>\n      <span class="k-palette-swatch" data-swatch="%s"></span>\n      <span class="k-palette-name">%s</span>\n    </label>\n'
+    % (p['id'], ' checked' if p['id'] == 'yamabuki' else '', p['id'], p['name']) for p in PAL if p['id'] in ('yamabuki', 'ai')) + '    <!-- 9色すべてを同じ形で並べる。value はパレットの名前 -->\n  </div>\n</fieldset>'
+
+PICKER_JS = '''// 設定ページやページ下部の色の選択(.k-palette)を、<html data-accent> と保存につなぐ
+const root = document.documentElement;
+const current = root.dataset.accent || "yamabuki";
+document.querySelectorAll('.k-palette input[name="accent"]').forEach((radio) => {
+  radio.checked = radio.value === current;
+  radio.addEventListener("change", () => {
+    root.dataset.accent = radio.value;
+    try { localStorage.setItem("kasane-accent", radio.value); } catch (e) {}
+  });
+});'''
+
+page('integrate', 'Kasane は、色をデザイナーが決めることも、利用者が変えることもできます。製品に組み込むときの決め方と、実際の使い方の例をまとめます。',
+  sec('決めること', '<p>組み込むときに決めるのは、次の2つだけです。</p>'
+      + table(['決めること', 'やり方'], [
+          ['既定の色', '<code>&lt;html data-accent="…"&gt;</code> に書く'],
+          ['利用者が色を変えられるか', '変えられるなら、設定ページかページ下部に色の選択を置く']])
+      + '<p>どちらも、作る人(デザイナーや開発者)が最初に決めます。</p>'
+      + '<p>ライトとダークは、端末の設定に従います。製品には切り替えのボタンを置きません。このドキュメントサイトでは見本のために最初に色を聞いていますが、製品では既定の色ですぐに始めます。</p>')
+  + sec('使用例', '<p>同じ部品でも、パレットを変えるだけで印象が変わります。サービスの性格やブランドの色に近いパレットを、既定の色に選びます。</p>'
+      '<div class="showcase">' + ''.join(_demo(*x) for x in SHOWCASE) + '</div>')
+  + sec('既定の色を決める', '<p>既定の色は、HTML に直接書きます。保存された色があればそちらを使い、なければ既定の色のまま表示します。どちらも描画の前に決まるので、色がちらつきません。</p>'
+      + code('HTML', '<html lang="ja" data-accent="ai">  <!-- 既定の色 -->\n<head>\n  <script>\n    try {\n      var saved = localStorage.getItem("kasane-accent");\n      if (saved) document.documentElement.dataset.accent = saved;  // 利用者が選んだ色\n    } catch (e) {}\n  </script>\n  <link rel="stylesheet" href="' + BASE + '/kasane.min.css">\n</head>')
+      + table(['こんなとき', '選ぶパレット'], [
+          ['ブランドの色がある', 'その色相に一番近いパレット'],
+          ['信頼感、落ち着き', '藍、空'],
+          ['明るさ、親しみやすさ', '山吹、橘、萌黄'],
+          ['やさしさ、交流', '紅梅、藤'],
+          ['情報に集中してほしい、業務の画面', '墨']]))
+  + sec('設定ページに置く', '<p>設定ページがあるなら、そこに色の選択を置きます。色の名前も見えるので、選びやすくなります。下の例を押すと、このサイトの色も変わります。</p>'
+      + '<div class="ex"><div class="ex-demo ex-stack"><div class="k-card wide"><h3 class="k-card-title">表示の設定</h3>' + palette_html(name='accent-settings') + '</div></div>'
+      + code('HTML', PALETTE_SRC) + '</div>')
+  + sec('ページ下部に置く', '<p>設定ページがないときは、ページ下部に小さく置きます。色の丸だけを並べ、名前は読み上げ用に残します。</p>'
+      + '<div class="ex"><div class="ex-demo ex-stack"><div class="demo-footer wide"><span>© 2026 サンプル</span>' + palette_html(name='accent-footer', compact=True, legend='テーマカラー') + '</div></div>'
+      + code('HTML', '<fieldset class="k-palette k-palette-compact">\n  <legend>テーマカラー</legend>\n  <div class="k-palette-items">…設定ページと同じ…</div>\n</fieldset>') + '</div>')
+  + sec('選んだ色を保存する', '<p>選択を <code>&lt;html data-accent&gt;</code> と保存につなぐ JavaScript です。設定ページでもページ下部でも同じです。</p>'
+      + code('JavaScript', PICKER_JS))
+  + sec('使い方', dd('<div class="stack" style="font-size:14px"><span>開いたらすぐ既定の色</span><span class="k-badge k-badge-accent">設定 › 表示 › テーマカラー</span></div>', '既定の色ですぐに始め、変えたい人は設定から変えられます。',
+                    '<div class="stack" style="font-size:14px"><span>開くたびに「色を選んでください」</span><span class="k-badge">どの画面にも色の切り替え</span></div>', '最初に色を選ばせたり、色の切り替えをあちこちに置いたりしません。'))
+  + sec('AI に伝えるとき', '<p>AI に作ってもらうときは、既定の色と、色を変えられるかどうかを最初に伝えます。</p>'
+      + code('Markdown', 'デザインは Kasane に従う(仕様書: ' + BASE + '/kasane.en.md)。\n既定の色は藍(data-accent="ai")。利用者が設定ページで色を変えられるようにする。\nライト・ダークは端末の設定に従い、切り替えボタンは置かない。')))
