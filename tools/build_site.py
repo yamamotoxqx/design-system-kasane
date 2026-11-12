@@ -291,6 +291,11 @@ def dd(do_html, do_text, dont_html, dont_text):
     return ('<div class="dd"><figure class="dd-item dd-do"><div class="dd-demo">%s</div><figcaption class="dd-cap"><span class="dd-label">%sDo</span>%s</figcaption></figure>'
             '<figure class="dd-item dd-dont"><div class="dd-demo">%s</div><figcaption class="dd-cap"><span class="dd-label">%sDon\'t</span>%s</figcaption></figure></div>') % (do_html, I_OK, do_text, dont_html, I_NG, dont_text)
 
+def table_fixed(widths, head, rows):
+    # fixed column widths: the table keeps its size while fonts load
+    cols = '<colgroup>%s</colgroup>' % ''.join('<col style="width:%s">' % w for w in widths)
+    return table(head, rows).replace('<table>', '<table class="fixed">' + cols, 1)
+
 def table(head, rows):
     return '<div class="tbl"><table><thead><tr>%s</tr></thead><tbody>%s</tbody></table></div>' % (
         ''.join('<th>%s</th>' % h for h in head), ''.join('<tr>%s</tr>' % ''.join('<td>%s</td>' % c for c in r) for r in rows))
@@ -400,7 +405,7 @@ page('color', '色はすべてトークンで指定します。アクセント�
   + sec('面の重なり', '<p>内側に入るほど、面の色を一段ずつ変えます。</p>'
       '<div class="layers L0"><span>--bg</span><div class="layers L1"><span>--surface</span><div class="layers L2"><span>--surface-2</span><div class="layers L3"><span>--surface-3</span></div></div></div></div>')
   + sec('トークンの一覧', '<p>値は、いま表示しているパレットとテーマのものです。</p>'
-      + table(['トークン', '用途', 'いまの値'], [['<code>%s</code>' % k, d, '<span class="sw"><i style="background:var(%s)"></i><span data-token="%s">%s</span></span>' % (k, k, PAL[0]['light'][k])] for k, d in TOKENS]))
+      + table_fixed(['32%', '43%', '25%'], ['トークン', '用途', 'いまの値'], [['<code>%s</code>' % k, d, '<span class="sw"><i style="background:var(%s)"></i><span data-token="%s">%s</span></span>' % (k, k, PAL[0]['light'][k])] for k, d in TOKENS]))
   + sec('アクセントの使い分け', '<p>アクセントには、塗り用と文字用の2つのトークンがあります。黄色や水色のような明るい色は、そのまま文字にすると読めないためです。</p>'
       + code('CSS', '.button-primary { background: var(--accent); color: var(--on-accent); }\n.link           { color: var(--accent-ink); }\n.highlight      { background: var(--accent-soft); color: var(--accent-ink); }'))
   + sec('状態の色', '<p>成功は緑、エラーは赤、情報は落ち着いた青灰色で、どのパレットでも同じです。文字の色は、対応する <code>-soft</code> の面に重ねて使い、アイコンを必ず添えます。</p>'
