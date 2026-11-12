@@ -23,3 +23,7 @@
 
 /LICENSE
   Content-Type: text/plain; charset=utf-8
+/favicon.*
+  Cache-Control: public, max-age=86400
+/og.png
+  Cache-Control: public, max-age=86400

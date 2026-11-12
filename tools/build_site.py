@@ -353,6 +353,7 @@ TITLE_OF = {pid: t for _, _, pages in NAV for pid, t in pages}
 
 PAGES = []
 TOCS = []
+ART, TOC_OF, LEAD_OF = {}, {}, {}   # per page, for the one-file-per-URL site
 FLAT = [(pid, t) for _, _, pages in NAV for pid, t in pages]
 def page(pid, lead, body):
     # give every section an id, and build this page's on-this-page list and pager at build time
@@ -364,12 +365,14 @@ def page(pid, lead, body):
     toc = ''.join('<button type="button" data-scroll="%s">%s</button>' % (sid, re.sub(r'<[^>]+>', '', h2).strip())
                   for sid, h2 in re.findall(r'<section class="sec" id="([^"]+)"><h2>(.*?)</h2>', body))
     TOCS.append('<nav class="toc-page" data-page="%s" aria-label="このページの目次"><div class="toc-title">このページの内容</div>%s</nav>' % (pid, toc))
+    TOC_OF[pid] = TOCS[-1]; LEAD_OF[pid] = lead
     i = [p for p, _ in FLAT].index(pid)
     pager = ''
     if i > 0: pager += '<a class="prev" href="#%s"><small>前のページ</small>%s</a>' % FLAT[i - 1]
     if i < len(FLAT) - 1: pager += '<a class="next" href="#%s"><small>次のページ</small>%s</a>' % FLAT[i + 1]
     PAGES.append('<article class="page" data-page="%s"><div class="page-head"><div class="crumbs">%s / %s</div><h1>%s</h1><p class="lead">%s</p></div>%s<nav class="pager" aria-label="前後のページ">%s</nav></article>'
                  % (pid, SEC_OF[pid], TITLE_OF[pid], TITLE_OF[pid], lead, body, pager))
+    ART[pid] = PAGES[-1]
 
 def sec(title, body):
     return '<section class="sec"><h2>%s</h2>%s</section>' % (title, body)
@@ -587,13 +590,10 @@ for p in PAL:
     DOCS_EXTRA += '%s[data-theme="dark"]%s{--bad-on-accent:%s}\n' % (sel, ',:root:not([data-accent])[data-theme="dark"]' if first else '', d)
 DOCS_EXTRA += '.bad-on-accent,.bad-on-accent:hover{background:var(--accent);color:var(--bad-on-accent);cursor:default}.bad-on-accent::after{content:attr(data-label)}.bad-link{color:var(--accent);font-weight:700;text-decoration:underline;text-underline-offset:3px}.bad-link::after{content:attr(data-label)}\n'
 
-# Point AI tools at the plain-text spec: <head> metadata and a footer column.
-AI_NOTE = ('Kasane デザインシステムのドキュメント。AI が UI を作るときは、このページではなく仕様書 %s/kasane.md を最初に全部読み、'
-           'CSS は %s/kasane.min.css を読み込むこと。' % (BASE, BASE))
-HEAD_META = ('<meta name="description" content="%s">\n<link rel="alternate" type="text/markdown" title="Kasane 仕様書" href="%s/kasane.md">\n'
-             '<link rel="help" href="%s/kasane.md">' % (html.escape(AI_NOTE), BASE, BASE))
+# Point AI tools at the plain-text spec: <head> links and a footer column.
+SITE = BASE.rsplit('/', 1)[0]
 footer_cols += ('<div class="f-col"><div class="f-title">AI 向け</div><a href="%s/kasane.md">仕様書(kasane.md)</a><a href="%s/kasane.en.md">英語版(kasane.en.md)</a>'
-                '<a href="%s/llms.txt">llms.txt</a><a href="%s/tokens.json">tokens.json</a></div>' % (BASE, BASE, BASE.rsplit('/', 1)[0], BASE))
+                '<a href="%s/llms.txt">llms.txt</a><a href="%s/tokens.json">tokens.json</a></div>' % (BASE, BASE, SITE, BASE))
 
 # Routing without JavaScript at first paint: a tiny script in <head> sets html[data-page] and
 # html[data-sec] from the hash, and these rules show the right page, sidebar group and TOC.
@@ -604,16 +604,75 @@ ROUTE_CSS = ''.join('html[data-page="%s"] .page[data-page="%s"],html[data-page="
 ROUTE_CSS += ''.join('html[data-sec="%s"] .nav-group[data-sec="%s"]{display:flex}' % (s, s) for s, _, _ in NAV)
 DOCS_EXTRA = ROUTE_CSS + '\n' + DOCS_EXTRA
 
+# ---------------------------------------------------------------- SEO
+SITE_NAME = 'Kasane'
+HOME_TITLE = 'Kasane — 色を選べるデザインシステム'
+HOME_DESC = ('Kasane(かさね)は、面を重ねて情報を区切り、アクセントの色を9色から選べる、Webサイトと Webアプリのためのデザインシステムです。'
+             'CSS、部品の見本とサンプルコード、AI 用の仕様書、自動チェックを公開しています。')
+def plain(h):
+    return re.sub(r'\s+', ' ', html.unescape(re.sub(r'<[^>]+>', '', h))).strip()
+def url_of(pid):
+    return SITE + ('/' if pid == 'home' else '/%s/' % pid)
+BG = {m: PAL[0][m]['--bg'] for m in ('light', 'dark')}   # default palette, for the browser UI colour
+def seo(pid, title, desc, robots=None):
+    a = html.escape
+    tags = ['<meta name="description" content="%s">' % a(desc)]
+    if robots:
+        tags.append('<meta name="robots" content="%s">' % robots)
+    else:
+        tags += ['<link rel="canonical" href="%s">' % url_of(pid),
+                 '<meta property="og:type" content="%s">' % ('website' if pid == 'home' else 'article'),
+                 '<meta property="og:site_name" content="%s">' % SITE_NAME,
+                 '<meta property="og:title" content="%s">' % a(title),
+                 '<meta property="og:description" content="%s">' % a(desc),
+                 '<meta property="og:url" content="%s">' % url_of(pid),
+                 '<meta property="og:image" content="%s/og.png">' % SITE,
+                 '<meta property="og:image:width" content="1200">', '<meta property="og:image:height" content="630">',
+                 '<meta property="og:image:alt" content="Kasane — 面を重ねて区切り、色を選べるデザインシステム">',
+                 '<meta property="og:locale" content="ja_JP">',
+                 '<meta name="twitter:card" content="summary_large_image">']
+        if pid == 'home':
+            ld = {'@context': 'https://schema.org', '@type': 'WebSite', 'name': SITE_NAME, 'alternateName': 'かさね', 'url': SITE + '/',
+                  'description': desc, 'inLanguage': 'ja'}
+        else:
+            sid = PAGE_SEC[pid]; first = [p for s_, _, ps in NAV if s_ == sid for p, _ in ps][0]
+            ld = {'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [
+                {'@type': 'ListItem', 'position': 1, 'name': SITE_NAME, 'item': SITE + '/'},
+                {'@type': 'ListItem', 'position': 2, 'name': SEC_OF[pid], 'item': url_of(first)},
+                {'@type': 'ListItem', 'position': 3, 'name': TITLE_OF[pid], 'item': url_of(pid)}]}
+        tags.append('<script type="application/ld+json">%s</script>' % json.dumps(ld, ensure_ascii=False).replace('</', '<\\/'))
+    tags += ['<meta name="theme-color" media="(prefers-color-scheme: light)" content="%s">' % BG['light'],
+             '<meta name="theme-color" media="(prefers-color-scheme: dark)" content="%s">' % BG['dark'],
+             '<link rel="icon" href="/favicon.ico" sizes="32x32">',
+             '<link rel="icon" href="/favicon.svg" type="image/svg+xml">',
+             '<link rel="apple-touch-icon" href="/apple-touch-icon.png">',
+             '<link rel="manifest" href="/site.webmanifest">',
+             '<link rel="alternate" type="text/markdown" title="Kasane 仕様書" href="%s/kasane.md">' % BASE,
+             '<link rel="alternate" type="text/markdown" hreflang="en" title="Kasane spec (English)" href="%s/kasane.en.md">' % BASE]
+    return '\n'.join(tags)
+
 T = open('site.tpl.html', encoding='utf-8').read()
 T = re.sub(r'<!--@@ICON:([a-z0-9-]+)@@-->', lambda m: icon(m.group(1)), T)
-T = T.replace('<title>Kasane ドキュメント</title>', '<title>Kasane ドキュメント</title>\n' + HEAD_META, 1)
 T = T.replace('/* Log, icon grid */', DOCS_EXTRA + '\n/* Log, icon grid */', 1)
-out = (T.replace('<!--@@PAGES@@-->', HOME + ''.join(PAGES)).replace('<!--@@SIDEBAR@@-->', sidebar).replace('<!--@@TOPNAV@@-->', topnav)
-        .replace('<!--@@FOOTER@@-->', footer_cols).replace('<!--@@CHOOSER@@-->', chooser_btns).replace('/*@@NAV@@*/', nav_json)
-        .replace('<!--@@TOC@@-->', ''.join(TOCS)).replace('/*@@PAGESEC@@*/', json.dumps(PAGE_SEC)))
+T = (T.replace('<!--@@SIDEBAR@@-->', sidebar).replace('<!--@@TOPNAV@@-->', topnav)
+      .replace('<!--@@FOOTER@@-->', footer_cols).replace('<!--@@CHOOSER@@-->', chooser_btns).replace('/*@@NAV@@*/', nav_json)
+      .replace('/*@@PAGESEC@@*/', json.dumps(PAGE_SEC)))
+
+NOT_FOUND = ('<article class="page" data-page="home"><div class="page-head"><h1>ページが見つかりません</h1>'
+             '<p class="lead">URLが変わったか、ページがなくなった可能性があります。</p></div>'
+             '<div class="inline start"><a class="k-btn k-btn-primary" href="/">トップページへ</a><a class="k-btn" href="/start/">使い始める</a></div></article>')
+
+def write(path, out):
+    assert '@@' not in out, path
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    open(path, 'w', encoding='utf-8').write(out)
+
 if EMBED:
-    # Single file for previews: inline the CSS and a subset of LINE Seed JP.
+    # Single file for previews: every page in one document, routed by #name; CSS and a subset of LINE Seed JP inlined.
     import subprocess, base64
+    out = (T.replace('<!--@@PAGES@@-->', HOME + ''.join(PAGES)).replace('<!--@@TOC@@-->', ''.join(TOCS))
+            .replace('@@TITLE@@', HOME_TITLE).replace('<!--@@SEO@@-->', seo('home', HOME_TITLE, HOME_DESC))
+            .replace('/*@@ROUTE@@*/', "(function(d){var h=location.hash.slice(1);if(!(h in KASANE_PAGES))h='home';d.dataset.page=h;d.dataset.sec=KASANE_PAGES[h];})(document.documentElement);"))
     src = os.environ.get('LINE_SEED_SRC', '/home/claude/hidamari/fonts/node_modules/line-seed-jp/woff2')
     out = out.replace('<!--@@HEADLINKS@@-->', '').replace('/*@@PALETTES@@*/', PALETTES_CSS).replace('/*@@COMPONENTS@@*/', COMPONENTS_CSS)
     chars = (set(out) | set(chr(c) for c in range(0x20, 0x7f))) - {'\n', '\t'}
@@ -626,12 +685,38 @@ if EMBED:
         faces.append("@font-face{font-family:'LINE Seed JP';font-weight:%d;font-style:normal;font-display:swap;src:url(data:font/woff2;base64,%s) format('woff2')}"
                      % (w, base64.b64encode(open(dst, 'rb').read()).decode()))
     out = out.replace('/*@@FONTS@@*/', '\n'.join(faces))
-    target = os.path.join(OUT, 'docs-embedded.html')
+    write(os.path.join(OUT, 'docs-embedded.html'), out)
+    print('wrote tools/.out/docs-embedded.html', len(out), 'bytes;', len(PAGES) + 1, 'pages')
 else:
-    # The docs site uses the same files it documents.
-    out = (out.replace('<!--@@HEADLINKS@@-->', '<link rel="preload" href="%s/fonts/line-seed-jp.css" as="style">\n<link rel="stylesheet" href="%s/fonts/line-seed-jp.css" media="print" onload="this.media=\'all\'">\n<noscript><link rel="stylesheet" href="%s/fonts/line-seed-jp.css"></noscript>\n<link rel="stylesheet" href="%s/kasane.css">' % (VERSION, VERSION, VERSION, VERSION))
-              .replace('/*@@PALETTES@@*/', '').replace('/*@@COMPONENTS@@*/', '').replace('/*@@FONTS@@*/', ''))
-    target = os.path.join(ROOT, 'index.html')
-assert '@@' not in out
-open(target, 'w', encoding='utf-8').write(out)
-print('wrote', os.path.relpath(target, ROOT), len(out), 'bytes;', len(PAGES) + 1, 'pages')
+    # The docs site: one HTML file per URL (/, /color/, …) so every page can be found and shared on its own.
+    # It uses the same files it documents.
+    SITE_DIR = os.path.join(ROOT, 'site')
+    import shutil
+    for d in os.listdir(SITE_DIR) if os.path.isdir(SITE_DIR) else []:
+        if os.path.isfile(os.path.join(SITE_DIR, d, 'index.html')): shutil.rmtree(os.path.join(SITE_DIR, d))
+    head_links = ('<link rel="preload" href="/%s/fonts/line-seed-jp.css" as="style">\n<link rel="stylesheet" href="/%s/fonts/line-seed-jp.css" media="print" onload="this.media=\'all\'">\n'
+                  '<noscript><link rel="stylesheet" href="/%s/fonts/line-seed-jp.css"></noscript>\n<link rel="stylesheet" href="/%s/kasane.css">' % (VERSION, VERSION, VERSION, VERSION))
+    ids = set(PAGE_SEC)
+    def links(h):   # #name → /name/
+        return re.sub(r'href="#([a-z-]+)"', lambda m: 'href="%s"' % ('/' if m.group(1) == 'home' else '/%s/' % m.group(1)) if m.group(1) in ids else m.group(0), h)
+    def render(pid, article, toc, title, desc, robots=None):
+        route = "window.KASANE_PAGE='%s';document.documentElement.dataset.page='%s';document.documentElement.dataset.sec='%s';" % (pid, pid, PAGE_SEC[pid])
+        if pid == 'home' and not robots:   # old links (/#color) still work
+            route += "(function(h){if(h&&h!=='home'&&h in KASANE_PAGES)location.replace('/'+h+'/');})(location.hash.slice(1));"
+        out = (T.replace('<!--@@PAGES@@-->', article).replace('<!--@@TOC@@-->', toc).replace('@@TITLE@@', html.escape(title))
+                .replace('<!--@@SEO@@-->', seo(pid, title, desc, robots)).replace('/*@@ROUTE@@*/', route)
+                .replace('<!--@@HEADLINKS@@-->', head_links).replace('/*@@PALETTES@@*/', '').replace('/*@@COMPONENTS@@*/', '').replace('/*@@FONTS@@*/', ''))
+        return links(out)
+    write(os.path.join(SITE_DIR, 'index.html'), render('home', HOME, '', HOME_TITLE, HOME_DESC))
+    for pid, _ in FLAT:
+        write(os.path.join(SITE_DIR, pid, 'index.html'), render(pid, ART[pid], TOC_OF[pid], '%s | Kasane デザインシステム' % TITLE_OF[pid], plain(LEAD_OF[pid])))
+    write(os.path.join(SITE_DIR, '404.html'), render('home', NOT_FOUND, '', 'ページが見つかりません | Kasane', 'お探しのページは見つかりませんでした。', robots='noindex'))
+    write(os.path.join(SITE_DIR, 'sitemap.xml'), '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+          + ''.join('  <url><loc>%s</loc></url>\n' % url_of(p) for p in ['home'] + [p for p, _ in FLAT]) + '</urlset>\n')
+    write(os.path.join(SITE_DIR, 'robots.txt'), 'User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n' % SITE)
+    write(os.path.join(SITE_DIR, 'site.webmanifest'), json.dumps({
+        'name': 'Kasane デザインシステム', 'short_name': 'Kasane', 'lang': 'ja', 'start_url': '/', 'display': 'browser',
+        'background_color': BG['light'], 'theme_color': BG['light'],
+        'icons': [{'src': '/icon-192.png', 'sizes': '192x192', 'type': 'image/png'}, {'src': '/icon-512.png', 'sizes': '512x512', 'type': 'image/png'},
+                  {'src': '/icon-512.png', 'sizes': '512x512', 'type': 'image/png', 'purpose': 'maskable'}]}, ensure_ascii=False, indent=2) + '\n')
+    print('wrote site/:', len(FLAT) + 1, 'pages, 404.html, sitemap.xml, robots.txt, site.webmanifest')

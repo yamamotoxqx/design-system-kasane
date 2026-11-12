@@ -87,7 +87,7 @@ Lighthouse の最低点は、パフォーマンス 90、アクセシビリティ
 | `v1/kasane.en.md` | 仕様書の英語版(同じ内容。AI が読むときのトークンが少なく済む) |
 | `v1/tokens.json` | トークンの値(W3C Design Tokens 形式) |
 | `v1/fonts/` | LINE Seed JP(文字の範囲ごとに分割) |
-| `index.html` | ドキュメントサイト |
+| `site/` | ドキュメントサイト(ページごとの HTML、sitemap.xml、robots.txt、アイコン、共有用の画像) |
 | `llms.txt` | AI に仕様書の場所を知らせる案内 |
 | `lint/` | `kasane-lint`(Stylelint のルール、`kasane-check`、`kasane-image`、`kasane-lighthouse`)。`npm run dist` で `v1/kasane-lint-<版>.tgz` として配信 |
 | `tools/` | 上のファイルを生成するソース |
@@ -96,7 +96,8 @@ Lighthouse の最低点は、パフォーマンス 90、アクセシビリティ
 
 ```bash
 npm install
-npm run build   # tools/ から v1/ と index.html を生成
+npm run build   # tools/ から v1/ と site/ を生成
+npm run icons   # アイコンと共有用の画像を作り直す(ロゴや既定の色を変えたときだけ)
 npm test        # Stylelint・kasane-check のルール、kasane-image、全パレットのコントラストを検査
 npm run dist && npm run lighthouse   # ドキュメントサイトが Lighthouse の最低点を満たすか
 ```

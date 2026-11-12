@@ -18,7 +18,7 @@ jobs:
       - run: npm ci
       # Rebuild from the sources and fail if the committed files are out of date.
       - run: npm run build
-      - run: git diff --exit-code -- v1 index.html llms.txt lint/data
+      - run: git diff --exit-code -- v1 site llms.txt lint/data
       # Lint rules work, and every palette meets the contrast rules.
       - run: npm test
       # Real phones and PCs have Japanese system fonts; the runner does not. Install them so the

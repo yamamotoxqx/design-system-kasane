@@ -57,6 +57,7 @@ page('with-ai', 'Claude Code や Codex などの AI にUIを作ってもらう�
 
 page('updates', 'Kasane の変更の記録です。',
   sec('2026年11月', '<ul class="log">'
+      '<li><time class="k-num">11.12</time><div><b>ページごとのURLとファビコンを用意</b><span>各ページを /color/ のような別のURLで開けるようにし、検索エンジン向けの情報(説明文、共有用の画像、サイトマップ)を加えました。タブのアイコンは選んだ色に変わります。</span></div></li>'
       '<li><time class="k-num">11.12</time><div><b>組み込み方と使用例のページ、色の選択の部品を追加</b><span>製品では既定の色を決めておき、利用者は設定ページかページ下部で色を変えます。ライト・ダークは端末の設定に従います。</span></div></li>'
       '<li><time class="k-num">11.12</time><div><b>仕様書の英語版を追加</b><span>kasane.en.md は日本語版と同じ内容で、AI が読むときのトークンが少なく済みます。</span></div></li>'
       '<li><time class="k-num">11.12</time><div><b>アクセシビリティとパフォーマンスのページを追加</b><span>画像を軽くして SSIM を確かめる kasane-image と、Lighthouse の最低点を確かめる kasane-lighthouse を加えました。</span></div></li>'

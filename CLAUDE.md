@@ -2,11 +2,12 @@
 
 Kasane デザインシステム本体のリポジトリ。
 
-- 配布するファイルは `v1/`(kasane.css、kasane.min.css、kasane.md、kasane.en.md、tokens.json、fonts/、配信時に kasane-lint の tgz)と、ルートの `index.html`(ドキュメントサイト)、`llms.txt`。
+- 配布するファイルは `v1/`(kasane.css、kasane.min.css、kasane.md、kasane.en.md、tokens.json、fonts/、配信時に kasane-lint の tgz)と、`site/`(ドキュメントサイト。ページごとの HTML、404.html、sitemap.xml、robots.txt、アイコン、共有用の画像)、ルートの `llms.txt`。`npm run dist` で `site/` の中身が配信先のルートになる。
 - これらは `tools/` のソースから生成する。**生成されたファイルを直接編集しない。**
   - 色のパレット: `tools/core.cjs`(色の計算)、`tools/gen.cjs`(9色の定義)
   - 部品の CSS とドキュメントの各ページ: `tools/build_site.py`、`tools/pages_extra.py`
-  - ドキュメントサイトの枠: `tools/site.tpl.html`
+  - ドキュメントサイトの枠: `tools/site.tpl.html`。ページは1つずつ別のURL(`/color/` など)。リンクは `#color` と書けば、ビルドで `/color/` に変わる
+  - アイコンと共有用の画像(`site/favicon.*`、`apple-touch-icon.png`、`icon-*.png`、`og.png`): `npm run icons`(`tools/icons.py`、Python の Playwright と Pillow が必要)。`npm run build` では作り直さない
   - AI 用の仕様書: `tools/kasane.md.tpl`(日本語)と `tools/kasane.en.md.tpl`(英語版)。**片方を変えたら、もう片方も同じように変える**(`npm test` で見出し・コード・表・クラス・トークンがそろっているかを確かめる)
 - 変更したら `npm run build` → `npm test`。CI も同じことをして、生成物が古いと失敗する。
 - 配信先は https://kasane.y-n0.de(Cloudflare Pages、`npm run dist` → `dist/`)。`main` に push すると配信も更新される。配信先を変えるときは `KASANE_BASE_URL=https://… npm run build`。
