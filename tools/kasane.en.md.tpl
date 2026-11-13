@@ -695,3 +695,33 @@ document.querySelectorAll('.k-palette input[name="accent"]').forEach((radio) => 
 ```
 
 In products with sign-in, also save the choice as a user setting on the server and write it into `data-accent` when serving HTML, so it follows the user across devices.
+
+---
+
+## 15. Supporting multiple languages
+
+When one product ships in several languages, do the following. If the request does not mention languages, build in one language only.
+
+| Decision | Rule |
+|---|---|
+| `<html lang>` | Write the page language. Words in another language get `lang` on their element |
+| URL | The default language as is (`/pricing/`), other languages with a language code in front (`/en/pricing/`). Each page points to the same page in other languages with `hreflang` |
+| Language switch | One place: the right side of the header or the footer. It goes to the same page in the other language. Never redirect based on browser settings |
+| Language names | Written in that language (“English”, “日本語”), with `lang`. No flags |
+| Text | Read it from translation files, not hard-coded. Never join pieces of sentences. No text in images |
+| Width | No fixed widths on buttons or labels. Also screenshot the language with the longest text |
+| Fonts | LINE Seed JP covers Japanese and Latin. For other scripts, add a font for that language only, as in `:root:lang(ko) { --font-body: … }` |
+| Numbers and dates | Pass the page language to `Intl.DateTimeFormat` / `Intl.NumberFormat`. Use `.k-num` in columns |
+| Right-to-left languages | Not checked in v1. If needed, check that mirrored screens hold up, and report |
+
+```html
+<html lang="ja">
+<head>
+  <link rel="canonical" href="https://example.com/pricing/">
+  <link rel="alternate" hreflang="ja" href="https://example.com/pricing/">
+  <link rel="alternate" hreflang="en" href="https://example.com/en/pricing/">
+  <link rel="alternate" hreflang="x-default" href="https://example.com/pricing/">
+</head>
+<!-- Language switch (fetch Lucide's languages icon and paste it) -->
+<a class="k-btn k-btn-quiet" href="/en/pricing/" hreflang="en" lang="en"><svg …(languages)></svg>English</a>
+```

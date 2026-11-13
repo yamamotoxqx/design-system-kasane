@@ -357,7 +357,7 @@ def table(head, rows):
 
 NAV = [
     ('intro', 'はじめに', [('about', 'Kasane とは'), ('start', '使い始める'), ('integrate', '組み込み方と使用例'), ('with-ai', 'AI と使う'), ('updates', '更新情報')]),
-    ('principle', '原則', [('principles', 'デザイン原則'), ('accessibility', 'アクセシビリティ'), ('performance', 'パフォーマンス'), ('writing', '文章')]),
+    ('principle', '原則', [('principles', 'デザイン原則'), ('accessibility', 'アクセシビリティ'), ('performance', 'パフォーマンス'), ('writing', '文章'), ('i18n', '多言語対応')]),
     ('style', 'スタイル', [('color', 'カラー'), ('typography', 'タイポグラフィ'), ('shape', '角丸と余白'), ('layout', 'レイアウト'), ('icons', 'アイコン'), ('motion', '動き')]),
     ('component', 'コンポーネント', [('button', 'ボタン'), ('input', '入力欄'), ('card', 'カードとリスト'), ('badge', 'バッジ'), ('tabs', 'タブ'), ('progress', '進捗バー'), ('dialog', 'ダイアログとトースト')]),
 ]

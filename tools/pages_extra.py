@@ -57,6 +57,7 @@ page('with-ai', 'Claude Code や Codex などの AI にUIを作ってもらう�
 
 page('updates', 'Kasane の変更の記録です。',
   sec('2026年11月', '<ul class="log">'
+      '<li><time class="k-num">11.13</time><div><b>多言語対応のページを追加</b><span>言語ごとのURL、言語の切り替えの置き方、文章の長さ、書体、数字と日付、翻訳の管理の決まりをまとめました。仕様書にも「多言語に対応するとき」を足しました。</span></div></li>'
       '<li><time class="k-num">11.13</time><div><b>ドキュメントサイトと README を英語にも対応</b><span>英語版は /en/ で開けます。右上の言語の切り替えで、同じページの日本語版と英語版を行き来できます。</span></div></li>'
       '<li><time class="k-num">11.12</time><div><b>面の重なりを図で説明、長いコードをたためるように</b><span>カラーのページで、面と文字の色をいまの値つきで見られます。長いサンプルコードは最初たたんで表示し、「すべて表示」で全文を開けます。</span></div></li>'
       '<li><time class="k-num">11.12</time><div><b>ページごとのURLとファビコンを用意</b><span>各ページを /color/ のような別のURLで開けるようにし、検索エンジン向けの情報(説明文、共有用の画像、サイトマップ)を加えました。タブのアイコンは選んだ色に変わります。</span></div></li>'
@@ -85,6 +86,58 @@ page('writing', '画面の言葉も、デザインの一部です。やわらか
            '<span class="k-error" style="font-weight:700">%s入力内容が不正です。</span>' % I_WARN, '何が問題で、どう直せばよいのかが分かりません。'))
   + sec('数字と日付', '<p>数字は半角で書き、単位との間は空けません。縦に並べるときは <code>.k-num</code> で桁をそろえます。日付は「11月5日(木)」のように、曜日を添えると予定を立てやすくなります。</p>'
       + ex('<span><span class="k-num">3</span>件の予定 ・ <span class="k-num">11</span>月<span class="k-num">5</span>日(木)まで</span>')))
+
+# ---------------------------------------------------------------- 原則: 多言語対応
+I18N_HEAD = """<html lang="ja">
+<head>
+  <title>料金 | サンプル</title>
+  <link rel="canonical" href="https://example.com/pricing/">
+  <link rel="alternate" hreflang="ja" href="https://example.com/pricing/">
+  <link rel="alternate" hreflang="en" href="https://example.com/en/pricing/">
+  <link rel="alternate" hreflang="x-default" href="https://example.com/pricing/">
+</head>"""
+I18N_SWITCH = ('<a class="k-btn k-btn-quiet" href="/en/pricing/" hreflang="en" lang="en">\n  '
+               + icon('languages') + '\n  English\n</a>')
+I18N_FONT = """/* Kasane の書体(LINE Seed JP)は日本語とラテン文字用。ほかの文字は、その言語のときだけ書体を足す */
+:root:lang(ko) { --font-body: "Noto Sans KR", "LINE Seed JP", sans-serif; }
+:root:lang(zh-Hans) { --font-body: "Noto Sans SC", "LINE Seed JP", sans-serif; }"""
+I18N_INTL = """const lang = document.documentElement.lang;   // "ja" や "en"
+new Intl.DateTimeFormat(lang, { month: "short", day: "numeric", weekday: "short" }).format(date);
+// ja → 11月5日(木)  en → Thu, Nov 5
+new Intl.NumberFormat(lang, { style: "currency", currency: "JPY" }).format(12480);
+// ja → ￥12,480  en → ¥12,480"""
+I18N_AI = """デザインは Kasane に従う(仕様書: https://kasane.y-n0.de/v1/kasane.en.md)。
+対応する言語は日本語(既定、/)と英語(/en/)。仕様書の「多言語に対応するとき」に従う。
+画面の文章は直接書かず、翻訳ファイル(locales/ja.json、locales/en.json)から読む。"""
+
+page('i18n', '1つの製品を複数の言語で出すときの決まりです。言語が変わっても、同じ見た目と使い心地になるようにします。',
+  sec('決めること', '<p>多言語に対応するときは、次の3つを最初に決めます。迷ったら、この表の「Kasane の決まり」のとおりにします。</p>'
+      + table(['決めること', 'Kasane の決まり'], [
+          ['言語ごとのURL', '既定の言語はそのまま(<code>/pricing/</code>)、ほかの言語は先頭に言語の記号を付ける(<code>/en/pricing/</code>)'],
+          ['言語を切り替える場所', 'ヘッダーの右側(色を変えるボタンの隣)か、ページ下部。どちらか1か所'],
+          ['翻訳の管理', '元になる言語を1つ決め、ほかの言語は翻訳ファイルで持つ。訳がない文は自動で見つける']]))
+  + sec('言語を指定する', '<p><code>&lt;html lang&gt;</code> には、そのページの言語を書きます。読み上げの発音や、ブラウザの翻訳、改行の位置がこの値で決まります。ページの中に別の言語の言葉があるときは、その要素にも <code>lang</code> を付けます。</p>'
+      + code('HTML', '<html lang="ja">\n…\n<p>英語では <span lang="en">Layered surfaces</span> と呼びます。</p>'))
+  + sec('URLを分ける', '<p>言語ごとに別のURLにします。同じURLで中身だけを切り替えると、検索結果に片方の言語しか出ず、URLを共有しても相手に同じ言語で届きません。各ページには、ほかの言語の同じページを <code>hreflang</code> で示します。</p>'
+      + code('HTML', I18N_HEAD)
+      + '<p>ブラウザの言語設定を見て、勝手に別の言語のページへ移しません。旅行中の人や、あえて別の言語で読みたい人が困るためです。言語の切り替えで選んだ言語は覚えておき、次から最初に案内します。</p>')
+  + sec('言語の切り替え', '<p>言語の切り替えは、ヘッダーの右側かページ下部の1か所に置きます。押すと、いま見ているページの別の言語版へ移ります(トップページに戻しません)。アイコンは Lucide の <code>languages</code> を使い、スマートフォンでは文字を隠してアイコンだけにします。</p>'
+      + '<div class="ex"><div class="ex-demo">' + I18N_SWITCH.replace('/en/pricing/', '/en/i18n/') + '</div>' + code('HTML', I18N_SWITCH) + '</div>'
+      + dd('<div class="inline"><span class="k-btn k-btn-quiet" lang="en" data-i18n-skip>English</span><span class="k-btn k-btn-quiet" lang="ja" data-i18n-skip>日本語</span></div>', '言語の名前は、その言語で書きます。英語を読む人には「English」の方が見つけやすいためです。<code>lang</code> も付けます。',
+           '<div class="inline"><span class="k-btn k-btn-quiet">国旗のアイコン</span><span class="k-btn k-btn-quiet">英語</span></div>', '国旗は国を表すもので、言語ではありません。いまの言語で書いた名前(「英語」)は、その言語を読めない人には見つけられません。'))
+  + sec('文章の長さが変わる前提で作る', '<ul class="links">'
+      '<li><b>幅を決め打ちしない</b><span>同じ内容でも、英語は日本語より横に長くなりがちです。ボタンやラベルに固定の幅を付けず、折り返せるようにします。</span></li>'
+      '<li><b>一番長い言語で確かめる</b><span>画面を撮って見直すときは、文章が一番長くなる言語でも撮ります。文字の切れや重なりがないかを見ます。</span></li>'
+      '<li><b>文章をつなぎ合わせない</b><span>「3」+「件の予定」のように部品をつなぐと、語順の違う言語で訳せません。数字を含む文も、文ごと翻訳ファイルに入れます。</span></li>'
+      '<li><b>画像に文字を入れない</b><span>画像の中の文字は翻訳できず、読み上げもできません。</span></li></ul>')
+  + sec('書体', '<p>Kasane の書体の LINE Seed JP は、日本語とラテン文字(英語やヨーロッパの言語)に対応しています。それ以外の文字を使う言語では、その言語のときだけ <code>--font-body</code> を上書きして、書体を足します。</p>'
+      + code('CSS', I18N_FONT))
+  + sec('数字と日付', '<p>日付、金額、数字の区切りは言語によって書き方が違います。自分で組み立てずに、ブラウザの <code>Intl</code> にページの言語を渡して作ります。縦に並べるときは、どの言語でも <code>.k-num</code> で桁をそろえます。</p>'
+      + code('JavaScript', I18N_INTL))
+  + sec('右から左に書く言語', '<p>アラビア語やヘブライ語のように右から左に書く言語は、Kasane の v1 では確かめていません。対応が必要になったら、画面を左右反転して崩れないかを確かめ、足りないところを報告してください。</p>')
+  + sec('翻訳を管理する', '<p>元になる言語を1つ決め、画面の文章はコードに直接書かずに翻訳ファイルから読みます。訳がない文を自動で見つける仕組みを CI に入れると、訳し忘れのまま公開されるのを防げます。このドキュメントサイトも、日本語で書いたページを訳のファイルで英語に置き換えて作り、訳がない文があるとビルドが止まるようにしています。</p>')
+  + sec('AI に伝えるとき', '<p>AI に作ってもらうときは、対応する言語と、言語ごとのURL、翻訳ファイルの場所を最初に伝えます。</p>'
+      + code('Markdown', I18N_AI)))
 
 # ---------------------------------------------------------------- スタイル
 page('layout', '画面は、面を重ねて組み立てます。余白は部品の外側ではなく、並べる側で決めます。',

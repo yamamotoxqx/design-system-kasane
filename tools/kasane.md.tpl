@@ -695,3 +695,32 @@ document.querySelectorAll('.k-palette input[name="accent"]').forEach((radio) => 
 
 ログインのある製品では、選んだ色を利用者の設定としてサーバーにも保存し、HTML を返すときに `data-accent` へ書き込むと、別の端末でも同じ色になります。
 
+---
+
+## 15. 多言語に対応するとき
+
+1つの製品を複数の言語で出すときは、次のとおりにします。依頼に言語が書かれていなければ、1つの言語だけで作ります。
+
+| 決めること | 決まり |
+|---|---|
+| `<html lang>` | ページの言語を書く。別の言語の言葉には、その要素に `lang` を付ける |
+| URL | 既定の言語はそのまま(`/pricing/`)、ほかの言語は先頭に言語の記号(`/en/pricing/`)。各ページに `hreflang` でほかの言語の同じページを示す |
+| 言語の切り替え | ヘッダーの右側かページ下部の1か所。同じページの別の言語版へ移る。ブラウザの言語設定で勝手に移さない |
+| 言語の名前 | その言語で書く(「English」「日本語」)。`lang` を付ける。国旗は使わない |
+| 文章 | コードに直接書かず翻訳ファイルから読む。文をつなぎ合わせない。画像に文字を入れない |
+| 幅 | ボタンやラベルに固定の幅を付けない。一番長い言語でも画面を撮って確かめる |
+| 書体 | LINE Seed JP は日本語とラテン文字用。ほかの文字は `:root:lang(ko) { --font-body: … }` のように、その言語のときだけ足す |
+| 数字と日付 | `Intl.DateTimeFormat` / `Intl.NumberFormat` にページの言語を渡す。縦に並べるときは `.k-num` |
+| 右から左の言語 | v1 では確かめていない。必要なら左右反転で崩れないかを確かめ、報告する |
+
+```html
+<html lang="ja">
+<head>
+  <link rel="canonical" href="https://example.com/pricing/">
+  <link rel="alternate" hreflang="ja" href="https://example.com/pricing/">
+  <link rel="alternate" hreflang="en" href="https://example.com/en/pricing/">
+  <link rel="alternate" hreflang="x-default" href="https://example.com/pricing/">
+</head>
+<!-- 言語の切り替え(アイコンは Lucide の languages を取得して貼る) -->
+<a class="k-btn k-btn-quiet" href="/en/pricing/" hreflang="en" lang="en"><svg …(languages)></svg>English</a>
+```
