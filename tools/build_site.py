@@ -765,7 +765,7 @@ else:
         return (lambda s_: s_) if lang == 'ja' else (lambda s_: TR[lang].lookup(re.sub(r'\s+', ' ', s_).strip()) or s_)
     JS_STRINGS = ['メニューを開く', 'メニューを閉じる', 'コピー', 'コピーしました', 'コピーできませんでした', 'すべて表示', 'たたむ']
     def links(h, lang):   # #name → /name/ (or /en/name/)
-        return re.sub(r'href="#([a-z-]+)"', lambda m: 'href="%s"' % path_of(m.group(1), lang) if m.group(1) in ids else m.group(0), h)
+        return re.sub(r'href="#([a-z0-9-]+)"', lambda m: 'href="%s"' % path_of(m.group(1), lang) if m.group(1) in ids else m.group(0), h)
     def lang_switch(pid, lang, cls='lang-link', label_tag='span'):
         other = 'en' if lang == 'ja' else 'ja'
         label = 'English' if other == 'en' else '日本語'

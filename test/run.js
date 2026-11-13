@@ -1,6 +1,6 @@
 // npm test: (1) the Stylelint rules catch what they should, (2) every palette meets the contrast rules.
 import stylelint from 'stylelint';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const here = (p) => fileURLToPath(new URL(p, import.meta.url));
@@ -113,6 +113,14 @@ const shape = (file) => {
 };
 const ja = shape('kasane.md'), en = shape('kasane.en.md');
 for (const k of Object.keys(ja)) (ja[k] === en[k] ? pass : fail)(`same ${k}` + (ja[k] === en[k] ? '' : `\n      ja: ${ja[k]}\n      en: ${en[k]}`));
+
+// ---------------------------------------------------------------- 6. docs links go to real URLs
+console.log('\nDocs site links');
+{
+  const walk = (d) => readdirSync(d).flatMap((f) => { const p = d + '/' + f; return statSync(p).isDirectory() ? walk(p) : p.endsWith('.html') ? [p] : []; });
+  const bad = walk(here('../site')).flatMap((f) => (readFileSync(f, 'utf8').match(/href="#[^"]*"/g) || []).map((m) => f.split('/site/')[1] + ' ' + m));
+  (bad.length ? fail : pass)('no #name links left (every page link is a /name/ URL)' + (bad.length ? '\n      ' + bad.slice(0, 5).join('\n      ') : ''));
+}
 
 console.log(failed ? `\n${failed} check(s) failed` : '\nAll checks passed');
 process.exit(failed ? 1 : 0);
