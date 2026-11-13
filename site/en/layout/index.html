@@ -125,7 +125,7 @@ html.navigated .page{animation:k-enter var(--motion-slow) var(--ease-out)}
 .sec{display:flex;flex-direction:column;gap:16px;scroll-margin-top:calc(var(--header-h) + 16px)}
 .sec h2{font-size:24px;display:flex;align-items:center;gap:12px}
 .sec>p{max-width:38em}
-.sec a,.links a{color:var(--accent-ink);font-weight:700;text-underline-offset:3px}
+.sec a:not(.k-btn),.links a:not(.k-btn){color:var(--accent-ink);font-weight:700;text-underline-offset:3px}
 .a-ink{color:var(--accent-ink);font-weight:700;text-decoration:underline;text-underline-offset:3px}
 
 .toc{padding:8px 4px;font-size:14px}
@@ -148,6 +148,12 @@ html.navigated .page{animation:k-enter var(--motion-slow) var(--ease-out)}
 .tile{display:flex;flex-direction:column;gap:8px;background:var(--surface-2);border-radius:var(--r-md);padding:20px;text-align:left;border:0;text-decoration:none}
 .tile h3,.tile .tile-h{font-size:18px;font-weight:800;font-family:var(--font-body);line-height:1.4}
 .tile p{font-size:15px;color:var(--muted)}
+/* Design variants on the multilingual page */
+.variant{display:flex;flex-direction:column;gap:10px}
+.variant + .variant{margin-top:12px}
+.variant h3{margin:0;font-size:17px;font-weight:800}
+.variant > p{margin:0}
+.lang-ico{width:18px;height:18px;color:var(--muted);flex:none}
 /* Language switch in the header */
 .lang-link{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:999px;color:var(--ink);text-decoration:none;font-weight:700;font-size:14px;margin-right:8px}
 .lang-link:hover{background:var(--surface-2)}

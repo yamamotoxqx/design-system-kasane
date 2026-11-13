@@ -110,6 +110,29 @@ I18N_AI = """デザインは Kasane に従う(仕様書: https://kasane.y-n0.de/
 対応する言語は日本語(既定、/)と英語(/en/)。仕様書の「多言語に対応するとき」に従う。
 画面の文章は直接書かず、翻訳ファイル(locales/ja.json、locales/en.json)から読む。"""
 
+LG = icon('languages')
+I18N_V_HEADER = '<a class="k-btn k-btn-quiet" href="/en/i18n/" hreflang="en" lang="en">\n  ' + LG + '\n  English\n</a>'
+I18N_V_PHONE = '<a class="k-btn k-btn-icon" href="/en/i18n/" hreflang="en" lang="en" aria-label="English">\n  ' + LG + '\n</a>'
+I18N_V_FOOTER_CODE = ('<nav aria-label="言語">\n'
+    '  <a class="k-btn k-btn-quiet k-btn-sm" href="/en/pricing/" hreflang="en" lang="en">English</a>\n'
+    '  <a class="k-btn k-btn-quiet k-btn-sm" href="/ko/pricing/" hreflang="ko" lang="ko">한국어</a>\n'
+    '  <a class="k-btn k-btn-quiet k-btn-sm" href="/zh-hans/pricing/" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>\n'
+    '</nav>')
+I18N_V_FOOTER_DEMO = ('<div class="inline" data-i18n-skip>' + icon('languages', 'lang-ico')
+    + ''.join('<span class="k-btn k-btn-quiet k-btn-sm" lang="%s">%s</span>' % (l, n) for l, n in (('en', 'English'), ('ko', '한국어'), ('zh-Hans', '简体中文'))) + '</div>')
+I18N_V_SETTINGS = ('<div role="radiogroup" aria-labelledby="lang-label">\n  <p id="lang-label"><b>表示する言語</b></p>\n'
+    '  <label class="k-option"><input class="k-radio" type="radio" name="lang" value="ja" checked> <span lang="ja" data-i18n-skip>日本語</span></label>\n'
+    '  <label class="k-option"><input class="k-radio" type="radio" name="lang" value="en"> <span lang="en" data-i18n-skip>English</span></label>\n'
+    '</div>')
+I18N_V_NOTICE = ('<div class="k-notice" lang="en" data-i18n-skip>\n  <h3 class="k-notice-title">English is available</h3>\n'
+    '  <div>This page is also available in English.</div>\n  <div class="inline start">\n'
+    '    <a class="k-btn k-btn-primary k-btn-sm" href="/en/i18n/" hreflang="en">Read in English</a>\n'
+    '    <button class="k-btn k-btn-quiet k-btn-sm" type="button">Not now</button>\n  </div>\n</div>')
+
+def _variant(title, text, demo, src, stack=False):
+    return ('<div class="variant"><h3>%s</h3><p>%s</p><div class="ex"><div class="ex-demo%s">%s</div>%s</div></div>'
+            % (title, text, ' ex-stack' if stack else '', demo, code('HTML', src.replace(' data-i18n-skip', ''))))
+
 page('i18n', '1つの製品を複数の言語で出すときの決まりです。言語が変わっても、同じ見た目と使い心地になるようにします。',
   sec('決めること', '<p>多言語に対応するときは、次の3つを最初に決めます。迷ったら、この表の「Kasane の決まり」のとおりにします。</p>'
       + table(['決めること', 'Kasane の決まり'], [
@@ -126,6 +149,12 @@ page('i18n', '1つの製品を複数の言語で出すときの決まりです�
       + '<div class="ex"><div class="ex-demo"><!--@@LANGDEMO@@--></div>' + code('HTML', I18N_SWITCH) + '</div>'
       + dd('<div class="inline"><span class="k-btn k-btn-quiet" lang="en" data-i18n-skip>English</span><span class="k-btn k-btn-quiet" lang="ja" data-i18n-skip>日本語</span></div>', '言語の名前は、その言語で書きます。英語を読む人には「English」の方が見つけやすいためです。<code>lang</code> も付けます。',
            '<div class="inline"><span class="k-btn k-btn-quiet">国旗のアイコン</span><span class="k-btn k-btn-quiet">英語</span></div>', '国旗は国を表すもので、言語ではありません。いまの言語で書いた名前(「英語」)は、その言語を読めない人には見つけられません。'))
+  + sec('切り替えのデザイン案', '<p>製品の形に合わせて選べるように、言語の切り替えの見せ方を5つ用意しました。どれも Kasane の部品だけで作れます。置くのは、この中から1つ(スマートフォンとパソコンで1つずつ)にします。</p>'
+      + _variant('ヘッダー(パソコン)', 'アイコンと言語の名前を並べます。いちばん見つけやすい形です。色を変えるボタンの左に置きます。', I18N_V_HEADER, I18N_V_HEADER)
+      + _variant('ヘッダー(スマートフォン)', '幅が狭いときはアイコンだけにします。名前は <code>aria-label</code> に、その言語で書きます。', I18N_V_PHONE, I18N_V_PHONE)
+      + _variant('ページ下部', '言語が3つ以上あるときや、ヘッダーに場所がないときに。いまの言語は出さず、ほかの言語だけを小さく並べます。', I18N_V_FOOTER_DEMO, I18N_V_FOOTER_CODE)
+      + _variant('設定ページ', 'ログインして使う製品では、表示の設定に言語の選択を置きます。選んだ言語は利用者の設定として保存します。', I18N_V_SETTINGS, I18N_V_SETTINGS, stack=True)
+      + _variant('別の言語を案内する', 'ブラウザの言語とページの言語が違うときは、勝手に移さずにお知らせで案内します。お知らせの文章は、案内する言語で書きます。閉じたら、次からは出しません。', I18N_V_NOTICE, I18N_V_NOTICE, stack=True))
   + sec('文章の長さが変わる前提で作る', '<ul class="links">'
       '<li><b>幅を決め打ちしない</b><span>同じ内容でも、英語は日本語より横に長くなりがちです。ボタンやラベルに固定の幅を付けず、折り返せるようにします。</span></li>'
       '<li><b>一番長い言語で確かめる</b><span>画面を撮って見直すときは、文章が一番長くなる言語でも撮ります。文字の切れや重なりがないかを見ます。</span></li>'
