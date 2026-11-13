@@ -660,6 +660,44 @@ def path_of(pid, lang='ja'):
     return ('' if lang == 'ja' else '/' + lang) + ('/' if pid == 'home' else '/%s/' % pid)
 def url_of(pid, lang='ja'):
     return SITE + path_of(pid, lang)
+# Language switch examples on the multilingual page: built per page language, like the header switch.
+# Languages this site does not have (ko, zh-Hans) are shown for display only, in their own fonts.
+LANG_NAMES = [('ja', '日本語'), ('en', 'English'), ('ko', '한국어'), ('zh-Hans', '简体中文')]
+NOTICE_TEXT = {'en': ('English is available', 'This page is also available in English.', 'Read in English', 'Not now'),
+               'ja': ('日本語でも読めます', 'このページは日本語でも読めます。', '日本語で読む', '今はしない')}
+def lang_variant(name, pid, lang, prefix=''):
+    other = 'en' if lang == 'ja' else 'ja'
+    oname = dict(LANG_NAMES)[other]
+    href = prefix + path_of(pid, other)
+    sw = ' data-lang-switch data-i18n-skip'
+    if name == 'header':
+        return '<a class="k-btn k-btn-quiet" href="%s" hreflang="%s" lang="%s"%s>%s%s</a>' % (href, other, other, sw, icon('languages'), oname)
+    if name == 'phone':
+        return '<a class="k-btn k-btn-icon" href="%s" hreflang="%s" lang="%s" aria-label="%s"%s>%s</a>' % (href, other, other, oname, sw, icon('languages'))
+    if name == 'footer':
+        items = []
+        for l, n in LANG_NAMES:
+            if l == lang:
+                continue
+            if l in LANGS:
+                items.append('<a class="k-btn k-btn-quiet k-btn-sm" href="%s" hreflang="%s" lang="%s"%s>%s</a>' % (prefix + path_of(pid, l), l, l, sw, n))
+            else:
+                items.append('<span class="k-btn k-btn-quiet k-btn-sm" lang="%s" data-i18n-skip>%s</span>' % (l, n))
+        return '<nav class="inline" aria-label="言語">' + icon('languages', 'lang-ico') + ''.join(items) + '</nav>'
+    if name == 'settings':
+        opts = ''.join('<label class="k-option"><input class="k-radio" type="radio" name="lang-demo" value="%s"%s%s> <span lang="%s" data-i18n-skip>%s</span></label>'
+                       % (l, ' checked' if l == lang else '', '' if l == lang else ' data-lang-href="%s"' % (prefix + path_of(pid, l)), l, n)
+                       for l, n in LANG_NAMES if l in LANGS)
+        return '<div role="radiogroup" aria-labelledby="lang-demo-label"><p id="lang-demo-label"><b>表示する言語</b></p>%s</div>' % opts
+    if name == 'notice':
+        t, body, go, later = NOTICE_TEXT[other]
+        return ('<div class="k-notice" lang="%s" data-i18n-skip><h3 class="k-notice-title">%s</h3><div>%s</div><div class="inline start">'
+                '<a class="k-btn k-btn-primary k-btn-sm" href="%s" hreflang="%s" data-lang-switch>%s</a>'
+                '<button class="k-btn k-btn-quiet k-btn-sm" type="button" data-dismiss-notice>%s</button></div></div>' % (other, t, body, href, other, go, later))
+    raise ValueError(name)
+def fill_variants(h, pid, lang, prefix=''):
+    return re.sub(r'<!--@@LANGVARIANT:([a-z]+)@@-->', lambda m: lang_variant(m.group(1), pid, lang, prefix), h)
+
 BG = {m: PAL[0][m]['--bg'] for m in ('light', 'dark')}   # default palette, for the browser UI colour
 def seo(pid, title, desc, robots=None, lang='ja', tr=lambda s: s):
     a = html.escape
@@ -723,6 +761,7 @@ if EMBED:
             .replace('@@TITLE@@', HOME_TITLE).replace('<!--@@SEO@@-->', seo('home', HOME_TITLE, HOME_DESC))
             .replace('/*@@ROUTE@@*/', "(function(d){var h=location.hash.slice(1);if(!(h in KASANE_PAGES))h='home';d.dataset.page=h;d.dataset.sec=KASANE_PAGES[h];})(document.documentElement);"))
     src = os.environ.get('LINE_SEED_SRC', '/home/claude/hidamari/fonts/node_modules/line-seed-jp/woff2')
+    out = fill_variants(out, 'i18n', 'ja', SITE)
     out = out.replace('<!--@@HEADLINKS@@-->', '').replace('<!--@@LANG@@-->', '').replace(
         '<!--@@LANGDEMO@@-->', '<a class="k-btn k-btn-quiet" href="%s/en/i18n/" hreflang="en" lang="en">%sEnglish</a>' % (SITE, icon('languages'))).replace('/*@@PALETTES@@*/', PALETTES_CSS).replace('/*@@COMPONENTS@@*/', COMPONENTS_CSS)
     chars = (set(out) | set(chr(c) for c in range(0x20, 0x7f))) - {'\n', '\t'}
@@ -791,7 +830,7 @@ else:
                 .replace('<!--@@LANG@@-->', lang_switch(pid, lang))
                 .replace('<!--@@LANGDEMO@@-->', lang_switch(pid, lang, 'k-btn k-btn-quiet', 'span'))
                 .replace('<!--@@HEADLINKS@@-->', (LATIN_HEAD if lang != 'ja' else '') + head_links).replace('/*@@PALETTES@@*/', '').replace('/*@@COMPONENTS@@*/', '').replace('/*@@FONTS@@*/', ''))
-        out = links(out, lang)
+        out = fill_variants(links(out, lang), pid, lang)
         if lang != 'ja':
             out = TR[lang].translate(out).replace('<html lang="ja"', '<html lang="%s"' % lang, 1)
             if not out.lower().startswith('<!doctype'):

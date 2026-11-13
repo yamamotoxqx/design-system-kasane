@@ -34,8 +34,8 @@ def _is_inline_run_member(node):
         return True
     if not isinstance(node, Tag) or node.has_attr('data-i18n-skip'):
         return False
-    # a plain <span> or a number (<span class="k-num">) inside a sentence is part of it
-    plain_span = node.name == 'span' and (not node.attrs or node.get('class') == ['k-num'])
+    # a plain <span>, a number (<span class="k-num">) or a word in another language (<span lang>) inside a sentence is part of it
+    plain_span = node.name == 'span' and (not node.attrs or node.get('class') == ['k-num'] or list(node.attrs) == ['lang'])
     if node.name not in INLINE and not plain_span:
         return False
     return all(_is_inline_run_member(c) for c in node.children)

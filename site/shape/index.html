@@ -148,6 +148,9 @@ html.navigated .page{animation:k-enter var(--motion-slow) var(--ease-out)}
 .variant + .variant{margin-top:12px}
 .variant h3{margin:0;font-size:17px;font-weight:800}
 .variant > p{margin:0}
+/* Languages LINE Seed JP does not cover get their own fonts, only where they appear (see 多言語対応 › 書体) */
+:lang(ko){--font-body:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-family:var(--font-body)}
+:lang(zh-Hans){--font-body:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;font-family:var(--font-body)}
 .lang-ico{width:18px;height:18px;color:var(--muted);flex:none}
 /* Language switch in the header */
 .lang-link{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:999px;color:var(--ink);text-decoration:none;font-weight:700;font-size:14px;margin-right:8px}
@@ -656,13 +659,21 @@ html[data-first-visit] .modal,.modal.open{display:grid}
      The two languages have the same sections (same ids) but different text lengths, so remember which
      section you were in and how far through it, and go to the same spot on the other page. */
   var POS_KEY='kasane-lang-pos';
-  document.addEventListener('click',function(e){
-    var a=e.target.closest('a[data-lang-switch]');if(!a||e.metaKey||e.ctrlKey||e.shiftKey)return;
+  function savePos(href){
     var top=(document.querySelector('.header')||{offsetHeight:0}).offsetHeight+8,cur=null;
     all('.page [id]').forEach(function(el){if(el.getBoundingClientRect().top<=top)cur=el;});
     if(!cur)return;
     var r=cur.getBoundingClientRect();
-    try{sessionStorage.setItem(POS_KEY,JSON.stringify({path:new URL(a.href,location.href).pathname,id:cur.id,f:Math.min(1,(top-r.top)/Math.max(1,r.height))}));}catch(err){}
+    try{sessionStorage.setItem(POS_KEY,JSON.stringify({path:new URL(href,location.href).pathname,id:cur.id,f:Math.min(1,(top-r.top)/Math.max(1,r.height))}));}catch(err){}
+  }
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('a[data-lang-switch]');if(a&&!(e.metaKey||e.ctrlKey||e.shiftKey))savePos(a.href);
+    var d=e.target.closest('[data-dismiss-notice]');if(d){var n=d.closest('.k-notice');if(n)n.hidden=true;}
+  });
+  /* a language picked in a settings-style radio group goes to that language, keeping your place */
+  document.addEventListener('change',function(e){
+    var r=e.target.closest('input[data-lang-href]');if(!r||!r.checked)return;
+    savePos(r.getAttribute('data-lang-href'));location.href=r.getAttribute('data-lang-href');
   });
   (function(){
     var p=null;try{p=JSON.parse(sessionStorage.getItem(POS_KEY)||'null');sessionStorage.removeItem(POS_KEY);}catch(err){}

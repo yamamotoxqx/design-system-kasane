@@ -118,8 +118,6 @@ I18N_V_FOOTER_CODE = ('<nav aria-label="言語">\n'
     '  <a class="k-btn k-btn-quiet k-btn-sm" href="/ko/pricing/" hreflang="ko" lang="ko">한국어</a>\n'
     '  <a class="k-btn k-btn-quiet k-btn-sm" href="/zh-hans/pricing/" hreflang="zh-Hans" lang="zh-Hans">简体中文</a>\n'
     '</nav>')
-I18N_V_FOOTER_DEMO = ('<div class="inline" data-i18n-skip>' + icon('languages', 'lang-ico')
-    + ''.join('<span class="k-btn k-btn-quiet k-btn-sm" lang="%s">%s</span>' % (l, n) for l, n in (('en', 'English'), ('ko', '한국어'), ('zh-Hans', '简体中文'))) + '</div>')
 I18N_V_SETTINGS = ('<div role="radiogroup" aria-labelledby="lang-label">\n  <p id="lang-label"><b>表示する言語</b></p>\n'
     '  <label class="k-option"><input class="k-radio" type="radio" name="lang" value="ja" checked> <span lang="ja" data-i18n-skip>日本語</span></label>\n'
     '  <label class="k-option"><input class="k-radio" type="radio" name="lang" value="en"> <span lang="en" data-i18n-skip>English</span></label>\n'
@@ -150,11 +148,11 @@ page('i18n', '1つの製品を複数の言語で出すときの決まりです�
       + dd('<div class="inline"><span class="k-btn k-btn-quiet" lang="en" data-i18n-skip>English</span><span class="k-btn k-btn-quiet" lang="ja" data-i18n-skip>日本語</span></div>', '言語の名前は、その言語で書きます。英語を読む人には「English」の方が見つけやすいためです。<code>lang</code> も付けます。',
            '<div class="inline"><span class="k-btn k-btn-quiet">国旗のアイコン</span><span class="k-btn k-btn-quiet">英語</span></div>', '国旗は国を表すもので、言語ではありません。いまの言語で書いた名前(「英語」)は、その言語を読めない人には見つけられません。'))
   + sec('切り替えのデザイン案', '<p>製品の形に合わせて選べるように、言語の切り替えの見せ方を5つ用意しました。どれも Kasane の部品だけで作れます。置くのは、この中から1つ(スマートフォンとパソコンで1つずつ)にします。</p>'
-      + _variant('ヘッダー(パソコン)', 'アイコンと言語の名前を並べます。いちばん見つけやすい形です。色を変えるボタンの左に置きます。', I18N_V_HEADER, I18N_V_HEADER)
-      + _variant('ヘッダー(スマートフォン)', '幅が狭いときはアイコンだけにします。名前は <code>aria-label</code> に、その言語で書きます。', I18N_V_PHONE, I18N_V_PHONE)
-      + _variant('ページ下部', '言語が3つ以上あるときや、ヘッダーに場所がないときに。いまの言語は出さず、ほかの言語だけを小さく並べます。', I18N_V_FOOTER_DEMO, I18N_V_FOOTER_CODE)
-      + _variant('設定ページ', 'ログインして使う製品では、表示の設定に言語の選択を置きます。選んだ言語は利用者の設定として保存します。', I18N_V_SETTINGS, I18N_V_SETTINGS, stack=True)
-      + _variant('別の言語を案内する', 'ブラウザの言語とページの言語が違うときは、勝手に移さずにお知らせで案内します。お知らせの文章は、案内する言語で書きます。閉じたら、次からは出しません。', I18N_V_NOTICE, I18N_V_NOTICE, stack=True))
+      + _variant('ヘッダー(パソコン)', 'アイコンと言語の名前を並べます。いちばん見つけやすい形です。色を変えるボタンの左に置きます。', '<!--@@LANGVARIANT:header@@-->', I18N_V_HEADER)
+      + _variant('ヘッダー(スマートフォン)', '幅が狭いときはアイコンだけにします。名前は <code>aria-label</code> に、その言語で書きます。', '<!--@@LANGVARIANT:phone@@-->', I18N_V_PHONE)
+      + _variant('ページ下部', '言語が3つ以上あるときや、ヘッダーに場所がないときに。いまの言語は出さず、ほかの言語だけを小さく並べます。このサイトにない言語(<span lang="ko">한국어</span>、<span lang="zh-Hans">简体中文</span>)は、見本として表示だけしています。表示には「書体」の決まりどおり、その言語の書体を使います。', '<!--@@LANGVARIANT:footer@@-->', I18N_V_FOOTER_CODE)
+      + _variant('設定ページ', 'ログインして使う製品では、表示の設定に言語の選択を置きます。選んだ言語は利用者の設定として保存します。', '<!--@@LANGVARIANT:settings@@-->', I18N_V_SETTINGS, stack=True)
+      + _variant('別の言語を案内する', 'ブラウザの言語とページの言語が違うときは、勝手に移さずにお知らせで案内します。お知らせの文章は、案内する言語で書きます。閉じたら、次からは出しません。', '<!--@@LANGVARIANT:notice@@-->', I18N_V_NOTICE, stack=True))
   + sec('文章の長さが変わる前提で作る', '<ul class="links">'
       '<li><b>幅を決め打ちしない</b><span>同じ内容でも、英語は日本語より横に長くなりがちです。ボタンやラベルに固定の幅を付けず、折り返せるようにします。</span></li>'
       '<li><b>一番長い言語で確かめる</b><span>画面を撮って見直すときは、文章が一番長くなる言語でも撮ります。文字の切れや重なりがないかを見ます。</span></li>'
