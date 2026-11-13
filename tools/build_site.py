@@ -741,14 +741,24 @@ else:
     # It uses the same files it documents.
     SITE_DIR = os.path.join(ROOT, 'site')
     import shutil
+    # The translated pages need BeautifulSoup. Where it is missing (e.g. a deploy machine that only rebuilds),
+    # keep the committed site/en/ as it is; CI has it and checks that site/ is up to date.
+    try:
+        import bs4  # noqa: F401
+        BUILD_LANGS = LANGS
+    except ImportError:
+        BUILD_LANGS = ('ja',)
+        print('i18n: BeautifulSoup (bs4) is not installed; keeping the existing translated pages')
     for d in os.listdir(SITE_DIR) if os.path.isdir(SITE_DIR) else []:
+        if d in LANGS and d not in BUILD_LANGS: continue
         if os.path.isfile(os.path.join(SITE_DIR, d, 'index.html')): shutil.rmtree(os.path.join(SITE_DIR, d))
     head_links = ('<link rel="preload" href="/%s/fonts/line-seed-jp.css" as="style">\n<link rel="stylesheet" href="/%s/fonts/line-seed-jp.css" media="print" onload="this.media=\'all\'">\n'
                   '<noscript><link rel="stylesheet" href="/%s/fonts/line-seed-jp.css"></noscript>\n<link rel="stylesheet" href="/%s/kasane.css">' % (VERSION, VERSION, VERSION, VERSION))
     ids = set(PAGE_SEC)
     sys.path.insert(0, HERE)
-    from i18n import Translator, JP
-    TABLES = {l: json.load(open(os.path.join(HERE, 'i18n', l + '.json'), encoding='utf-8')) for l in LANGS if l != 'ja'}
+    if BUILD_LANGS != ('ja',):
+        from i18n import Translator
+    TABLES = {l: json.load(open(os.path.join(HERE, 'i18n', l + '.json'), encoding='utf-8')) for l in BUILD_LANGS if l != 'ja'}
     TR = {l: Translator(t) for l, t in TABLES.items()}
     def tr_text(lang):
         return (lambda s_: s_) if lang == 'ja' else (lambda s_: TR[lang].lookup(re.sub(r'\s+', ' ', s_).strip()) or s_)
@@ -785,7 +795,7 @@ else:
             if not out.lower().startswith('<!doctype'):
                 out = '<!DOCTYPE html>\n' + out
         return out
-    for lang in LANGS:
+    for lang in BUILD_LANGS:
         base = SITE_DIR if lang == 'ja' else os.path.join(SITE_DIR, lang)
         write(os.path.join(base, 'index.html'), render('home', HOME, '', HOME_TITLE, HOME_DESC, lang=lang))
         for pid, _ in FLAT:
