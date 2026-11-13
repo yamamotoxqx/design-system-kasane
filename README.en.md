@@ -27,7 +27,7 @@ A design system for websites and web apps. It separates content by layering surf
 - `data-accent`: the palette name (defaults to `yamabuki`)
 - `data-theme`: `light` or `dark` (defaults to the device setting; in products, leave it out and add no toggle)
 
-See the documentation site (https://kasane.y-n0.de/en/) and the spec (https://kasane.y-n0.de/v1/kasane.en.md; Japanese: https://kasane.y-n0.de/v1/kasane.md) for details. How to build Kasane into a product (the default color, where users change it) is on the documentation site’s “Integration and examples” page.
+See the [documentation site](https://kasane.y-n0.de/en/) and the [spec](https://kasane.y-n0.de/v1/kasane.en.md) ([Japanese](https://kasane.y-n0.de/v1/kasane.md)) for details. How to build Kasane into a product (the default color, where users change it) is on the documentation site’s “[Integration and examples](https://kasane.y-n0.de/en/integrate/)” page.
 
 ## Using it with AI
 
