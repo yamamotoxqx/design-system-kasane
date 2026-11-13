@@ -769,7 +769,7 @@ else:
     def lang_switch(pid, lang, cls='lang-link', label_tag='span'):
         other = 'en' if lang == 'ja' else 'ja'
         label = 'English' if other == 'en' else '日本語'
-        return ('<a class="%s" href="%s" hreflang="%s" lang="%s" data-i18n-skip>%s<%s>%s</%s></a>'
+        return ('<a class="%s" href="%s" hreflang="%s" lang="%s" data-lang-switch data-i18n-skip>%s<%s>%s</%s></a>'
                 % (cls, path_of(pid, other), other, other, icon('languages'), label_tag, label, label_tag))
     # English pages are almost all Latin text. The font CSS loads without blocking, so the first paint would use
     # another font and the text would reflow when LINE Seed JP arrives (layout shift). Declare the three Latin

@@ -431,7 +431,7 @@ html[data-first-visit] .modal,.modal.open{display:grid}
   </a>
 <nav aria-label="Sections" class="topnav"><a data-sec="intro" href="/en/about/">Introduction</a><a data-sec="principle" href="/en/principles/">Principles</a><a data-sec="style" href="/en/color/">Styles</a><a data-sec="component" href="/en/button/">Components</a></nav>
 <div class="space"></div>
-<a class="lang-link" data-i18n-skip="" href="/start/" hreflang="ja" lang="ja"><svg aria-hidden="true" class="lucide lucide-languages" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24"><path d="m5 8 6 6"></path><path d="m4 14 6-6 2-3"></path><path d="M2 5h12"></path><path d="M7 2h1"></path><path d="m22 22-5-10-5 10"></path><path d="M14 18h6"></path></svg><span>日本語</span></a>
+<a class="lang-link" data-i18n-skip="" data-lang-switch="" href="/start/" hreflang="ja" lang="ja"><svg aria-hidden="true" class="lucide lucide-languages" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24"><path d="m5 8 6 6"></path><path d="m4 14 6-6 2-3"></path><path d="M2 5h12"></path><path d="M7 2h1"></path><path d="m22 22-5-10-5 10"></path><path d="M14 18h6"></path></svg><span>日本語</span></a>
 <button class="color-btn" data-open-chooser="" type="button"><i aria-hidden="true"></i><span>Change color</span></button>
 </header>
 <div class="drawer-scrim" hidden="" id="drawer-scrim"></div>
@@ -641,6 +641,35 @@ html[data-first-visit] .modal,.modal.open{display:grid}
     var done=function(ok){b.textContent=ok?L('コピーしました'):L('コピーできませんでした');setTimeout(function(){b.textContent=L('コピー');},1800);};
     try{navigator.clipboard.writeText(text).then(function(){done(true);},function(){done(false);});}catch(err){done(false);}
   });
+
+  /* ---------- Language switch keeps your place ----------
+     The two languages have the same sections (same ids) but different text lengths, so remember which
+     section you were in and how far through it, and go to the same spot on the other page. */
+  var POS_KEY='kasane-lang-pos';
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('a[data-lang-switch]');if(!a||e.metaKey||e.ctrlKey||e.shiftKey)return;
+    var top=(document.querySelector('.header')||{offsetHeight:0}).offsetHeight+8,cur=null;
+    all('.page [id]').forEach(function(el){if(el.getBoundingClientRect().top<=top)cur=el;});
+    if(!cur)return;
+    var r=cur.getBoundingClientRect();
+    try{sessionStorage.setItem(POS_KEY,JSON.stringify({path:new URL(a.href,location.href).pathname,id:cur.id,f:Math.min(1,(top-r.top)/Math.max(1,r.height))}));}catch(err){}
+  });
+  (function(){
+    var p=null;try{p=JSON.parse(sessionStorage.getItem(POS_KEY)||'null');sessionStorage.removeItem(POS_KEY);}catch(err){}
+    if(!p||p.path!==location.pathname)return;
+    var el=document.getElementById(p.id);if(!el)return;
+    function go(){
+      var top=(document.querySelector('.header')||{offsetHeight:0}).offsetHeight+8,r=el.getBoundingClientRect();
+      window.scrollTo(0,window.scrollY+r.top-top+p.f*r.height);
+    }
+    /* fonts arriving can change the height of what is above; go again until the reader moves */
+    var moved=false;['wheel','touchstart','keydown','mousedown'].forEach(function(ev){window.addEventListener(ev,function(){moved=true;},{once:true,passive:true});});
+    function again(){if(!moved)go();}
+    go();
+    if(document.fonts&&document.fonts.ready)document.fonts.ready.then(again);
+    window.addEventListener('load',again);
+    setTimeout(again,600);
+  })();
 
   /* ---------- Start ---------- */
   setAccent(currentAccent(),false);
