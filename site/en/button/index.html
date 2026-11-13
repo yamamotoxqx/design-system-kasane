@@ -367,6 +367,10 @@ td svg.lucide{width:20px;height:20px;vertical-align:middle}
 .hero-art i:nth-child(2){right:60px;top:60px;background:var(--accent-soft);background:color-mix(in oklab,var(--accent) 45%,var(--surface-2))}
 .hero-art i:nth-child(3){right:120px;top:120px;background:var(--surface-3)}
 /* The three squares stack one by one when the home page appears (Kasane = layering) */
+/* The heading you jumped to from the table of contents is tinted once, then fades */
+@keyframes arrive{from{background-color:var(--accent-soft)}to{background-color:transparent}}
+.sec.arrive > h2{animation:arrive 1200ms var(--ease-out);border-radius:12px;margin-inline:-10px;padding-inline:10px}
+@media (prefers-reduced-motion:reduce){.sec.arrive > h2{animation:none}}
 @keyframes hero-stack{from{opacity:0;transform:translate(36px,-36px) scale(.92)}}
 .hero-art i{animation:hero-stack 800ms var(--ease-out) both;transition:background-color var(--motion-base)}
 .hero-art i:nth-child(1){animation-delay:150ms}
@@ -533,16 +537,27 @@ html[data-first-visit] .modal,.modal.open{display:grid}
   }
   function spy(){
     if(!tocSecs.length)return;
-    var cur=0;tocSecs.forEach(function(s,i){if(s.getBoundingClientRect().top<=140)cur=i;});
+    /* a section counts as current once it reaches where a jump from the table of contents puts it */
+    var line=(parseFloat(getComputedStyle(root).scrollPaddingTop)||0)+(parseFloat(getComputedStyle(tocSecs[0]).scrollMarginTop)||0)+12;
+    var cur=0;tocSecs.forEach(function(s,i){if(s.getBoundingClientRect().top<=line)cur=i;});
     if(window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-4&&tocSecs[tocSecs.length-1].getBoundingClientRect().top<window.innerHeight)cur=tocSecs.length-1;
     tocBtns.forEach(function(b,i){if(i===cur)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current');});
+  }
+  /* Jumping from the table of contents: glide there, then mark the heading you arrived at */
+  var reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
+  function goTo(el){
+    if(reduceMotion.matches){el.scrollIntoView({block:'start'});return;}
+    el.classList.remove('arrive');
+    var done=false,mark=function(){if(done)return;done=true;window.removeEventListener('scrollend',mark);void el.offsetWidth;el.classList.add('arrive');};
+    window.addEventListener('scrollend',mark);setTimeout(mark,900);   /* no scrollend in some browsers */
+    el.scrollIntoView({block:'start',behavior:'smooth'});
   }
   var ticking=false;
   window.addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(function(){spy();ticking=false;});}},{passive:true});
   window.addEventListener('hashchange',route);
   document.addEventListener('click',function(e){
     var s=e.target.closest('[data-scroll]');
-    if(s){var el=$(s.getAttribute('data-scroll'));if(el)el.scrollIntoView({block:'start'});}
+    if(s){var el=$(s.getAttribute('data-scroll'));if(el)goTo(el);}
   });
 
   /* ---------- Drawer (mobile) ---------- */
