@@ -723,7 +723,8 @@ if EMBED:
             .replace('@@TITLE@@', HOME_TITLE).replace('<!--@@SEO@@-->', seo('home', HOME_TITLE, HOME_DESC))
             .replace('/*@@ROUTE@@*/', "(function(d){var h=location.hash.slice(1);if(!(h in KASANE_PAGES))h='home';d.dataset.page=h;d.dataset.sec=KASANE_PAGES[h];})(document.documentElement);"))
     src = os.environ.get('LINE_SEED_SRC', '/home/claude/hidamari/fonts/node_modules/line-seed-jp/woff2')
-    out = out.replace('<!--@@HEADLINKS@@-->', '').replace('<!--@@LANG@@-->', '').replace('/*@@PALETTES@@*/', PALETTES_CSS).replace('/*@@COMPONENTS@@*/', COMPONENTS_CSS)
+    out = out.replace('<!--@@HEADLINKS@@-->', '').replace('<!--@@LANG@@-->', '').replace(
+        '<!--@@LANGDEMO@@-->', '<a class="k-btn k-btn-quiet" href="%s/en/i18n/" hreflang="en" lang="en">%sEnglish</a>' % (SITE, icon('languages'))).replace('/*@@PALETTES@@*/', PALETTES_CSS).replace('/*@@COMPONENTS@@*/', COMPONENTS_CSS)
     chars = (set(out) | set(chr(c) for c in range(0x20, 0x7f))) - {'\n', '\t'}
     open(os.path.join(OUT, 'chars.txt'), 'w', encoding='utf-8').write(''.join(sorted(chars)))
     faces = []
@@ -765,11 +766,11 @@ else:
     JS_STRINGS = ['メニューを開く', 'メニューを閉じる', 'コピー', 'コピーしました', 'コピーできませんでした', 'すべて表示', 'たたむ']
     def links(h, lang):   # #name → /name/ (or /en/name/)
         return re.sub(r'href="#([a-z-]+)"', lambda m: 'href="%s"' % path_of(m.group(1), lang) if m.group(1) in ids else m.group(0), h)
-    def lang_switch(pid, lang):
+    def lang_switch(pid, lang, cls='lang-link', label_tag='span'):
         other = 'en' if lang == 'ja' else 'ja'
         label = 'English' if other == 'en' else '日本語'
-        return ('<a class="lang-link" href="%s" hreflang="%s" lang="%s" data-i18n-skip>%s<span>%s</span></a>'
-                % (path_of(pid, other), other, other, icon('languages'), label))
+        return ('<a class="%s" href="%s" hreflang="%s" lang="%s" data-i18n-skip>%s<%s>%s</%s></a>'
+                % (cls, path_of(pid, other), other, other, icon('languages'), label_tag, label, label_tag))
     # English pages are almost all Latin text. The font CSS loads without blocking, so the first paint would use
     # another font and the text would reflow when LINE Seed JP arrives (layout shift). Declare the three Latin
     # groups inline and preload them, so English text is drawn in LINE Seed JP from the start.
@@ -788,6 +789,7 @@ else:
         out = (T.replace('<!--@@PAGES@@-->', article).replace('<!--@@TOC@@-->', toc).replace('@@TITLE@@', html.escape(title))
                 .replace('<!--@@SEO@@-->', seo(pid, title, desc, robots, lang, tr_text(lang))).replace('/*@@ROUTE@@*/', route)
                 .replace('<!--@@LANG@@-->', lang_switch(pid, lang))
+                .replace('<!--@@LANGDEMO@@-->', lang_switch(pid, lang, 'k-btn k-btn-quiet', 'span'))
                 .replace('<!--@@HEADLINKS@@-->', (LATIN_HEAD if lang != 'ja' else '') + head_links).replace('/*@@PALETTES@@*/', '').replace('/*@@COMPONENTS@@*/', '').replace('/*@@FONTS@@*/', ''))
         out = links(out, lang)
         if lang != 'ja':

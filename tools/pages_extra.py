@@ -122,7 +122,8 @@ page('i18n', '1つの製品を複数の言語で出すときの決まりです�
       + code('HTML', I18N_HEAD)
       + '<p>ブラウザの言語設定を見て、勝手に別の言語のページへ移しません。旅行中の人や、あえて別の言語で読みたい人が困るためです。言語の切り替えで選んだ言語は覚えておき、次から最初に案内します。</p>')
   + sec('言語の切り替え', '<p>言語の切り替えは、ヘッダーの右側かページ下部の1か所に置きます。押すと、いま見ているページの別の言語版へ移ります(トップページに戻しません)。アイコンは Lucide の <code>languages</code> を使い、スマートフォンでは文字を隠してアイコンだけにします。</p>'
-      + '<div class="ex"><div class="ex-demo">' + I18N_SWITCH.replace('/en/pricing/', '/en/i18n/') + '</div>' + code('HTML', I18N_SWITCH) + '</div>'
+      # the live example switches this page, like the header: English on the Japanese page, 日本語 on the English one
+      + '<div class="ex"><div class="ex-demo"><!--@@LANGDEMO@@--></div>' + code('HTML', I18N_SWITCH) + '</div>'
       + dd('<div class="inline"><span class="k-btn k-btn-quiet" lang="en" data-i18n-skip>English</span><span class="k-btn k-btn-quiet" lang="ja" data-i18n-skip>日本語</span></div>', '言語の名前は、その言語で書きます。英語を読む人には「English」の方が見つけやすいためです。<code>lang</code> も付けます。',
            '<div class="inline"><span class="k-btn k-btn-quiet">国旗のアイコン</span><span class="k-btn k-btn-quiet">英語</span></div>', '国旗は国を表すもので、言語ではありません。いまの言語で書いた名前(「英語」)は、その言語を読めない人には見つけられません。'))
   + sec('文章の長さが変わる前提で作る', '<ul class="links">'
