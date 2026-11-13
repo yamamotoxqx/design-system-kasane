@@ -655,35 +655,40 @@ HOME_DESC = ('Kasane(かさね)は、面を重ねて情報を区切り、アク�
              'CSS、部品の見本とサンプルコード、AI 用の仕様書、自動チェックを公開しています。')
 def plain(h):
     return re.sub(r'\s+', ' ', html.unescape(re.sub(r'<[^>]+>', '', h))).strip()
-def url_of(pid):
-    return SITE + ('/' if pid == 'home' else '/%s/' % pid)
+LANGS = ('ja', 'en')   # ja at /, en at /en/
+def path_of(pid, lang='ja'):
+    return ('' if lang == 'ja' else '/' + lang) + ('/' if pid == 'home' else '/%s/' % pid)
+def url_of(pid, lang='ja'):
+    return SITE + path_of(pid, lang)
 BG = {m: PAL[0][m]['--bg'] for m in ('light', 'dark')}   # default palette, for the browser UI colour
-def seo(pid, title, desc, robots=None):
+def seo(pid, title, desc, robots=None, lang='ja', tr=lambda s: s):
     a = html.escape
     tags = ['<meta name="description" content="%s">' % a(desc)]
     if robots:
         tags.append('<meta name="robots" content="%s">' % robots)
     else:
-        tags += ['<link rel="canonical" href="%s">' % url_of(pid),
+        tags += ['<link rel="canonical" href="%s">' % url_of(pid, lang)]
+        tags += ['<link rel="alternate" hreflang="%s" href="%s">' % (l, url_of(pid, l)) for l in LANGS]
+        tags += ['<link rel="alternate" hreflang="x-default" href="%s">' % url_of(pid),
                  '<meta property="og:type" content="%s">' % ('website' if pid == 'home' else 'article'),
                  '<meta property="og:site_name" content="%s">' % SITE_NAME,
                  '<meta property="og:title" content="%s">' % a(title),
                  '<meta property="og:description" content="%s">' % a(desc),
-                 '<meta property="og:url" content="%s">' % url_of(pid),
+                 '<meta property="og:url" content="%s">' % url_of(pid, lang),
                  '<meta property="og:image" content="%s/og.png">' % SITE,
                  '<meta property="og:image:width" content="1200">', '<meta property="og:image:height" content="630">',
                  '<meta property="og:image:alt" content="Kasane — 面を重ねて区切り、色を選べるデザインシステム">',
-                 '<meta property="og:locale" content="ja_JP">',
+                 '<meta property="og:locale" content="%s">' % ('ja_JP' if lang == 'ja' else 'en_US'),
                  '<meta name="twitter:card" content="summary_large_image">']
         if pid == 'home':
-            ld = {'@context': 'https://schema.org', '@type': 'WebSite', 'name': SITE_NAME, 'alternateName': 'かさね', 'url': SITE + '/',
-                  'description': desc, 'inLanguage': 'ja'}
+            ld = {'@context': 'https://schema.org', '@type': 'WebSite', 'name': SITE_NAME, 'alternateName': 'かさね', 'url': url_of('home', lang),
+                  'description': tr(desc), 'inLanguage': lang}
         else:
             sid = PAGE_SEC[pid]; first = [p for s_, _, ps in NAV if s_ == sid for p, _ in ps][0]
             ld = {'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [
-                {'@type': 'ListItem', 'position': 1, 'name': SITE_NAME, 'item': SITE + '/'},
-                {'@type': 'ListItem', 'position': 2, 'name': SEC_OF[pid], 'item': url_of(first)},
-                {'@type': 'ListItem', 'position': 3, 'name': TITLE_OF[pid], 'item': url_of(pid)}]}
+                {'@type': 'ListItem', 'position': 1, 'name': SITE_NAME, 'item': url_of('home', lang)},
+                {'@type': 'ListItem', 'position': 2, 'name': tr(SEC_OF[pid]), 'item': url_of(first, lang)},
+                {'@type': 'ListItem', 'position': 3, 'name': tr(TITLE_OF[pid]), 'item': url_of(pid, lang)}]}
         tags.append('<script type="application/ld+json">%s</script>' % json.dumps(ld, ensure_ascii=False).replace('</', '<\\/'))
     tags += ['<meta name="theme-color" media="(prefers-color-scheme: light)" content="%s">' % BG['light'],
              '<meta name="theme-color" media="(prefers-color-scheme: dark)" content="%s">' % BG['dark'],
@@ -718,7 +723,7 @@ if EMBED:
             .replace('@@TITLE@@', HOME_TITLE).replace('<!--@@SEO@@-->', seo('home', HOME_TITLE, HOME_DESC))
             .replace('/*@@ROUTE@@*/', "(function(d){var h=location.hash.slice(1);if(!(h in KASANE_PAGES))h='home';d.dataset.page=h;d.dataset.sec=KASANE_PAGES[h];})(document.documentElement);"))
     src = os.environ.get('LINE_SEED_SRC', '/home/claude/hidamari/fonts/node_modules/line-seed-jp/woff2')
-    out = out.replace('<!--@@HEADLINKS@@-->', '').replace('/*@@PALETTES@@*/', PALETTES_CSS).replace('/*@@COMPONENTS@@*/', COMPONENTS_CSS)
+    out = out.replace('<!--@@HEADLINKS@@-->', '').replace('<!--@@LANG@@-->', '').replace('/*@@PALETTES@@*/', PALETTES_CSS).replace('/*@@COMPONENTS@@*/', COMPONENTS_CSS)
     chars = (set(out) | set(chr(c) for c in range(0x20, 0x7f))) - {'\n', '\t'}
     open(os.path.join(OUT, 'chars.txt'), 'w', encoding='utf-8').write(''.join(sorted(chars)))
     faces = []
@@ -741,26 +746,65 @@ else:
     head_links = ('<link rel="preload" href="/%s/fonts/line-seed-jp.css" as="style">\n<link rel="stylesheet" href="/%s/fonts/line-seed-jp.css" media="print" onload="this.media=\'all\'">\n'
                   '<noscript><link rel="stylesheet" href="/%s/fonts/line-seed-jp.css"></noscript>\n<link rel="stylesheet" href="/%s/kasane.css">' % (VERSION, VERSION, VERSION, VERSION))
     ids = set(PAGE_SEC)
-    def links(h):   # #name → /name/
-        return re.sub(r'href="#([a-z-]+)"', lambda m: 'href="%s"' % ('/' if m.group(1) == 'home' else '/%s/' % m.group(1)) if m.group(1) in ids else m.group(0), h)
-    def render(pid, article, toc, title, desc, robots=None):
+    sys.path.insert(0, HERE)
+    from i18n import Translator, JP
+    TABLES = {l: json.load(open(os.path.join(HERE, 'i18n', l + '.json'), encoding='utf-8')) for l in LANGS if l != 'ja'}
+    TR = {l: Translator(t) for l, t in TABLES.items()}
+    def tr_text(lang):
+        return (lambda s_: s_) if lang == 'ja' else (lambda s_: TR[lang].lookup(re.sub(r'\s+', ' ', s_).strip()) or s_)
+    JS_STRINGS = ['メニューを開く', 'メニューを閉じる', 'コピー', 'コピーしました', 'コピーできませんでした', 'すべて表示', 'たたむ']
+    def links(h, lang):   # #name → /name/ (or /en/name/)
+        return re.sub(r'href="#([a-z-]+)"', lambda m: 'href="%s"' % path_of(m.group(1), lang) if m.group(1) in ids else m.group(0), h)
+    def lang_switch(pid, lang):
+        other = 'en' if lang == 'ja' else 'ja'
+        label = 'English' if other == 'en' else '日本語'
+        return ('<a class="lang-link" href="%s" hreflang="%s" lang="%s" data-i18n-skip>%s<span>%s</span></a>'
+                % (path_of(pid, other), other, other, icon('languages'), label))
+    # English pages are almost all Latin text. The font CSS loads without blocking, so the first paint would use
+    # another font and the text would reflow when LINE Seed JP arrives (layout shift). Declare the three Latin
+    # groups inline and preload them, so English text is drawn in LINE Seed JP from the start.
+    _fcss = open(os.path.join(ROOT, VERSION, 'fonts', 'line-seed-jp.css'), encoding='utf-8').read()
+    LATIN_FACES = [m.group(0) for m in re.finditer(r"@font-face\{[^}]*files/line-seed-jp-\d+-latin\.woff2[^}]*\}", _fcss)]
+    assert len(LATIN_FACES) == 3, 'expected the 400/700/800 Latin groups in line-seed-jp.css'
+    LATIN_HEAD = (''.join('<link rel="preload" href="/%s/fonts/files/%s" as="font" type="font/woff2" crossorigin>\n'
+                          % (VERSION, re.search(r'files/([^)]+)\)', f).group(1)) for f in LATIN_FACES)
+                  + '<style>' + ''.join(f.replace('font-display:swap', 'font-display:block').replace('url(./files/', 'url(/%s/fonts/files/' % VERSION) for f in LATIN_FACES) + '</style>\n')
+    def render(pid, article, toc, title, desc, robots=None, lang='ja'):
         route = "window.KASANE_PAGE='%s';document.documentElement.dataset.page='%s';document.documentElement.dataset.sec='%s';" % (pid, pid, PAGE_SEC[pid])
+        if lang != 'ja':
+            route += 'window.KASANE_T=%s;' % json.dumps({k: TR[lang].lookup(k) or k for k in JS_STRINGS}, ensure_ascii=False)
         if pid == 'home' and not robots:   # old links (/#color) still work
-            route += "(function(h){if(h&&h!=='home'&&h in KASANE_PAGES)location.replace('/'+h+'/');})(location.hash.slice(1));"
+            route += "(function(h){if(h&&h!=='home'&&h in KASANE_PAGES)location.replace('%s'+h+'/');})(location.hash.slice(1));" % path_of('home', lang)
         out = (T.replace('<!--@@PAGES@@-->', article).replace('<!--@@TOC@@-->', toc).replace('@@TITLE@@', html.escape(title))
-                .replace('<!--@@SEO@@-->', seo(pid, title, desc, robots)).replace('/*@@ROUTE@@*/', route)
-                .replace('<!--@@HEADLINKS@@-->', head_links).replace('/*@@PALETTES@@*/', '').replace('/*@@COMPONENTS@@*/', '').replace('/*@@FONTS@@*/', ''))
-        return links(out)
-    write(os.path.join(SITE_DIR, 'index.html'), render('home', HOME, '', HOME_TITLE, HOME_DESC))
-    for pid, _ in FLAT:
-        write(os.path.join(SITE_DIR, pid, 'index.html'), render(pid, ART[pid], TOC_OF[pid], '%s | Kasane デザインシステム' % TITLE_OF[pid], plain(LEAD_OF[pid])))
-    write(os.path.join(SITE_DIR, '404.html'), render('home', NOT_FOUND, '', 'ページが見つかりません | Kasane', 'お探しのページは見つかりませんでした。', robots='noindex'))
+                .replace('<!--@@SEO@@-->', seo(pid, title, desc, robots, lang, tr_text(lang))).replace('/*@@ROUTE@@*/', route)
+                .replace('<!--@@LANG@@-->', lang_switch(pid, lang))
+                .replace('<!--@@HEADLINKS@@-->', (LATIN_HEAD if lang != 'ja' else '') + head_links).replace('/*@@PALETTES@@*/', '').replace('/*@@COMPONENTS@@*/', '').replace('/*@@FONTS@@*/', ''))
+        out = links(out, lang)
+        if lang != 'ja':
+            out = TR[lang].translate(out).replace('<html lang="ja"', '<html lang="%s"' % lang, 1)
+            if not out.lower().startswith('<!doctype'):
+                out = '<!DOCTYPE html>\n' + out
+        return out
+    for lang in LANGS:
+        base = SITE_DIR if lang == 'ja' else os.path.join(SITE_DIR, lang)
+        write(os.path.join(base, 'index.html'), render('home', HOME, '', HOME_TITLE, HOME_DESC, lang=lang))
+        for pid, _ in FLAT:
+            write(os.path.join(base, pid, 'index.html'), render(pid, ART[pid], TOC_OF[pid], '%s | Kasane デザインシステム' % TITLE_OF[pid], plain(LEAD_OF[pid]), lang=lang))
+        write(os.path.join(base, '404.html'), render('home', NOT_FOUND, '', 'ページが見つかりません | Kasane', 'お探しのページは見つかりませんでした。', robots='noindex', lang=lang))
+    # Every Japanese text on the English pages needs an entry in tools/i18n/<lang>.json
+    for lang, t in TR.items():
+        miss = sorted(t.missing)
+        open(os.path.join(OUT, 'i18n-missing-%s.json' % lang), 'w', encoding='utf-8').write(json.dumps({k: '' for k in miss}, ensure_ascii=False, indent=1))
+        if miss:
+            print('i18n: %d %s text(s) have no translation (see tools/.out/i18n-missing-%s.json)' % (len(miss), lang, lang))
+            if not os.environ.get('KASANE_I18N_LAX'):
+                sys.exit(1)
     write(os.path.join(SITE_DIR, 'sitemap.xml'), '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-          + ''.join('  <url><loc>%s</loc></url>\n' % url_of(p) for p in ['home'] + [p for p, _ in FLAT]) + '</urlset>\n')
+          + ''.join('  <url><loc>%s</loc></url>\n' % url_of(p, l) for l in LANGS for p in ['home'] + [p for p, _ in FLAT]) + '</urlset>\n')
     write(os.path.join(SITE_DIR, 'robots.txt'), 'User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n' % SITE)
     write(os.path.join(SITE_DIR, 'site.webmanifest'), json.dumps({
         'name': 'Kasane デザインシステム', 'short_name': 'Kasane', 'lang': 'ja', 'start_url': '/', 'display': 'browser',
         'background_color': BG['light'], 'theme_color': BG['light'],
         'icons': [{'src': '/icon-192.png', 'sizes': '192x192', 'type': 'image/png'}, {'src': '/icon-512.png', 'sizes': '512x512', 'type': 'image/png'},
                   {'src': '/icon-512.png', 'sizes': '512x512', 'type': 'image/png', 'purpose': 'maskable'}]}, ensure_ascii=False, indent=2) + '\n')
-    print('wrote site/:', len(FLAT) + 1, 'pages, 404.html, sitemap.xml, robots.txt, site.webmanifest')
+    print('wrote site/:', len(FLAT) + 1, 'pages ×', len(LANGS), 'languages, 404.html, sitemap.xml, robots.txt, site.webmanifest')

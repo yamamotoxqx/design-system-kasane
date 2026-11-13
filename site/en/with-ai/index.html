@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Using with AI | Kasane Design System</title>
+<meta content="How to make AI tools such as Claude Code and Codex follow Kasane’s rules when they build UI. No local files are needed; just give them the URL." name="description"/>
+<link href="https://kasane.y-n0.de/en/with-ai/" rel="canonical"/>
+<link href="https://kasane.y-n0.de/with-ai/" hreflang="ja" rel="alternate"/>
+<link href="https://kasane.y-n0.de/en/with-ai/" hreflang="en" rel="alternate"/>
+<link href="https://kasane.y-n0.de/with-ai/" hreflang="x-default" rel="alternate"/>
+<meta content="article" property="og:type"/>
+<meta content="Kasane" property="og:site_name"/>
+<meta content="Using with AI | Kasane Design System" property="og:title"/>
+<meta content="How to make AI tools such as Claude Code and Codex follow Kasane’s rules when they build UI. No local files are needed; just give them the URL." property="og:description"/>
+<meta content="https://kasane.y-n0.de/en/with-ai/" property="og:url"/>
+<meta content="https://kasane.y-n0.de/og.png" property="og:image"/>
+<meta content="1200" property="og:image:width"/>
+<meta content="630" property="og:image:height"/>
+<meta content="Kasane — a design system of layered surfaces and a color you choose" property="og:image:alt"/>
+<meta content="en_US" property="og:locale"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Kasane", "item": "https://kasane.y-n0.de/en/"}, {"@type": "ListItem", "position": 2, "name": "Introduction", "item": "https://kasane.y-n0.de/en/about/"}, {"@type": "ListItem", "position": 3, "name": "Using with AI", "item": "https://kasane.y-n0.de/en/with-ai/"}]}</script>
+<meta content="#f0ece3" media="(prefers-color-scheme: light)" name="theme-color"/>
+<meta content="#181715" media="(prefers-color-scheme: dark)" name="theme-color"/>
+<link href="/favicon.ico" rel="icon" sizes="32x32"/>
+<link href="/favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="/apple-touch-icon.png" rel="apple-touch-icon"/>
+<link href="/site.webmanifest" rel="manifest"/>
+<link href="https://kasane.y-n0.de/v1/kasane.md" rel="alternate" title="Kasane spec (Japanese)" type="text/markdown"/>
+<link href="https://kasane.y-n0.de/v1/kasane.en.md" hreflang="en" rel="alternate" title="Kasane spec (English)" type="text/markdown"/>
+<script>
+/* Apply the saved palette and theme before first paint (no flash). */
+try{var a=localStorage.getItem('kasane-accent'),t=localStorage.getItem('kasane-theme');if(a)document.documentElement.dataset.accent=a;else document.documentElement.dataset.firstVisit='';if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}
+window.KASANE_PAGES={"home": "", "about": "intro", "start": "intro", "integrate": "intro", "with-ai": "intro", "updates": "intro", "principles": "principle", "accessibility": "principle", "performance": "principle", "writing": "principle", "color": "style", "typography": "style", "shape": "style", "layout": "style", "icons": "style", "motion": "style", "button": "component", "input": "component", "card": "component", "badge": "component", "tabs": "component", "progress": "component", "dialog": "component"};
+window.KASANE_PAGE='with-ai';document.documentElement.dataset.page='with-ai';document.documentElement.dataset.sec='intro';window.KASANE_T={"メニューを開く": "Open menu", "メニューを閉じる": "Close menu", "コピー": "Copy", "コピーしました": "Copied", "コピーできませんでした": "Could not copy", "すべて表示": "Show all", "たたむ": "Collapse"};
+</script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@900&amp;family=Inter:wght@400;500;600;700&amp;display=swap" media="print" onload="this.media='all'" rel="stylesheet"/>
+<noscript><link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@900&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/></noscript>
+<link as="font" crossorigin="" href="/v1/fonts/files/line-seed-jp-400-latin.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="/v1/fonts/files/line-seed-jp-700-latin.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="/v1/fonts/files/line-seed-jp-800-latin.woff2" rel="preload" type="font/woff2"/>
+<style>@font-face{font-family:'LINE Seed JP';font-style:normal;font-display:block;font-weight:400;src:url(/v1/fonts/files/line-seed-jp-400-latin.woff2) format('woff2');unicode-range:U+0-2cc,U+2ce-2d7,U+2da,U+2dc-2ff,U+301,U+304,U+308,U+329,U+400-45f,U+490-491,U+4b0-4b1,U+1d00-1dbf,U+1e00-1e9f,U+1ef2-206f,U+20a0-20c4,U+2113,U+2116,U+2122,U+2191,U+2193,U+2212,U+2215,U+2c60-2c7f,U+a720-a7ff,U+feff,U+fffd}@font-face{font-family:'LINE Seed JP';font-style:normal;font-display:block;font-weight:700;src:url(/v1/fonts/files/line-seed-jp-700-latin.woff2) format('woff2');unicode-range:U+0-2cc,U+2ce-2d7,U+2da,U+2dc-2ff,U+301,U+304,U+308,U+329,U+400-45f,U+490-491,U+4b0-4b1,U+1d00-1dbf,U+1e00-1e9f,U+1ef2-206f,U+20a0-20c4,U+2113,U+2116,U+2122,U+2191,U+2193,U+2212,U+2215,U+2c60-2c7f,U+a720-a7ff,U+feff,U+fffd}@font-face{font-family:'LINE Seed JP';font-style:normal;font-display:block;font-weight:800;src:url(/v1/fonts/files/line-seed-jp-800-latin.woff2) format('woff2');unicode-range:U+0-2cc,U+2ce-2d7,U+2da,U+2dc-2ff,U+301,U+304,U+308,U+329,U+400-45f,U+490-491,U+4b0-4b1,U+1d00-1dbf,U+1e00-1e9f,U+1ef2-206f,U+20a0-20c4,U+2113,U+2116,U+2122,U+2191,U+2193,U+2212,U+2215,U+2c60-2c7f,U+a720-a7ff,U+feff,U+fffd}</style>
+<link as="style" href="/v1/fonts/line-seed-jp.css" rel="preload"/>
+<link href="/v1/fonts/line-seed-jp.css" media="print" onload="this.media='all'" rel="stylesheet"/>
+<noscript><link href="/v1/fonts/line-seed-jp.css" rel="stylesheet"/></noscript>
+<link href="/v1/kasane.css" rel="stylesheet"/>
+<style>
+/* ============ 0. LINE Seed JP (subset, embedded for this page) ============ */
+
+
+/* ============ 1. Palettes (embedded build only) ============ */
+
+
+/* ============ 2. Components (embedded build only) ============ */
+
+
+/* ============ 3. Documentation site ============ */
+/* Layout: header with section nav on top; sidebar | main | on-this-page; link footer with the theme switch.
+   Under 1100px the on-this-page column hides; under 820px the sidebar becomes a drawer. */
+:root{--header-h:60px;--side-w:248px;--toc-w:216px}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:calc(var(--header-h) + 16px)}
+body{-webkit-font-smoothing:antialiased}
+h1,h2,h3,p,ul,figure{margin:0}
+h1,h2,h3{text-wrap:balance;line-height:1.4}
+a{color:inherit}
+button{font:inherit;color:inherit}
+code{font-family:var(--font-mono);font-size:.875em;background:var(--surface-2);border-radius:6px;padding:1px 6px}
+[hidden]{display:none!important}
+.brand,.page-head h1,.sec h2,.hero h1,.dialog h2{font-family:var(--font-title);font-weight:900;line-height:1.3}
+.num-tag,.sw,.pager small,.type-row small{font-family:var(--font-num);font-variant-numeric:tabular-nums}
+.ex-demo .k-toast{position:static;transform:none}
+.k-scrim{z-index:60}
+
+/* Header */
+.header{position:sticky;top:0;z-index:30;height:var(--header-h);background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px}
+.brand{display:flex;align-items:center;gap:10px;font-size:20px;text-decoration:none;margin-right:12px}
+.brand svg{width:28px;height:28px;flex:none}
+.topnav{display:flex;gap:2px}
+.topnav a{display:flex;align-items:center;min-height:40px;padding:0 14px;border-radius:999px;text-decoration:none;font-weight:700;font-size:15px;color:var(--muted)}
+.topnav a:hover{background:var(--surface-2);color:var(--ink)}
+.topnav a[aria-current="true"]{background:var(--surface);color:var(--ink)}
+.space{flex:1}
+.menu-btn{display:none;width:44px;height:44px;border:0;border-radius:999px;background:var(--surface-2);cursor:pointer;place-items:center;flex:none}
+.menu-btn svg{width:22px;height:22px}
+.color-btn{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 16px 0 10px;border:0;border-radius:999px;background:var(--surface-2);font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap}
+.color-btn:hover{background:var(--surface-3)}
+.color-btn i{display:block;width:22px;height:22px;border-radius:50%;background:var(--accent)}
+/* Narrow phones: the header keeps the icons, the words stay for screen readers */
+@media (max-width:420px){.color-btn{padding:0 9px}.color-btn span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
+
+/* Shell */
+.shell{display:grid;grid-template-columns:var(--side-w) minmax(0,1fr) var(--toc-w);gap:24px;max-width:1360px;margin:0 auto;padding:8px 16px 56px;align-items:start}
+html[data-page="home"] .shell{grid-template-columns:minmax(0,1fr);max-width:960px}
+html[data-page="home"] .sidebar,html[data-page="home"] .toc{display:none}
+.sidebar,.toc{position:sticky;top:calc(var(--header-h) + 8px);max-height:calc(100vh - var(--header-h) - 24px);overflow-y:auto}
+.sidebar{display:flex;flex-direction:column;gap:20px;padding:8px 4px}
+.nav-group{display:none;flex-direction:column;gap:2px}
+.nav-title{font-size:12px;font-weight:700;color:var(--muted);padding:0 12px 4px}
+.nav-link{display:flex;align-items:center;min-height:40px;padding:0 12px;border-radius:12px;text-decoration:none;font-size:15px;font-weight:700}
+.nav-link:hover{background:var(--surface-2)}
+.nav-link[aria-current="page"]{background:var(--accent-soft);color:var(--accent-ink)}
+.drawer-scrim{display:none}
+
+.main{background:var(--surface);border-radius:var(--r-lg);padding:clamp(20px,5vw,48px);min-width:0}
+.page{display:none;flex-direction:column;gap:48px}
+/* Animate only when moving between pages, not on the first load */
+html.navigated .page{animation:k-enter var(--motion-slow) var(--ease-out)}
+@media (prefers-reduced-motion:reduce){html.navigated .page{animation:none}}
+/* Each page has its own URL: between pages, keep the header and sidebar still and bring the main column in */
+@view-transition{navigation:auto}
+.main{view-transition-name:main}
+::view-transition-old(root),::view-transition-new(root),::view-transition-old(main){animation:none}
+::view-transition-old(main){opacity:0}
+::view-transition-new(main){animation:k-enter var(--motion-slow) var(--ease-out)}
+@media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}
+.crumbs{font-size:13px;color:var(--muted);font-weight:700}
+.page-head{display:flex;flex-direction:column;gap:12px}
+.page-head h1{font-size:clamp(28px,6vw,40px)}
+.lead{font-size:17px;color:var(--muted);max-width:36em}
+.sec{display:flex;flex-direction:column;gap:16px;scroll-margin-top:calc(var(--header-h) + 16px)}
+.sec h2{font-size:24px;display:flex;align-items:center;gap:12px}
+.sec>p{max-width:38em}
+.sec a,.links a{color:var(--accent-ink);font-weight:700;text-underline-offset:3px}
+.a-ink{color:var(--accent-ink);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+
+.toc{padding:8px 4px;font-size:14px}
+.toc-page{display:none;flex-direction:column;gap:4px}
+.toc-title{font-size:12px;font-weight:700;color:var(--muted);padding:0 12px 4px}
+.toc button{display:block;width:100%;text-align:left;border:0;background:none;padding:6px 12px;border-radius:10px;color:var(--muted);font-weight:700;line-height:1.5;cursor:pointer}
+.toc button:hover,.toc button[aria-current="true"]{background:var(--surface-2);color:var(--ink)}
+
+/* Pager */
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pager:empty{display:none}
+.pager a{display:flex;flex-direction:column;background:var(--surface-2);border-radius:var(--r-md);padding:14px 18px;text-decoration:none;font-weight:800;line-height:1.5}
+.pager a:hover{background:var(--surface-3)}
+.pager small{font-weight:700;color:var(--muted);font-size:12px}
+.pager .next{grid-column:2;text-align:right}
+
+/* Tiles and principle cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px}
+.cards.two{grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
+.tile{display:flex;flex-direction:column;gap:8px;background:var(--surface-2);border-radius:var(--r-md);padding:20px;text-align:left;border:0;text-decoration:none}
+.tile h3,.tile .tile-h{font-size:18px;font-weight:800;font-family:var(--font-body);line-height:1.4}
+.tile p{font-size:15px;color:var(--muted)}
+/* Language switch in the header */
+.lang-link{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:999px;color:var(--ink);text-decoration:none;font-weight:700;font-size:14px;margin-right:8px}
+.lang-link:hover{background:var(--surface-2)}
+.lang-link svg{width:18px;height:18px}
+@media (max-width:600px){.lang-link{padding:0 10px;margin-right:4px}.lang-link span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
+/* Feature tiles with a small picture on top */
+.feat-vis{background:var(--bg);border-radius:14px;padding:14px;min-height:132px;display:flex;flex-direction:column;justify-content:center;margin-bottom:6px}
+.fv-card{background:var(--surface);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:6px;font-size:13px}
+.fv-row{background:var(--surface-2);border-radius:10px;padding:6px 10px}
+.feat-sws{flex-direction:row;flex-wrap:wrap;align-content:center;justify-content:center;gap:10px}
+.feat-sw{width:32px;height:32px;border-radius:50%;border:0;padding:0;cursor:pointer;transition:transform var(--motion-fast) var(--ease-out)}
+.feat-sw:hover{transform:scale(1.12)}
+.feat-sw[aria-pressed="true"]{outline:3px solid var(--ink);outline-offset:3px}
+.feat-code code{background:none;padding:0;font-size:12.5px;line-height:1.7;color:var(--ink);word-break:break-all}
+.feat-checks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:13px}
+.feat-checks li{display:flex;align-items:center;gap:8px;background:var(--surface);border-radius:10px;padding:5px 10px}
+.feat-checks svg{width:16px;height:16px;color:var(--ok);flex:none}
+.feat-checks span{flex:1}
+.feat-checks b{font-weight:700;color:var(--ok)}
+.tile-link{cursor:pointer}
+.tile-link:hover{background:var(--surface-3)}
+.num-tag{display:inline-grid;place-items:center;flex:none;width:36px;height:36px;border-radius:50%;background:var(--accent);color:var(--on-accent);font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
+.links{list-style:none;padding:0;display:flex;flex-direction:column;gap:6px}
+.links li{display:flex;flex-direction:column;gap:2px;background:var(--surface-2);border-radius:var(--r-md);padding:14px 18px;line-height:1.6}
+.links li>b,.links li>a{font-size:16px;font-weight:800}
+.links span{color:var(--muted);font-size:14px}
+
+/* Example (live demo + code) */
+.ex{display:flex;flex-direction:column;gap:8px}
+.ex-demo{background:var(--bg);border-radius:var(--r-md);padding:28px 20px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center}
+.ex-demo.ex-stack{flex-direction:column;align-items:stretch;max-width:100%}
+.ex-demo.ex-stack>*{width:100%;max-width:420px;margin:0 auto}
+.ex-demo.ex-stack>.wide{max-width:600px}
+.code{background:var(--surface-2);border-radius:var(--r-md);overflow:hidden}
+.code-head{display:flex;justify-content:space-between;align-items:center;padding:6px 8px 0 16px;font-size:12px;font-weight:700;color:var(--muted)}
+.copy{border:0;background:transparent;border-radius:999px;min-height:32px;padding:0 12px;font-size:13px;font-weight:700;color:var(--accent-ink);cursor:pointer}
+.copy:hover{background:var(--surface-3)}
+pre{margin:0;padding:8px 16px 16px;overflow-x:auto;font-size:13px;line-height:1.7}
+pre code{background:none;padding:0;font-size:inherit}
+
+/* Do / Don't */
+.dd{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));grid-auto-rows:auto;gap:16px}
+.dd-item{display:grid;grid-template-rows:subgrid;grid-row:span 2;row-gap:0;border:2px solid var(--dd-color);border-radius:20px;overflow:hidden}
+.dd-do{--dd-color:var(--ok);--dd-soft:var(--ok-soft)}
+.dd-dont{--dd-color:var(--danger);--dd-soft:var(--danger-soft)}
+.dd-demo{flex:1;min-height:160px;background:var(--bg);padding:20px;display:grid;place-items:center}
+.dd-cap{padding:14px 18px;background:var(--dd-soft);font-size:14px;line-height:1.7}
+.dd-label{display:flex;align-items:center;gap:6px;margin-bottom:4px;color:var(--dd-color);font-weight:800;font-size:15px}
+.dd-label svg{width:18px;height:18px;flex:none}
+.k-card.mini{padding:14px;gap:6px;width:100%;max-width:250px;font-size:14px;border-radius:20px}
+.k-card.mini .k-list-item{padding:8px 12px;border-radius:12px}
+.stack{display:flex;flex-direction:column;align-items:center;gap:12px}
+.inline{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center}
+.dot{display:inline-flex;align-items:center;gap:8px;font-size:14px}
+.dot i{width:12px;height:12px;border-radius:50%;display:block}
+
+/* Tables */
+.tbl{overflow-x:auto}
+table{border-collapse:separate;border-spacing:0 4px;width:100%;min-width:520px;font-size:14px}
+th{text-align:left;font-size:12px;color:var(--muted);font-weight:700;padding:0 12px 4px}
+td{background:var(--surface-2);padding:8px 12px;line-height:1.6}
+td:first-child{border-radius:12px 0 0 12px;white-space:nowrap}
+table.fixed{table-layout:fixed}
+table.fixed td{overflow-wrap:anywhere}
+td:last-child{border-radius:0 12px 12px 0}
+td code{background:var(--surface-3)}
+.sw{display:inline-flex;align-items:center;gap:10px;font-size:13px;white-space:nowrap}
+.sw i{display:block;width:24px;height:24px;border-radius:8px;flex:none}
+
+/* Palette buttons (colour page and first-visit chooser) */
+.pals{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:8px}
+.pal{display:grid;grid-template-columns:auto 1fr;column-gap:10px;align-items:center;text-align:left;border:0;border-radius:var(--r-md);background:var(--surface-2);padding:10px 14px;cursor:pointer;min-height:56px}
+.pal:hover{background:var(--surface-3)}
+.pal i{grid-row:span 2;display:block;width:30px;height:30px;border-radius:50%}
+.pal b{font-size:15px;line-height:1.3}
+.pal small{font-size:12px;color:var(--muted);line-height:1.3}
+.pal[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.pal[aria-pressed="true"] small{color:inherit;opacity:.75}
+
+/* Style pages */
+.layer-viz{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px;align-items:start}
+.lv-panel{margin:0;display:flex;flex-direction:column;gap:12px}
+.lv-panel figcaption{font-size:16px;font-weight:800}
+.lv{border-radius:var(--r-lg);padding:14px 14px 16px;display:flex;flex-direction:column;gap:12px;color:var(--ink)}
+.lv .lv{border-radius:var(--r-md)}
+.lv-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;padding:0 4px;font-size:14px}
+.lv-h code,.lv-chip code{background:none;padding:0;font-family:var(--font-body);font-weight:700;font-size:inherit}
+.lv-val{font-family:var(--font-num);font-variant-numeric:tabular-nums;font-size:13px;color:var(--muted);text-transform:uppercase}
+.lv .lv .lv .lv .lv-val{color:var(--ink)}
+.lv-note{margin:0;font-size:14px;color:var(--muted)}
+.lv-chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.lv-chip{background:var(--surface-2);border-radius:var(--r-md);padding:10px 10px 12px;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.lv-chip i{display:block;height:44px;border-radius:12px;margin-bottom:6px}
+/* Long code starts folded */
+.code.long pre{max-height:calc(13.6em + 24px);overflow-y:hidden;-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)}
+.code.long.open pre{max-height:none;-webkit-mask-image:none;mask-image:none}
+.code-head small{font-weight:400;margin-left:4px}
+.code-more{display:block;margin:0 auto 10px;border:0;background:var(--surface-3);color:var(--ink);border-radius:999px;min-height:36px;padding:0 18px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.code-more:hover{background:var(--accent-soft);color:var(--accent-ink)}
+.type-list{display:flex;flex-direction:column;gap:6px}
+.type-row{display:grid;grid-template-columns:130px 1fr auto;gap:8px 16px;align-items:baseline;background:var(--surface-2);border-radius:var(--r-md);padding:12px 16px}
+.type-row code{background:var(--surface-3);justify-self:start}
+.type-row small{color:var(--muted);font-size:12px;white-space:nowrap}
+.numcmp{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.numcmp>div{background:var(--surface-2);border-radius:var(--r-md);padding:12px 16px;display:flex;flex-direction:column;align-items:flex-end;font-size:20px;font-weight:700;line-height:1.7}
+.numcmp small{align-self:flex-start;font-size:12px;color:var(--muted)}
+.radii{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.radii>div{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.radii i{display:block;width:100%;height:84px;background:var(--surface-2)}
+.radii small,.spaces small{color:var(--muted);font-size:13px}
+.spaces{display:flex;flex-direction:column;gap:6px}
+.spaces>div{display:grid;grid-template-columns:110px 64px 1fr;gap:12px;align-items:center;background:var(--surface-2);border-radius:12px;padding:8px 14px}
+.spaces code{background:var(--surface-3);justify-self:start}
+.spaces i{display:block;height:16px;background:var(--accent);border-radius:3px}
+
+/* Don't example for motion */
+@keyframes bad-wobble{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+.bad-motion{animation:bad-wobble .5s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.bad-motion{animation:none}}
+
+/* Site map (about page) */
+.site-map{list-style:none;padding:0;display:flex;flex-direction:column;gap:6px}
+.site-map a{display:flex;align-items:center;gap:16px;background:var(--surface-2);border-radius:var(--r-md);padding:16px 18px 16px 20px;text-decoration:none;color:var(--ink)}
+.site-map a:hover{background:var(--surface-3)}
+.site-map a:hover .go{transform:translateX(3px);color:var(--accent-ink)}
+.sm-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;line-height:1.6}
+.sm-text b{font-size:17px;font-weight:800}
+.sm-text span{font-size:14px;color:var(--muted)}
+.site-map .go{width:20px;height:20px;flex:none;color:var(--muted);transition:transform var(--motion-fast),color var(--motion-fast)}
+@media (prefers-reduced-motion:reduce){.site-map .go{transition:none}}
+
+/* Showcase and examples on the integration page */
+.showcase{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.show{margin:0;background:var(--bg);color:var(--ink);border-radius:var(--r-lg);padding:14px;display:flex;flex-direction:column;gap:10px}
+.show figcaption{display:flex;flex-direction:column;line-height:1.5;padding:4px 6px}
+.show figcaption b{font-size:16px;font-weight:800}
+.show figcaption span{font-size:13px;color:var(--muted)}
+.show .k-card{padding:18px;gap:10px;border-radius:22px}
+.show .k-list-item{padding:8px 12px;border-radius:14px;font-size:14px}
+.show .k-btn{min-height:40px;font-size:14px;padding:0 18px}
+.show-why{margin:0;padding:0 6px 4px;font-size:13px;color:var(--muted)}
+.demo-link{color:var(--accent-ink);font-weight:700;font-size:14px;text-decoration:underline;text-underline-offset:3px}
+.demo-footer{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;background:var(--surface-2);border-radius:var(--r-md);padding:12px 16px;font-size:13px;color:var(--muted)}
+.demo-footer legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+html[data-page="home"] .page[data-page="home"],html[data-page="home"] .toc-page[data-page="home"]{display:flex}html[data-page="about"] .page[data-page="about"],html[data-page="about"] .toc-page[data-page="about"]{display:flex}html[data-page="start"] .page[data-page="start"],html[data-page="start"] .toc-page[data-page="start"]{display:flex}html[data-page="integrate"] .page[data-page="integrate"],html[data-page="integrate"] .toc-page[data-page="integrate"]{display:flex}html[data-page="with-ai"] .page[data-page="with-ai"],html[data-page="with-ai"] .toc-page[data-page="with-ai"]{display:flex}html[data-page="updates"] .page[data-page="updates"],html[data-page="updates"] .toc-page[data-page="updates"]{display:flex}html[data-page="principles"] .page[data-page="principles"],html[data-page="principles"] .toc-page[data-page="principles"]{display:flex}html[data-page="accessibility"] .page[data-page="accessibility"],html[data-page="accessibility"] .toc-page[data-page="accessibility"]{display:flex}html[data-page="performance"] .page[data-page="performance"],html[data-page="performance"] .toc-page[data-page="performance"]{display:flex}html[data-page="writing"] .page[data-page="writing"],html[data-page="writing"] .toc-page[data-page="writing"]{display:flex}html[data-page="color"] .page[data-page="color"],html[data-page="color"] .toc-page[data-page="color"]{display:flex}html[data-page="typography"] .page[data-page="typography"],html[data-page="typography"] .toc-page[data-page="typography"]{display:flex}html[data-page="shape"] .page[data-page="shape"],html[data-page="shape"] .toc-page[data-page="shape"]{display:flex}html[data-page="layout"] .page[data-page="layout"],html[data-page="layout"] .toc-page[data-page="layout"]{display:flex}html[data-page="icons"] .page[data-page="icons"],html[data-page="icons"] .toc-page[data-page="icons"]{display:flex}html[data-page="motion"] .page[data-page="motion"],html[data-page="motion"] .toc-page[data-page="motion"]{display:flex}html[data-page="button"] .page[data-page="button"],html[data-page="button"] .toc-page[data-page="button"]{display:flex}html[data-page="input"] .page[data-page="input"],html[data-page="input"] .toc-page[data-page="input"]{display:flex}html[data-page="card"] .page[data-page="card"],html[data-page="card"] .toc-page[data-page="card"]{display:flex}html[data-page="badge"] .page[data-page="badge"],html[data-page="badge"] .toc-page[data-page="badge"]{display:flex}html[data-page="tabs"] .page[data-page="tabs"],html[data-page="tabs"] .toc-page[data-page="tabs"]{display:flex}html[data-page="progress"] .page[data-page="progress"],html[data-page="progress"] .toc-page[data-page="progress"]{display:flex}html[data-page="dialog"] .page[data-page="dialog"],html[data-page="dialog"] .toc-page[data-page="dialog"]{display:flex}html[data-sec="intro"] .nav-group[data-sec="intro"]{display:flex}html[data-sec="principle"] .nav-group[data-sec="principle"]{display:flex}html[data-sec="style"] .nav-group[data-sec="style"]{display:flex}html[data-sec="component"] .nav-group[data-sec="component"]{display:flex}
+.demo-scope[data-accent="yamabuki"]{--bg:#f0ece3;--surface:#fcfaf5;--surface-2:#e7e3d9;--surface-3:#dad5ca;--ink:#201f1c;--muted:#66635d;--line:#938f85;--accent:#eec96c;--accent-soft:#f9e6bb;--accent-ink:#6e5400;--on-accent:#201f1c;--focus:#8d6d00;--notice-head:#201f1c;--ok:#007131;--ok-soft:#d0f0d5;--danger:#9d3533;--danger-soft:#ffddd9;--info:#515f6e;--info-soft:#dfe7ef}@media (prefers-color-scheme:dark){html:not([data-theme="light"]) .demo-scope[data-accent="yamabuki"]{--bg:#181715;--surface:#22211f;--surface-2:#2b2a27;--surface-3:#353431;--ink:#e9e8e6;--muted:#95928b;--line:#6e6c65;--accent:#ebca78;--accent-soft:#3e310e;--accent-ink:#dbba68;--on-accent:#181715;--focus:#ba9a48;--notice-head:#dbba68;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}}html[data-theme="dark"] .demo-scope[data-accent="yamabuki"]{--bg:#181715;--surface:#22211f;--surface-2:#2b2a27;--surface-3:#353431;--ink:#e9e8e6;--muted:#95928b;--line:#6e6c65;--accent:#ebca78;--accent-soft:#3e310e;--accent-ink:#dbba68;--on-accent:#181715;--focus:#ba9a48;--notice-head:#dbba68;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}
+.demo-scope[data-accent="tachibana"]{--bg:#f4ebe4;--surface:#fef9f6;--surface-2:#eae1da;--surface-3:#ded4cc;--ink:#221f1c;--muted:#68625e;--line:#978d86;--accent:#e79a5d;--accent-soft:#ffe1cc;--accent-ink:#844500;--on-accent:#221f1c;--focus:#a45d1a;--notice-head:#221f1c;--ok:#007131;--ok-soft:#d0f0d5;--danger:#9d3533;--danger-soft:#ffddd9;--info:#515f6e;--info-soft:#dfe7ef}@media (prefers-color-scheme:dark){html:not([data-theme="light"]) .demo-scope[data-accent="tachibana"]{--bg:#191715;--surface:#232120;--surface-2:#2c2928;--surface-3:#363331;--ink:#e9e7e6;--muted:#97918c;--line:#706a66;--accent:#e19c67;--accent-soft:#472b15;--accent-ink:#f2ac76;--on-accent:#191715;--focus:#d18d57;--notice-head:#f2ac76;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}}html[data-theme="dark"] .demo-scope[data-accent="tachibana"]{--bg:#191715;--surface:#232120;--surface-2:#2c2928;--surface-3:#363331;--ink:#e9e7e6;--muted:#97918c;--line:#706a66;--accent:#e19c67;--accent-soft:#472b15;--accent-ink:#f2ac76;--on-accent:#191715;--focus:#d18d57;--notice-head:#f2ac76;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}
+.demo-scope[data-accent="kobai"]{--bg:#f4e9ee;--surface:#fef8fa;--surface-2:#ebdfe4;--surface-3:#dfd2d7;--ink:#221e1f;--muted:#686164;--line:#978c90;--accent:#d078a0;--accent-soft:#ffddeb;--accent-ink:#88375f;--on-accent:#221e1f;--focus:#a55179;--notice-head:#221e1f;--ok:#007131;--ok-soft:#d0f0d5;--danger:#9d3533;--danger-soft:#ffddd9;--info:#515f6e;--info-soft:#dfe7ef}@media (prefers-color-scheme:dark){html:not([data-theme="light"]) .demo-scope[data-accent="kobai"]{--bg:#191617;--surface:#232122;--surface-2:#2c292a;--surface-3:#363334;--ink:#e9e7e8;--muted:#979093;--line:#71696c;--accent:#d282a5;--accent-soft:#482736;--accent-ink:#f4a1c5;--on-accent:#191617;--focus:#d282a5;--notice-head:#f4a1c5;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}}html[data-theme="dark"] .demo-scope[data-accent="kobai"]{--bg:#191617;--surface:#232122;--surface-2:#2c292a;--surface-3:#363334;--ink:#e9e7e8;--muted:#979093;--line:#71696c;--accent:#d282a5;--accent-soft:#482736;--accent-ink:#f4a1c5;--on-accent:#191617;--focus:#d282a5;--notice-head:#f4a1c5;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}
+.demo-scope[data-accent="fuji"]{--bg:#eeebf5;--surface:#faf9fe;--surface-2:#e4e1eb;--surface-3:#d7d4df;--ink:#1f1f22;--muted:#646268;--line:#908d97;--accent:#a187d8;--accent-soft:#ebe3ff;--accent-ink:#614691;--on-accent:#1f1f22;--focus:#7b60ae;--notice-head:#1f1f22;--ok:#007131;--ok-soft:#d0f0d5;--danger:#9d3533;--danger-soft:#ffddd9;--info:#515f6e;--info-soft:#dfe7ef}@media (prefers-color-scheme:dark){html:not([data-theme="light"]) .demo-scope[data-accent="fuji"]{--bg:#171719;--surface:#222124;--surface-2:#2a2a2c;--surface-3:#343337;--ink:#e8e7ea;--muted:#939198;--line:#6c6b71;--accent:#a78fd9;--accent-soft:#362d4b;--accent-ink:#c6affb;--on-accent:#171719;--focus:#a78fd9;--notice-head:#c6affb;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}}html[data-theme="dark"] .demo-scope[data-accent="fuji"]{--bg:#171719;--surface:#222124;--surface-2:#2a2a2c;--surface-3:#343337;--ink:#e8e7ea;--muted:#939198;--line:#6c6b71;--accent:#a78fd9;--accent-soft:#362d4b;--accent-ink:#c6affb;--on-accent:#171719;--focus:#a78fd9;--notice-head:#c6affb;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}
+.demo-scope[data-accent="ai"]{--bg:#e7edf6;--surface:#f7faff;--surface-2:#dde4ec;--surface-3:#cfd7e1;--ink:#1d1f22;--muted:#62666c;--line:#899098;--accent:#659ae1;--accent-soft:#d9e9ff;--accent-ink:#245899;--on-accent:#1d1f22;--focus:#3f72b6;--notice-head:#1d1f22;--ok:#007131;--ok-soft:#d0f0d5;--danger:#9d3533;--danger-soft:#ffddd9;--info:#515f6e;--info-soft:#dfe7ef}@media (prefers-color-scheme:dark){html:not([data-theme="light"]) .demo-scope[data-accent="ai"]{--bg:#161719;--surface:#202224;--surface-2:#282a2d;--surface-3:#323437;--ink:#e6e8ea;--muted:#8e9398;--line:#686c72;--accent:#71a1e1;--accent-soft:#20344e;--accent-ink:#92c1ff;--on-accent:#161719;--focus:#71a1e1;--notice-head:#92c1ff;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}}html[data-theme="dark"] .demo-scope[data-accent="ai"]{--bg:#161719;--surface:#202224;--surface-2:#282a2d;--surface-3:#323437;--ink:#e6e8ea;--muted:#8e9398;--line:#686c72;--accent:#71a1e1;--accent-soft:#20344e;--accent-ink:#92c1ff;--on-accent:#161719;--focus:#71a1e1;--notice-head:#92c1ff;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}
+.demo-scope[data-accent="sora"]{--bg:#e4eff3;--surface:#f5fbfe;--surface-2:#dae5ea;--surface-3:#cbd8de;--ink:#1c2021;--muted:#5d6568;--line:#869196;--accent:#64c6ea;--accent-soft:#c9efff;--accent-ink:#00627d;--on-accent:#1c2021;--focus:#007d9f;--notice-head:#1c2021;--ok:#007131;--ok-soft:#d0f0d5;--danger:#9d3533;--danger-soft:#ffddd9;--info:#515f6e;--info-soft:#dfe7ef}@media (prefers-color-scheme:dark){html:not([data-theme="light"]) .demo-scope[data-accent="sora"]{--bg:#151819;--surface:#1f2223;--surface-2:#282b2c;--surface-3:#313536;--ink:#e6e8e9;--muted:#8c9497;--line:#666d70;--accent:#6fc4e5;--accent-soft:#133845;--accent-ink:#76cbec;--on-accent:#151819;--focus:#55abcb;--notice-head:#76cbec;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}}html[data-theme="dark"] .demo-scope[data-accent="sora"]{--bg:#151819;--surface:#1f2223;--surface-2:#282b2c;--surface-3:#313536;--ink:#e6e8e9;--muted:#8c9497;--line:#666d70;--accent:#6fc4e5;--accent-soft:#133845;--accent-ink:#76cbec;--on-accent:#151819;--focus:#55abcb;--notice-head:#76cbec;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}
+.demo-scope[data-accent="seiji"]{--bg:#e4f0ee;--surface:#f5fcfb;--surface-2:#d9e6e4;--surface-3:#cbd9d7;--ink:#1c2020;--muted:#5d6564;--line:#869290;--accent:#90e3d8;--accent-soft:#caf1eb;--accent-ink:#00665e;--on-accent:#1c2020;--focus:#2a8178;--notice-head:#1c2020;--ok:#007131;--ok-soft:#d0f0d5;--danger:#9d3533;--danger-soft:#ffddd9;--info:#515f6e;--info-soft:#dfe7ef}@media (prefers-color-scheme:dark){html:not([data-theme="light"]) .demo-scope[data-accent="seiji"]{--bg:#151817;--surface:#1f2222;--surface-2:#272b2a;--surface-3:#313534;--ink:#e6e8e8;--muted:#8c9493;--line:#666e6c;--accent:#98e1d7;--accent-soft:#1b3935;--accent-ink:#85cec4;--on-accent:#151817;--focus:#66aea4;--notice-head:#85cec4;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}}html[data-theme="dark"] .demo-scope[data-accent="seiji"]{--bg:#151817;--surface:#1f2222;--surface-2:#272b2a;--surface-3:#313534;--ink:#e6e8e8;--muted:#8c9493;--line:#666e6c;--accent:#98e1d7;--accent-soft:#1b3935;--accent-ink:#85cec4;--on-accent:#151817;--focus:#66aea4;--notice-head:#85cec4;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}
+.demo-scope[data-accent="moegi"]{--bg:#eceee4;--surface:#fafbf5;--surface-2:#e2e4da;--surface-3:#d5d7cc;--ink:#1f201c;--muted:#63645e;--line:#8f9086;--accent:#ceda88;--accent-soft:#e6edc5;--accent-ink:#575e00;--on-accent:#1f201c;--focus:#707827;--notice-head:#1f201c;--ok:#007131;--ok-soft:#d0f0d5;--danger:#9d3533;--danger-soft:#ffddd9;--info:#515f6e;--info-soft:#dfe7ef}@media (prefers-color-scheme:dark){html:not([data-theme="light"]) .demo-scope[data-accent="moegi"]{--bg:#171715;--surface:#21221f;--surface-2:#2a2a28;--surface-3:#343431;--ink:#e8e8e6;--muted:#92938c;--line:#6b6d66;--accent:#cfd990;--accent-soft:#323618;--accent-ink:#bbc57e;--on-accent:#171715;--focus:#9ca65f;--notice-head:#bbc57e;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}}html[data-theme="dark"] .demo-scope[data-accent="moegi"]{--bg:#171715;--surface:#21221f;--surface-2:#2a2a28;--surface-3:#343431;--ink:#e8e8e6;--muted:#92938c;--line:#6b6d66;--accent:#cfd990;--accent-soft:#323618;--accent-ink:#bbc57e;--on-accent:#171715;--focus:#9ca65f;--notice-head:#bbc57e;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}
+.demo-scope[data-accent="sumi"]{--bg:#eeecea;--surface:#fbfaf8;--surface-2:#e4e3e0;--surface-3:#d7d5d2;--ink:#201f1e;--muted:#646361;--line:#918f8c;--accent:#2e2e2e;--accent-soft:#e8e8e8;--accent-ink:#292929;--on-accent:#ffffff;--focus:#717171;--notice-head:#201f1e;--ok:#007131;--ok-soft:#d0f0d5;--danger:#9d3533;--danger-soft:#ffddd9;--info:#515f6e;--info-soft:#dfe7ef}@media (prefers-color-scheme:dark){html:not([data-theme="light"]) .demo-scope[data-accent="sumi"]{--bg:#171717;--surface:#222121;--surface-2:#2a2a29;--surface-3:#343433;--ink:#e8e8e7;--muted:#939290;--line:#6d6c6a;--accent:#d7d7d7;--accent-soft:#333333;--accent-ink:#bebebe;--on-accent:#171717;--focus:#9e9e9e;--notice-head:#bebebe;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}}html[data-theme="dark"] .demo-scope[data-accent="sumi"]{--bg:#171717;--surface:#222121;--surface-2:#2a2a29;--surface-3:#343433;--ink:#e8e8e7;--muted:#939290;--line:#6d6c6a;--accent:#d7d7d7;--accent-soft:#333333;--accent-ink:#bebebe;--on-accent:#171717;--focus:#9e9e9e;--notice-head:#bebebe;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}
+:root[data-accent="yamabuki"],:root:not([data-accent]){--bad-on-accent:#ffffff}
+@media (prefers-color-scheme:dark){:root[data-accent="yamabuki"]:not([data-theme="light"]),:root:not([data-accent]):not([data-theme="light"]){--bad-on-accent:#ffffff}}
+:root[data-accent="yamabuki"][data-theme="dark"],:root:not([data-accent])[data-theme="dark"]{--bad-on-accent:#ffffff}
+:root[data-accent="tachibana"]{--bad-on-accent:#ffffff}
+@media (prefers-color-scheme:dark){:root[data-accent="tachibana"]:not([data-theme="light"]){--bad-on-accent:#ffffff}}
+:root[data-accent="tachibana"][data-theme="dark"]{--bad-on-accent:#ffffff}
+:root[data-accent="kobai"]{--bad-on-accent:#ffffff}
+@media (prefers-color-scheme:dark){:root[data-accent="kobai"]:not([data-theme="light"]){--bad-on-accent:#ffffff}}
+:root[data-accent="kobai"][data-theme="dark"]{--bad-on-accent:#ffffff}
+:root[data-accent="fuji"]{--bad-on-accent:#ffffff}
+@media (prefers-color-scheme:dark){:root[data-accent="fuji"]:not([data-theme="light"]){--bad-on-accent:#ffffff}}
+:root[data-accent="fuji"][data-theme="dark"]{--bad-on-accent:#ffffff}
+:root[data-accent="ai"]{--bad-on-accent:#ffffff}
+@media (prefers-color-scheme:dark){:root[data-accent="ai"]:not([data-theme="light"]){--bad-on-accent:#ffffff}}
+:root[data-accent="ai"][data-theme="dark"]{--bad-on-accent:#ffffff}
+:root[data-accent="sora"]{--bad-on-accent:#ffffff}
+@media (prefers-color-scheme:dark){:root[data-accent="sora"]:not([data-theme="light"]){--bad-on-accent:#ffffff}}
+:root[data-accent="sora"][data-theme="dark"]{--bad-on-accent:#ffffff}
+:root[data-accent="seiji"]{--bad-on-accent:#ffffff}
+@media (prefers-color-scheme:dark){:root[data-accent="seiji"]:not([data-theme="light"]){--bad-on-accent:#ffffff}}
+:root[data-accent="seiji"][data-theme="dark"]{--bad-on-accent:#ffffff}
+:root[data-accent="moegi"]{--bad-on-accent:#ffffff}
+@media (prefers-color-scheme:dark){:root[data-accent="moegi"]:not([data-theme="light"]){--bad-on-accent:#ffffff}}
+:root[data-accent="moegi"][data-theme="dark"]{--bad-on-accent:#ffffff}
+:root[data-accent="sumi"]{--bad-on-accent:#1a1a1a}
+@media (prefers-color-scheme:dark){:root[data-accent="sumi"]:not([data-theme="light"]){--bad-on-accent:#ffffff}}
+:root[data-accent="sumi"][data-theme="dark"]{--bad-on-accent:#ffffff}
+.bad-on-accent,.bad-on-accent:hover{background:var(--accent);color:var(--bad-on-accent);cursor:default}.bad-on-accent::after{content:attr(data-label)}.bad-link{color:var(--accent);font-weight:700;text-decoration:underline;text-underline-offset:3px}.bad-link::after{content:attr(data-label)}
+
+/* Log, icon grid */
+.log{list-style:none;padding:0;display:flex;flex-direction:column;gap:6px}
+.log li{display:flex;gap:16px;align-items:baseline;background:var(--surface-2);border-radius:var(--r-md);padding:14px 18px}
+.log time{flex:none;font-size:13px;color:var(--muted)}
+.log div{display:flex;flex-direction:column;line-height:1.6}
+.log span{font-size:14px;color:var(--muted)}
+.icon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.icon-grid>div{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--surface-2);border-radius:var(--r-md);padding:16px 8px 10px}
+.icon-grid svg{width:28px;height:28px}
+.icon-grid small{font-size:12px;color:var(--muted)}
+.icon-grid code{font-size:11px;background:none;padding:0;color:var(--muted)}
+td svg.lucide{width:20px;height:20px;vertical-align:middle}
+
+/* Home */
+.home{gap:32px}
+.hero{position:relative;overflow:hidden;background:var(--surface-2);border-radius:var(--r-lg);padding:clamp(28px,6vw,56px);display:flex;flex-direction:column;gap:14px}
+.hero h1{font-size:clamp(44px,10vw,80px);line-height:1.1}
+.hero .lead{color:var(--ink);font-weight:700}
+.hero .start{justify-content:flex-start;margin-top:8px}
+.hero-ai{font-size:14px;color:var(--muted)}
+.hero-ai a{color:var(--accent-ink);font-weight:700;text-underline-offset:3px}
+.hero>*{position:relative}
+.hero-art{position:absolute;right:-30px;top:-30px;width:260px;height:260px}
+.hero-art i{position:absolute;border-radius:36px;width:150px;height:150px}
+.hero-art i:nth-child(1){right:0;top:0;background:var(--accent)}
+/* Between the accent and the hero surface, so the three squares always differ (accent-soft can match surface-3, e.g. sumi in dark) */
+.hero-art i:nth-child(2){right:60px;top:60px;background:var(--accent-soft);background:color-mix(in oklab,var(--accent) 45%,var(--surface-2))}
+.hero-art i:nth-child(3){right:120px;top:120px;background:var(--surface-3)}
+/* The three squares stack one by one when the home page appears (Kasane = layering) */
+@keyframes hero-stack{from{opacity:0;transform:translate(36px,-36px) scale(.92)}}
+.hero-art i{animation:hero-stack 800ms var(--ease-out) both;transition:background-color var(--motion-base)}
+.hero-art i:nth-child(1){animation-delay:150ms}
+.hero-art i:nth-child(2){animation-delay:400ms}
+.hero-art i:nth-child(3){animation-delay:650ms}
+@media (prefers-reduced-motion:reduce){.hero-art i{animation:none}}
+a.k-btn{text-decoration:none}
+
+/* Footer */
+.footer{background:var(--surface-2);margin-top:8px}
+.footer-in{max-width:1360px;margin:0 auto;padding:40px 16px 32px;display:flex;flex-direction:column;gap:28px}
+.f-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:24px 16px}
+.f-col{display:flex;flex-direction:column;gap:2px;align-items:flex-start}
+.f-title{font-size:12px;font-weight:700;color:var(--muted);padding-bottom:6px}
+.f-col a{text-decoration:none;font-weight:700;font-size:15px;padding:4px 0}
+.f-col a:hover{text-decoration:underline;text-underline-offset:3px}
+.f-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px}
+.f-brand{font-weight:800}
+.f-brand{display:flex;flex-direction:column;gap:4px}
+.f-brand small{display:block;font-weight:400;color:var(--muted);font-size:13px}
+.f-meta{display:flex;align-items:baseline;gap:6px}
+.f-meta a{color:inherit;text-decoration:none}
+.f-credit{margin-top:6px;font-size:12px!important}
+.f-meta a:hover{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+.f-theme{display:flex;align-items:center;gap:12px;font-weight:700;font-size:14px}
+.footer .k-seg{background:var(--surface-3)}
+
+/* First-visit chooser: shown by CSS from the first paint on a first visit, then controlled by script */
+.modal{display:none}
+html[data-first-visit] .modal,.modal.open{display:grid}
+.modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.5);place-items:center;padding:16px;overflow-y:auto}
+.dialog{background:var(--surface);border-radius:var(--r-lg);padding:clamp(20px,5vw,32px);width:100%;max-width:560px;display:flex;flex-direction:column;gap:16px}
+.dialog h2{font-size:22px}
+.dialog p{color:var(--muted);font-size:15px}
+.dialog .actions{display:flex;justify-content:flex-end}
+
+/* Responsive */
+@media (max-width:1100px){
+  .shell{grid-template-columns:var(--side-w) minmax(0,1fr)}
+  .toc{display:none}
+}
+@media (max-width:820px){
+  .menu-btn{display:grid}
+  .topnav{display:none}
+  .brand{margin-right:0}
+  .shell{grid-template-columns:minmax(0,1fr)}
+  html[data-page="home"] .sidebar{display:flex}
+  .sidebar{position:fixed;z-index:40;top:0;left:0;bottom:0;width:min(84vw,300px);max-height:none;background:var(--surface);padding:20px 12px;border-radius:0 var(--r-lg) var(--r-lg) 0;transform:translateX(-102%);visibility:hidden;transition:transform .2s,visibility .2s}
+  .sidebar.open{transform:none;visibility:visible}
+  .nav-group{display:flex}
+  .drawer-scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(0,0,0,.45)}
+  .type-row{grid-template-columns:1fr}
+  .spaces>div{grid-template-columns:100px 64px;}
+  .spaces small{grid-column:1 / -1}
+  .hero-art{opacity:.5}
+}
+@media (prefers-reduced-motion:reduce){.sidebar{transition:none}}
+</style>
+</head>
+<body>
+<header class="header">
+<button aria-controls="sidebar" aria-expanded="false" aria-label="Open menu" class="menu-btn" id="menu-btn" type="button">
+<svg aria-hidden="true" class="lucide lucide-menu" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg>
+</button>
+<a class="brand" href="/en/">
+<svg aria-hidden="true" viewbox="0 0 28 28"><rect fill="var(--surface-3)" height="18" rx="6" width="18" x="2" y="8"></rect><rect fill="var(--accent)" height="18" rx="6" width="18" x="8" y="2"></rect></svg>
+    Kasane
+  </a>
+<nav aria-label="Sections" class="topnav"><a data-sec="intro" href="/en/about/">Introduction</a><a data-sec="principle" href="/en/principles/">Principles</a><a data-sec="style" href="/en/color/">Styles</a><a data-sec="component" href="/en/button/">Components</a></nav>
+<div class="space"></div>
+<a class="lang-link" data-i18n-skip="" href="/with-ai/" hreflang="ja" lang="ja"><svg aria-hidden="true" class="lucide lucide-languages" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24"><path d="m5 8 6 6"></path><path d="m4 14 6-6 2-3"></path><path d="M2 5h12"></path><path d="M7 2h1"></path><path d="m22 22-5-10-5 10"></path><path d="M14 18h6"></path></svg><span>日本語</span></a>
+<button class="color-btn" data-open-chooser="" type="button"><i aria-hidden="true"></i><span>Change color</span></button>
+</header>
+<div class="drawer-scrim" hidden="" id="drawer-scrim"></div>
+<div class="shell" id="shell">
+<nav aria-label="Pages" class="sidebar" id="sidebar"><div class="nav-group" data-sec="intro"><div class="nav-title">Introduction</div><a class="nav-link" href="/en/about/">About Kasane</a><a class="nav-link" href="/en/start/">Getting started</a><a class="nav-link" href="/en/integrate/">Integration and examples</a><a class="nav-link" href="/en/with-ai/">Using with AI</a><a class="nav-link" href="/en/updates/">Updates</a></div><div class="nav-group" data-sec="principle"><div class="nav-title">Principles</div><a class="nav-link" href="/en/principles/">Design principles</a><a class="nav-link" href="/en/accessibility/">Accessibility</a><a class="nav-link" href="/en/performance/">Performance</a><a class="nav-link" href="/en/writing/">Writing</a></div><div class="nav-group" data-sec="style"><div class="nav-title">Styles</div><a class="nav-link" href="/en/color/">Color</a><a class="nav-link" href="/en/typography/">Typography</a><a class="nav-link" href="/en/shape/">Radius and spacing</a><a class="nav-link" href="/en/layout/">Layout</a><a class="nav-link" href="/en/icons/">Icons</a><a class="nav-link" href="/en/motion/">Motion</a></div><div class="nav-group" data-sec="component"><div class="nav-title">Components</div><a class="nav-link" href="/en/button/">Buttons</a><a class="nav-link" href="/en/input/">Inputs</a><a class="nav-link" href="/en/card/">Cards and lists</a><a class="nav-link" href="/en/badge/">Badges</a><a class="nav-link" href="/en/tabs/">Tabs</a><a class="nav-link" href="/en/progress/">Progress bar</a><a class="nav-link" href="/en/dialog/">Dialogs and toasts</a></div></nav>
+<main class="main" id="main">
+<article class="page" data-page="with-ai"><div class="page-head"><div class="crumbs">Introduction / Using with AI</div><h1>Using with AI</h1><p class="lead">How to make AI tools such as Claude Code and Codex follow Kasane’s rules when they build UI. No local files are needed; just give them the URL.</p></div><section class="sec" id="with-ai-s1"><h2>What to give AI</h2><p>Give AI the spec, <code>kasane.en.md</code>, not this documentation site: AI does not read interactive pages and large files well. The spec contains the rules and their reasons, every token, the HTML of every component, how to build components Kasane does not have, and a checklist for the end of the work.</p><p>The Japanese and English editions say the same thing. For AI, the English edition is recommended because it uses fewer tokens (the units AI counts text in). Even with the English edition, the spec tells AI to write the UI text in the product’s language (Japanese, for example).</p><div class="tbl"><table><thead><tr><th>File</th><th>Content</th></tr></thead><tbody><tr><td><code>https://kasane.y-n0.de/v1/kasane.md</code></td><td>Spec (Japanese)</td></tr><tr><td><code>https://kasane.y-n0.de/v1/kasane.en.md</code></td><td>English edition of the spec. Same content, fewer tokens for AI</td></tr><tr><td><code>https://kasane.y-n0.de/v1/kasane.min.css</code></td><td>CSS for every token and component</td></tr><tr><td><code>https://kasane.y-n0.de/v1/tokens.json</code></td><td>Token values (W3C Design Tokens format)</td></tr><tr><td><code>llms.txt</code></td><td>A pointer that tells AI where the spec is (placed at the site root)</td></tr></tbody></table></div></section><section class="sec" id="with-ai-s2"><h2>Using with Claude Code</h2><p>Add the following to your project’s <code>CLAUDE.md</code>. It is read automatically for every task.</p><div class="code"><div class="code-head"><span>Markdown</span><button class="copy" type="button">Copy</button></div><pre><code>## UI
+
+Before building or changing UI, read this spec to the end and follow its rules.
+https://kasane.y-n0.de/v1/kasane.en.md
+
+Load this CSS:
+https://kasane.y-n0.de/v1/kasane.min.css
+
+At the end of the work, go through every item in the spec’s end-of-work checklist.</code></pre></div><p>If Claude Code asks for permission every time it reads the URL, allow the domain in Claude Code’s settings and it will stop asking.</p></section><section class="sec" id="with-ai-s3"><h2>Using with Codex</h2><p>Write the same as above in your project’s <code>AGENTS.md</code>. If Codex runs without network access it cannot read the URL; in that case put <code>kasane.en.md</code> (or <code>kasane.md</code>) in the repository and point to that file.</p></section><section class="sec" id="with-ai-s4"><h2>Using with other AI tools</h2><p>In a chat, paste the contents of <code>kasane.en.md</code> or attach it as a file. Put it in the project instructions and you will not need to paste it every time.</p></section><section class="sec" id="with-ai-s5"><h2>Automatic checks</h2><p>AI can miss parts of long instructions. With <code>kasane-lint</code>, many of the rules are checked mechanically: Stylelint checks the CSS and <code>kasane-check</code> checks the HTML. It installs from the same place as the CSS, with no GitHub account needed.</p><div class="code"><div class="code-head"><span>bash</span><button class="copy" type="button">Copy</button></div><pre><code>npm install --save-dev stylelint https://kasane.y-n0.de/v1/kasane-lint-1.2.0.tgz</code></pre></div><p>Create <code>.stylelintrc.json</code> in your project.</p><div class="code"><div class="code-head"><span>JSON</span><button class="copy" type="button">Copy</button></div><pre><code>{
+  "extends": ["kasane-lint/stylelint"]
+}</code></pre></div><div class="code"><div class="code-head"><span>bash</span><button class="copy" type="button">Copy</button></div><pre><code>npx stylelint "src/**/*.css"
+npx kasane-check "src/**/*.html"</code></pre></div><p>The same package also includes <code>kasane-image</code>, which compresses images and checks SSIM, and <code>kasane-lighthouse</code>, which checks the Lighthouse minimums. See <a href="/en/performance/">Performance</a> for how to use them.</p><p>The file name in the URL includes the version number. Rule updates ship as a file with a new number, so what you installed never changes on its own.</p><p>To have AI fix the issues itself, add this line to <code>CLAUDE.md</code> or <code>AGENTS.md</code>.</p><div class="code"><div class="code-head"><span>Markdown</span><button class="copy" type="button">Copy</button></div><pre><code>At the end of the work, run npx stylelint "src/**/*.css" and npx kasane-check "src/**/*.html", and fix everything they report.
+Compress images with npx kasane-image before using them.
+When a screen is done, evaluate it with npx kasane-lighthouse and fix it until it meets the minimums.</code></pre></div></section><section class="sec" id="with-ai-s6"><h2>CSS rules (Stylelint)</h2><div class="tbl"><table><thead><tr><th>Rule</th><th>Finds</th></tr></thead><tbody><tr><td><code>kasane/no-raw-color</code></td><td>Raw colors (<code>#fff</code>, <code>rgb()</code>, color names and so on)</td></tr><tr><td><code>kasane/no-shadow</code></td><td>Shadows such as <code>box-shadow</code></td></tr><tr><td><code>kasane/border-only-on-inputs</code></td><td>Borders and divider lines on anything but input controls</td></tr><tr><td><code>kasane/use-tokens</code></td><td>Raw radius, spacing, text size or motion duration (warning)</td></tr><tr><td><code>kasane/no-outline-none</code></td><td><code>outline: none</code></td></tr><tr><td><code>kasane/font-family-token</code></td><td>Fonts set without a token</td></tr></tbody></table></div><p>If your own input classes need a border, you can allow them in the config.</p><div class="code"><div class="code-head"><span>JSON</span><button class="copy" type="button">Copy</button></div><pre><code>{
+  "extends": ["kasane-lint/stylelint"],
+  "rules": {
+    "kasane/border-only-on-inputs": [true, { "inputSelectors": ["\\.app-search"] }]
+  }
+}</code></pre></div></section><section class="sec" id="with-ai-s7"><h2>HTML rules (kasane-check)</h2><div class="tbl"><table><thead><tr><th>Rule</th><th>Finds</th></tr></thead><tbody><tr><td><code>kasane/one-primary</code></td><td>Two or more primary buttons on one screen</td></tr><tr><td><code>kasane/status-icon</code></td><td>Success, error or info badges, or error messages, without an icon</td></tr><tr><td><code>kasane/inline-style</code></td><td>Colors, shadows, borders or fonts written directly in a <code>style</code> attribute</td></tr><tr><td><code>kasane/icon-button-label</code></td><td>Buttons or links without text and without <code>aria-label</code></td></tr><tr><td><code>kasane/form-label</code></td><td>An input without a label</td></tr><tr><td><code>kasane/switch-structure</code></td><td>A switch missing a required element</td></tr><tr><td><code>kasane/unknown-class</code></td><td><code>k-</code> classes that Kasane does not have (typos or made-up names)</td></tr><tr><td><code>kasane/lucide-icon</code></td><td>Icon names that do not exist in Lucide, and non-Lucide icons inside components</td></tr><tr><td><code>kasane/dialog-label</code></td><td>A dialog without a name</td></tr><tr><td><code>kasane/tab-aria</code></td><td>A tab without <code>aria-selected</code> or <code>aria-controls</code></td></tr><tr><td><code>kasane/img-alt</code></td><td>An image without <code>alt</code></td></tr><tr><td><code>kasane/img-size</code></td><td>An image without <code>width</code> and <code>height</code></td></tr><tr><td><code>kasane/img-format</code></td><td>JPEG, PNG or GIF used as is</td></tr></tbody></table></div><p>Where you depart from a rule for a reason, <code>data-kasane-ignore</code> excludes the element and its contents from the checks. Give a rule name to exclude only that rule.</p><div class="code"><div class="code-head"><span>HTML</span><button class="copy" type="button">Copy</button></div><pre><code>&lt;section data-kasane-ignore="one-primary"&gt;…&lt;/section&gt;</code></pre></div><p>If your HTML lives inside JavaScript (React and so on), check the HTML your build outputs (such as <code>dist/**/*.html</code>).</p><p>What machines cannot find (visual balance, how the text is written and so on) is covered by the spec’s checklist and by reviewing screenshots.</p></section><section class="sec" id="with-ai-s8"><h2>Checking with screenshots</h2><p>The spec tells AI that can take screenshots (with Playwright or browser control) to capture the screens it built in light and dark, at desktop and phone widths, and review them. That catches problems rules miss: clipped or overlapping text, hard-to-read color pairs, uneven component sizes. If it cannot take screenshots, it is told to say so.</p></section><nav aria-label="Previous and next pages" class="pager"><a class="prev" href="/en/integrate/"><small>Previous</small>Integration and examples</a><a class="next" href="/en/updates/"><small>Next</small>Updates</a></nav></article>
+</main>
+<aside class="toc" id="toc"><nav aria-label="Table of contents" class="toc-page" data-page="with-ai"><div class="toc-title">On this page</div><button data-scroll="with-ai-s1" type="button">What to give AI</button><button data-scroll="with-ai-s2" type="button">Using with Claude Code</button><button data-scroll="with-ai-s3" type="button">Using with Codex</button><button data-scroll="with-ai-s4" type="button">Using with other AI tools</button><button data-scroll="with-ai-s5" type="button">Automatic checks</button><button data-scroll="with-ai-s6" type="button">CSS rules (Stylelint)</button><button data-scroll="with-ai-s7" type="button">HTML rules (kasane-check)</button><button data-scroll="with-ai-s8" type="button">Checking with screenshots</button></nav></aside>
+</div>
+<footer class="footer">
+<div class="footer-in">
+<div class="f-cols"><div class="f-col"><div class="f-title">Introduction</div><a href="/en/about/">About Kasane</a><a href="/en/start/">Getting started</a><a href="/en/integrate/">Integration and examples</a><a href="/en/with-ai/">Using with AI</a><a href="/en/updates/">Updates</a></div><div class="f-col"><div class="f-title">Principles</div><a href="/en/principles/">Design principles</a><a href="/en/accessibility/">Accessibility</a><a href="/en/performance/">Performance</a><a href="/en/writing/">Writing</a></div><div class="f-col"><div class="f-title">Styles</div><a href="/en/color/">Color</a><a href="/en/typography/">Typography</a><a href="/en/shape/">Radius and spacing</a><a href="/en/layout/">Layout</a><a href="/en/icons/">Icons</a><a href="/en/motion/">Motion</a></div><div class="f-col"><div class="f-title">Components</div><a href="/en/button/">Buttons</a><a href="/en/input/">Inputs</a><a href="/en/card/">Cards and lists</a><a href="/en/badge/">Badges</a><a href="/en/tabs/">Tabs</a><a href="/en/progress/">Progress bar</a><a href="/en/dialog/">Dialogs and toasts</a></div><div class="f-col"><div class="f-title">For AI</div><a href="https://kasane.y-n0.de/v1/kasane.md">Spec (kasane.md, Japanese)</a><a href="https://kasane.y-n0.de/v1/kasane.en.md">Spec (kasane.en.md)</a><a href="https://kasane.y-n0.de/llms.txt">llms.txt</a><a href="https://kasane.y-n0.de/v1/tokens.json">tokens.json</a></div></div>
+<div class="f-bottom">
+<div class="f-brand">Kasane<small>A design system that separates content with layered surfaces and lets you choose the color</small>
+<small class="f-meta"><a href="https://github.com/yamamotoxqx/design-system-kasane">GitHub</a><span aria-hidden="true">·</span><a href="https://github.com/yamamotoxqx/design-system-kasane/blob/main/LICENSE">MIT License</a></small>
+<small class="f-credit">Built with care by yamamotoxqx, assisted by Claude</small></div>
+<div class="f-theme"><span id="theme-label">Theme</span>
+<div aria-labelledby="theme-label" class="k-seg" role="group">
+<button aria-pressed="false" data-theme-set="light" type="button">Light</button>
+<button aria-pressed="false" data-theme-set="dark" type="button">Dark</button>
+</div>
+</div>
+</div>
+</div>
+</footer>
+<div class="modal" id="chooser">
+<div aria-labelledby="chooser-title" aria-modal="true" class="dialog" role="dialog">
+<h2 id="chooser-title">Choose an accent color</h2>
+<p>This site will use the color you choose. You can change it any time with “Change color” at the top right.</p>
+<div class="pals"><button aria-pressed="false" class="pal" data-accent-set="yamabuki" type="button"><i style="background:linear-gradient(135deg,#eec96c 50%,#ebca78 50%)"></i><b>山吹</b><small>Yamabuki</small></button><button aria-pressed="false" class="pal" data-accent-set="tachibana" type="button"><i style="background:linear-gradient(135deg,#e79a5d 50%,#e19c67 50%)"></i><b>橘</b><small>Tachibana</small></button><button aria-pressed="false" class="pal" data-accent-set="kobai" type="button"><i style="background:linear-gradient(135deg,#d078a0 50%,#d282a5 50%)"></i><b>紅梅</b><small>Kobai</small></button><button aria-pressed="false" class="pal" data-accent-set="fuji" type="button"><i style="background:linear-gradient(135deg,#a187d8 50%,#a78fd9 50%)"></i><b>藤</b><small>Fuji</small></button><button aria-pressed="false" class="pal" data-accent-set="ai" type="button"><i style="background:linear-gradient(135deg,#659ae1 50%,#71a1e1 50%)"></i><b>藍</b><small>Ai</small></button><button aria-pressed="false" class="pal" data-accent-set="sora" type="button"><i style="background:linear-gradient(135deg,#64c6ea 50%,#6fc4e5 50%)"></i><b>空</b><small>Sora</small></button><button aria-pressed="false" class="pal" data-accent-set="seiji" type="button"><i style="background:linear-gradient(135deg,#90e3d8 50%,#98e1d7 50%)"></i><b>青磁</b><small>Seiji</small></button><button aria-pressed="false" class="pal" data-accent-set="moegi" type="button"><i style="background:linear-gradient(135deg,#ceda88 50%,#cfd990 50%)"></i><b>萌黄</b><small>Moegi</small></button><button aria-pressed="false" class="pal" data-accent-set="sumi" type="button"><i style="background:linear-gradient(135deg,#2e2e2e 50%,#d7d7d7 50%)"></i><b>墨</b><small>Sumi</small></button></div>
+<div class="actions"><button class="k-btn k-btn-primary" id="chooser-ok" type="button">Start with this color</button></div>
+</div>
+</div>
+<script>
+(function(){
+  var NAV=[{"id": "intro", "label": "はじめに", "pages": [["about", "Kasane とは"], ["start", "使い始める"], ["integrate", "組み込み方と使用例"], ["with-ai", "AI と使う"], ["updates", "更新情報"]]}, {"id": "principle", "label": "原則", "pages": [["principles", "デザイン原則"], ["accessibility", "アクセシビリティ"], ["performance", "パフォーマンス"], ["writing", "文章"]]}, {"id": "style", "label": "スタイル", "pages": [["color", "カラー"], ["typography", "タイポグラフィ"], ["shape", "角丸と余白"], ["layout", "レイアウト"], ["icons", "アイコン"], ["motion", "動き"]]}, {"id": "component", "label": "コンポーネント", "pages": [["button", "ボタン"], ["input", "入力欄"], ["card", "カードとリスト"], ["badge", "バッジ"], ["tabs", "タブ"], ["progress", "進捗バー"], ["dialog", "ダイアログとトースト"]]}];
+  var root=document.documentElement;
+  var L=function(s){var t=window.KASANE_T;return t&&t[s]||s;};   /* UI strings on translated pages */
+  var $=function(id){return document.getElementById(id);};
+  var all=function(sel,el){return Array.prototype.slice.call((el||document).querySelectorAll(sel));};
+  var store={get:function(k){try{return localStorage.getItem(k);}catch(e){return null;}},set:function(k,v){try{localStorage.setItem(k,v);}catch(e){}}};
+  var FLAT=[];NAV.forEach(function(s){s.pages.forEach(function(p){FLAT.push({id:p[0],title:p[1],sec:s.id,secLabel:s.label});});});
+
+  /* ---------- Router (plain #name). The first page is already shown by the <head> script and CSS. ---------- */
+  var tocBtns=[],tocSecs=[],first=true;
+  function route(){
+    var id=window.KASANE_PAGE||location.hash.slice(1);if(!(id in window.KASANE_PAGES))id='home';
+    var cur=FLAT.filter(function(p){return p.id===id;})[0];
+    if(!first)root.classList.add('navigated');
+    root.dataset.page=id;root.dataset.sec=window.KASANE_PAGES[id];
+    var self=['#'+id,'/'+id+'/'];
+    all('.nav-link').forEach(function(a){if(self.indexOf(a.getAttribute('href').replace(/^\/en\//,'/'))>=0)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
+    all('.topnav a').forEach(function(a){if(cur&&a.getAttribute('data-sec')===cur.sec)a.setAttribute('aria-current','true');else a.removeAttribute('aria-current');});
+    if(!window.KASANE_PAGE)document.title=cur?cur.title+' | Kasane デザインシステム':'Kasane — 色を選べるデザインシステム';
+    var tp=document.querySelector('.toc-page[data-page="'+id+'"]');
+    tocBtns=tp?all('button',tp):[];tocSecs=tocBtns.map(function(b){return $(b.getAttribute('data-scroll'));});
+    setDrawer(false);
+    if(!first)window.scrollTo(0,0);
+    first=false;
+    paintTokens();spy();
+  }
+  function spy(){
+    if(!tocSecs.length)return;
+    var cur=0;tocSecs.forEach(function(s,i){if(s.getBoundingClientRect().top<=140)cur=i;});
+    if(window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-4&&tocSecs[tocSecs.length-1].getBoundingClientRect().top<window.innerHeight)cur=tocSecs.length-1;
+    tocBtns.forEach(function(b,i){if(i===cur)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current');});
+  }
+  var ticking=false;
+  window.addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(function(){spy();ticking=false;});}},{passive:true});
+  window.addEventListener('hashchange',route);
+  document.addEventListener('click',function(e){
+    var s=e.target.closest('[data-scroll]');
+    if(s){var el=$(s.getAttribute('data-scroll'));if(el)el.scrollIntoView({block:'start'});}
+  });
+
+  /* ---------- Drawer (mobile) ---------- */
+  var side=$('sidebar'),menu=$('menu-btn'),dscrim=$('drawer-scrim');
+  function setDrawer(open){
+    side.classList.toggle('open',open);dscrim.hidden=!open;
+    menu.setAttribute('aria-expanded',String(open));menu.setAttribute('aria-label',open?L('メニューを閉じる'):L('メニューを開く'));
+  }
+  menu.addEventListener('click',function(){var o=!side.classList.contains('open');setDrawer(o);if(o){var f=side.querySelector('a');if(f)f.focus();}});
+  dscrim.addEventListener('click',function(){setDrawer(false);});
+
+  /* ---------- Accent palette ---------- */
+  function currentAccent(){return root.dataset.accent||'yamabuki';}
+  function setAccent(id,save){
+    root.dataset.accent=id;if(save)store.set('kasane-accent',id);
+    all('[data-accent-set]').forEach(function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-accent-set')===id));});
+    all('.k-palette input[type=radio]').forEach(function(r){r.checked=r.value===id;});
+    all('[data-accent-code]').forEach(function(el){el.textContent=id;});
+    paintTokens();
+  }
+  function paintTokens(){
+    var cs=getComputedStyle(root);
+    all('[data-token]').forEach(function(el){el.textContent=cs.getPropertyValue(el.getAttribute('data-token')).trim();});
+    paintIcon(cs);
+  }
+  /* The tab icon follows the chosen palette */
+  var iconLink=document.querySelector('link[rel="icon"][type="image/svg+xml"]');
+  function paintIcon(cs){
+    if(!iconLink)return;
+    var acc=cs.getPropertyValue('--accent').trim(),back=cs.getPropertyValue('--surface-3').trim();if(!acc)return;
+    iconLink.href='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28"><rect x="2" y="8" width="18" height="18" rx="6" fill="'+back+'"/><rect x="8" y="2" width="18" height="18" rx="6" fill="'+acc+'"/></svg>');
+  }
+  var chooser=$('chooser'),opener=null;
+  function isChooserOpen(){return chooser.classList.contains('open')||('firstVisit' in root.dataset);}
+  function openChooser(from){
+    opener=from||null;chooser.classList.add('open');
+    var sel=chooser.querySelector('[aria-pressed="true"]')||chooser.querySelector('.pal');sel.focus();
+  }
+  function closeChooser(){chooser.classList.remove('open');delete root.dataset.firstVisit;store.set('kasane-accent',currentAccent());if(opener)opener.focus();}
+  document.addEventListener('click',function(e){
+    var p=e.target.closest('[data-accent-set]');
+    if(p){setAccent(p.getAttribute('data-accent-set'),!isChooserOpen());return;}
+    var o=e.target.closest('[data-open-chooser]');
+    if(o)openChooser(o);
+  });
+  $('chooser-ok').addEventListener('click',closeChooser);
+  chooser.addEventListener('click',function(e){if(e.target===chooser)closeChooser();});
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){if(isChooserOpen())closeChooser();else if(side.classList.contains('open')){setDrawer(false);menu.focus();}}
+    if(e.key==='Tab'&&isChooserOpen()){
+      var f=all('button',chooser),first=f[0],last=f[f.length-1];
+      if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+      else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+    }
+  });
+
+  /* ---------- Theme switch (light / dark; default follows the device) ---------- */
+  var mq=window.matchMedia('(prefers-color-scheme: dark)'),themeBtns=all('[data-theme-set]');
+  function isDark(){var t=root.dataset.theme;return t?t==='dark':mq.matches;}
+  function paintTheme(){var cur=isDark()?'dark':'light';themeBtns.forEach(function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-theme-set')===cur));});paintTokens();}
+  themeBtns.forEach(function(b){b.addEventListener('click',function(){var v=b.getAttribute('data-theme-set');root.dataset.theme=v;store.set('kasane-theme',v);paintTheme();});});
+  try{mq.addEventListener('change',paintTheme);}catch(e){}
+
+  /* ---------- Tabs in the examples ---------- */
+  all('[role="tablist"]').forEach(function(list){
+    var tabs=all('[role="tab"]',list);
+    function select(tab){tabs.forEach(function(x){var on=x===tab;x.setAttribute('aria-selected',String(on));x.tabIndex=on?0:-1;$(x.getAttribute('aria-controls')).hidden=!on;});}
+    tabs.forEach(function(tab,i){
+      tab.addEventListener('click',function(){select(tab);});
+      tab.addEventListener('keydown',function(e){var d=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(!d)return;var n=tabs[(i+d+tabs.length)%tabs.length];select(n);n.focus();});
+    });
+  });
+
+  /* ---------- Pressed-style segmented controls in the examples ---------- */
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.ex-demo .k-seg[role="group"] button');if(!b)return;
+    all('button',b.parentNode).forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});
+  });
+
+  /* ---------- Palette pickers in the examples change the site's accent ---------- */
+  document.addEventListener('change',function(e){
+    var r=e.target.closest('.k-palette input[type=radio]');if(r&&r.checked)setAccent(r.value,true);
+  });
+
+  /* ---------- Replay a motion example ---------- */
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('[data-replay]');if(!b)return;
+    var el=$(b.getAttribute('data-replay'));el.classList.remove('k-enter');void el.offsetWidth;el.classList.add('k-enter');
+  });
+
+  /* ---------- Live dialog example ---------- */
+  /* The main column has its own stacking layer (for the page transition), so a full-screen
+     layer inside it would sit under the header and the table of contents: move it to <body>. */
+  var demoDlg=$('demo-dialog'),demoFrom=null;
+  if(demoDlg)document.body.appendChild(demoDlg);
+  function closeDemo(){if(!demoDlg||demoDlg.hidden)return;demoDlg.hidden=true;if(demoFrom)demoFrom.focus();}
+  document.addEventListener('click',function(e){
+    var o=e.target.closest('[data-open-demo]');
+    if(o&&demoDlg){demoFrom=o;demoDlg.hidden=false;demoDlg.querySelector('button').focus();return;}
+    if(e.target.closest('[data-close-demo]')||e.target===demoDlg)closeDemo();
+  });
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeDemo();});
+
+  /* ---------- Fold / unfold long code ---------- */
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.code-more');if(!b)return;
+    var box=b.closest('.code'),open=box.classList.toggle('open');
+    b.setAttribute('aria-expanded',String(open));b.textContent=open?L('たたむ'):L('すべて表示');
+    if(!open&&box.getBoundingClientRect().top<0)box.scrollIntoView({block:'start'});
+  });
+
+  /* ---------- Copy buttons ---------- */
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.copy');if(!b)return;
+    var text=b.closest('.code').querySelector('pre').textContent;
+    var done=function(ok){b.textContent=ok?L('コピーしました'):L('コピーできませんでした');setTimeout(function(){b.textContent=L('コピー');},1800);};
+    try{navigator.clipboard.writeText(text).then(function(){done(true);},function(){done(false);});}catch(err){done(false);}
+  });
+
+  /* ---------- Start ---------- */
+  setAccent(currentAccent(),false);
+  paintTheme();
+  route();
+  if('firstVisit' in root.dataset)openChooser(null);
+})();
+</script>
+</body>
+</html>

@@ -6,6 +6,9 @@
 <title>更新情報 | Kasane デザインシステム</title>
 <meta name="description" content="Kasane の変更の記録です。">
 <link rel="canonical" href="https://kasane.y-n0.de/updates/">
+<link rel="alternate" hreflang="ja" href="https://kasane.y-n0.de/updates/">
+<link rel="alternate" hreflang="en" href="https://kasane.y-n0.de/en/updates/">
+<link rel="alternate" hreflang="x-default" href="https://kasane.y-n0.de/updates/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Kasane">
 <meta property="og:title" content="更新情報 | Kasane デザインシステム">
@@ -82,6 +85,8 @@ code{font-family:var(--font-mono);font-size:.875em;background:var(--surface-2);b
 .color-btn{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 16px 0 10px;border:0;border-radius:999px;background:var(--surface-2);font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap}
 .color-btn:hover{background:var(--surface-3)}
 .color-btn i{display:block;width:22px;height:22px;border-radius:50%;background:var(--accent)}
+/* Narrow phones: the header keeps the icons, the words stay for screen readers */
+@media (max-width:420px){.color-btn{padding:0 9px}.color-btn span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
 
 /* Shell */
 .shell{display:grid;grid-template-columns:var(--side-w) minmax(0,1fr) var(--toc-w);gap:24px;max-width:1360px;margin:0 auto;padding:8px 16px 56px;align-items:start}
@@ -138,6 +143,11 @@ html.navigated .page{animation:k-enter var(--motion-slow) var(--ease-out)}
 .tile{display:flex;flex-direction:column;gap:8px;background:var(--surface-2);border-radius:var(--r-md);padding:20px;text-align:left;border:0;text-decoration:none}
 .tile h3,.tile .tile-h{font-size:18px;font-weight:800;font-family:var(--font-body);line-height:1.4}
 .tile p{font-size:15px;color:var(--muted)}
+/* Language switch in the header */
+.lang-link{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:999px;color:var(--ink);text-decoration:none;font-weight:700;font-size:14px;margin-right:8px}
+.lang-link:hover{background:var(--surface-2)}
+.lang-link svg{width:18px;height:18px}
+@media (max-width:600px){.lang-link{padding:0 10px;margin-right:4px}.lang-link span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
 /* Feature tiles with a small picture on top */
 .feat-vis{background:var(--bg);border-radius:14px;padding:14px;min-height:132px;display:flex;flex-direction:column;justify-content:center;margin-bottom:6px}
 .fv-card{background:var(--surface);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:6px;font-size:13px}
@@ -417,7 +427,8 @@ html[data-first-visit] .modal,.modal.open{display:grid}
   </a>
   <nav class="topnav" aria-label="セクション"><a href="/about/" data-sec="intro">はじめに</a><a href="/principles/" data-sec="principle">原則</a><a href="/color/" data-sec="style">スタイル</a><a href="/button/" data-sec="component">コンポーネント</a></nav>
   <div class="space"></div>
-  <button class="color-btn" type="button" data-open-chooser><i aria-hidden="true"></i>色を変える</button>
+  <a class="lang-link" href="/en/updates/" hreflang="en" lang="en" data-i18n-skip><svg aria-hidden="true" class="lucide lucide-languages" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" ><path d="m5 8 6 6" /><path d="m4 14 6-6 2-3" /><path d="M2 5h12" /><path d="M7 2h1" /><path d="m22 22-5-10-5 10" /><path d="M14 18h6" /></svg><span>English</span></a>
+  <button class="color-btn" type="button" data-open-chooser><i aria-hidden="true"></i><span>色を変える</span></button>
 </header>
 
 <div class="drawer-scrim" id="drawer-scrim" hidden></div>
@@ -425,7 +436,7 @@ html[data-first-visit] .modal,.modal.open{display:grid}
 <div class="shell" id="shell">
   <nav class="sidebar" id="sidebar" aria-label="ページ"><div class="nav-group" data-sec="intro"><div class="nav-title">はじめに</div><a class="nav-link" href="/about/">Kasane とは</a><a class="nav-link" href="/start/">使い始める</a><a class="nav-link" href="/integrate/">組み込み方と使用例</a><a class="nav-link" href="/with-ai/">AI と使う</a><a class="nav-link" href="/updates/">更新情報</a></div><div class="nav-group" data-sec="principle"><div class="nav-title">原則</div><a class="nav-link" href="/principles/">デザイン原則</a><a class="nav-link" href="/accessibility/">アクセシビリティ</a><a class="nav-link" href="/performance/">パフォーマンス</a><a class="nav-link" href="/writing/">文章</a></div><div class="nav-group" data-sec="style"><div class="nav-title">スタイル</div><a class="nav-link" href="/color/">カラー</a><a class="nav-link" href="/typography/">タイポグラフィ</a><a class="nav-link" href="/shape/">角丸と余白</a><a class="nav-link" href="/layout/">レイアウト</a><a class="nav-link" href="/icons/">アイコン</a><a class="nav-link" href="/motion/">動き</a></div><div class="nav-group" data-sec="component"><div class="nav-title">コンポーネント</div><a class="nav-link" href="/button/">ボタン</a><a class="nav-link" href="/input/">入力欄</a><a class="nav-link" href="/card/">カードとリスト</a><a class="nav-link" href="/badge/">バッジ</a><a class="nav-link" href="/tabs/">タブ</a><a class="nav-link" href="/progress/">進捗バー</a><a class="nav-link" href="/dialog/">ダイアログとトースト</a></div></nav>
   <main class="main" id="main">
-    <article class="page" data-page="updates"><div class="page-head"><div class="crumbs">はじめに / 更新情報</div><h1>更新情報</h1><p class="lead">Kasane の変更の記録です。</p></div><section class="sec" id="updates-s1"><h2>2026年11月</h2><ul class="log"><li><time class="k-num">11.12</time><div><b>面の重なりを図で説明、長いコードをたためるように</b><span>カラーのページで、面と文字の色をいまの値つきで見られます。長いサンプルコードは最初たたんで表示し、「すべて表示」で全文を開けます。</span></div></li><li><time class="k-num">11.12</time><div><b>ページごとのURLとファビコンを用意</b><span>各ページを /color/ のような別のURLで開けるようにし、検索エンジン向けの情報(説明文、共有用の画像、サイトマップ)を加えました。タブのアイコンは選んだ色に変わります。</span></div></li><li><time class="k-num">11.12</time><div><b>組み込み方と使用例のページ、色の選択の部品を追加</b><span>製品では既定の色を決めておき、利用者は設定ページかページ下部で色を変えます。ライト・ダークは端末の設定に従います。</span></div></li><li><time class="k-num">11.12</time><div><b>仕様書の英語版を追加</b><span>kasane.en.md は日本語版と同じ内容で、AI が読むときのトークンが少なく済みます。</span></div></li><li><time class="k-num">11.12</time><div><b>アクセシビリティとパフォーマンスのページを追加</b><span>画像を軽くして SSIM を確かめる kasane-image と、Lighthouse の最低点を確かめる kasane-lighthouse を加えました。</span></div></li><li><time class="k-num">11.11</time><div><b>アイコンを Lucide に統一、HTML のチェックを追加</b><span>アイコンは Lucide だけを使う決まりにしました。kasane-check で、HTML の使い方も自動で確かめられます。</span></div></li><li><time class="k-num">11.11</time><div><b>URLでの配信と自動チェックを用意</b><span>CSSを1本にまとめ、AI用の仕様書(kasane.md)と Stylelint のプラグインを加えました。</span></div></li><li><time class="k-num">11.11</time><div><b>ドキュメントサイトを作成</b><span>はじめに、原則、スタイル、コンポーネントの4セクションで構成しました。初回に色を選ぶ画面と、ライト・ダークの切り替えがあります。</span></div></li><li><time class="k-num">11.11</time><div><b>色以外は Hidamari を引き継ぐことに決定</b><span>書体(LINE Seed JP、Zen Maru Gothic、Inter)、角丸、部品を引き継ぎました。</span></div></li><li><time class="k-num">11.11</time><div><b>アクセントは9色のパレットから選ぶ方式に決定</b><span>山吹、橘、紅梅、藤、藍、空、青磁、萌黄、墨。全色でコントラストの基準を検査しました。</span></div></li><li><time class="k-num">11.10</time><div><b>名前を Kasane に決定</b><span>Hidamari とは切り離した、色を選べるデザインシステムとして始めました。</span></div></li></ul></section><nav class="pager" aria-label="前後のページ"><a class="prev" href="/with-ai/"><small>前のページ</small>AI と使う</a><a class="next" href="/principles/"><small>次のページ</small>デザイン原則</a></nav></article>
+    <article class="page" data-page="updates"><div class="page-head"><div class="crumbs">はじめに / 更新情報</div><h1>更新情報</h1><p class="lead">Kasane の変更の記録です。</p></div><section class="sec" id="updates-s1"><h2>2026年11月</h2><ul class="log"><li><time class="k-num">11.13</time><div><b>ドキュメントサイトと README を英語にも対応</b><span>英語版は /en/ で開けます。右上の言語の切り替えで、同じページの日本語版と英語版を行き来できます。</span></div></li><li><time class="k-num">11.12</time><div><b>面の重なりを図で説明、長いコードをたためるように</b><span>カラーのページで、面と文字の色をいまの値つきで見られます。長いサンプルコードは最初たたんで表示し、「すべて表示」で全文を開けます。</span></div></li><li><time class="k-num">11.12</time><div><b>ページごとのURLとファビコンを用意</b><span>各ページを /color/ のような別のURLで開けるようにし、検索エンジン向けの情報(説明文、共有用の画像、サイトマップ)を加えました。タブのアイコンは選んだ色に変わります。</span></div></li><li><time class="k-num">11.12</time><div><b>組み込み方と使用例のページ、色の選択の部品を追加</b><span>製品では既定の色を決めておき、利用者は設定ページかページ下部で色を変えます。ライト・ダークは端末の設定に従います。</span></div></li><li><time class="k-num">11.12</time><div><b>仕様書の英語版を追加</b><span>kasane.en.md は日本語版と同じ内容で、AI が読むときのトークンが少なく済みます。</span></div></li><li><time class="k-num">11.12</time><div><b>アクセシビリティとパフォーマンスのページを追加</b><span>画像を軽くして SSIM を確かめる kasane-image と、Lighthouse の最低点を確かめる kasane-lighthouse を加えました。</span></div></li><li><time class="k-num">11.11</time><div><b>アイコンを Lucide に統一、HTML のチェックを追加</b><span>アイコンは Lucide だけを使う決まりにしました。kasane-check で、HTML の使い方も自動で確かめられます。</span></div></li><li><time class="k-num">11.11</time><div><b>URLでの配信と自動チェックを用意</b><span>CSSを1本にまとめ、AI用の仕様書(kasane.md)と Stylelint のプラグインを加えました。</span></div></li><li><time class="k-num">11.11</time><div><b>ドキュメントサイトを作成</b><span>はじめに、原則、スタイル、コンポーネントの4セクションで構成しました。初回に色を選ぶ画面と、ライト・ダークの切り替えがあります。</span></div></li><li><time class="k-num">11.11</time><div><b>色以外は Hidamari を引き継ぐことに決定</b><span>書体(LINE Seed JP、Zen Maru Gothic、Inter)、角丸、部品を引き継ぎました。</span></div></li><li><time class="k-num">11.11</time><div><b>アクセントは9色のパレットから選ぶ方式に決定</b><span>山吹、橘、紅梅、藤、藍、空、青磁、萌黄、墨。全色でコントラストの基準を検査しました。</span></div></li><li><time class="k-num">11.10</time><div><b>名前を Kasane に決定</b><span>Hidamari とは切り離した、色を選べるデザインシステムとして始めました。</span></div></li></ul></section><nav class="pager" aria-label="前後のページ"><a class="prev" href="/with-ai/"><small>前のページ</small>AI と使う</a><a class="next" href="/principles/"><small>次のページ</small>デザイン原則</a></nav></article>
   </main>
   <aside class="toc" id="toc"><nav class="toc-page" data-page="updates" aria-label="このページの目次"><div class="toc-title">このページの内容</div><button type="button" data-scroll="updates-s1">2026年11月</button></nav></aside>
 </div>
@@ -460,6 +471,7 @@ html[data-first-visit] .modal,.modal.open{display:grid}
 (function(){
   var NAV=[{"id": "intro", "label": "はじめに", "pages": [["about", "Kasane とは"], ["start", "使い始める"], ["integrate", "組み込み方と使用例"], ["with-ai", "AI と使う"], ["updates", "更新情報"]]}, {"id": "principle", "label": "原則", "pages": [["principles", "デザイン原則"], ["accessibility", "アクセシビリティ"], ["performance", "パフォーマンス"], ["writing", "文章"]]}, {"id": "style", "label": "スタイル", "pages": [["color", "カラー"], ["typography", "タイポグラフィ"], ["shape", "角丸と余白"], ["layout", "レイアウト"], ["icons", "アイコン"], ["motion", "動き"]]}, {"id": "component", "label": "コンポーネント", "pages": [["button", "ボタン"], ["input", "入力欄"], ["card", "カードとリスト"], ["badge", "バッジ"], ["tabs", "タブ"], ["progress", "進捗バー"], ["dialog", "ダイアログとトースト"]]}];
   var root=document.documentElement;
+  var L=function(s){var t=window.KASANE_T;return t&&t[s]||s;};   /* UI strings on translated pages */
   var $=function(id){return document.getElementById(id);};
   var all=function(sel,el){return Array.prototype.slice.call((el||document).querySelectorAll(sel));};
   var store={get:function(k){try{return localStorage.getItem(k);}catch(e){return null;}},set:function(k,v){try{localStorage.setItem(k,v);}catch(e){}}};
@@ -473,7 +485,7 @@ html[data-first-visit] .modal,.modal.open{display:grid}
     if(!first)root.classList.add('navigated');
     root.dataset.page=id;root.dataset.sec=window.KASANE_PAGES[id];
     var self=['#'+id,'/'+id+'/'];
-    all('.nav-link').forEach(function(a){if(self.indexOf(a.getAttribute('href'))>=0)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
+    all('.nav-link').forEach(function(a){if(self.indexOf(a.getAttribute('href').replace(/^\/en\//,'/'))>=0)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
     all('.topnav a').forEach(function(a){if(cur&&a.getAttribute('data-sec')===cur.sec)a.setAttribute('aria-current','true');else a.removeAttribute('aria-current');});
     if(!window.KASANE_PAGE)document.title=cur?cur.title+' | Kasane デザインシステム':'Kasane — 色を選べるデザインシステム';
     var tp=document.querySelector('.toc-page[data-page="'+id+'"]');
@@ -501,7 +513,7 @@ html[data-first-visit] .modal,.modal.open{display:grid}
   var side=$('sidebar'),menu=$('menu-btn'),dscrim=$('drawer-scrim');
   function setDrawer(open){
     side.classList.toggle('open',open);dscrim.hidden=!open;
-    menu.setAttribute('aria-expanded',String(open));menu.setAttribute('aria-label',open?'メニューを閉じる':'メニューを開く');
+    menu.setAttribute('aria-expanded',String(open));menu.setAttribute('aria-label',open?L('メニューを閉じる'):L('メニューを開く'));
   }
   menu.addEventListener('click',function(){var o=!side.classList.contains('open');setDrawer(o);if(o){var f=side.querySelector('a');if(f)f.focus();}});
   dscrim.addEventListener('click',function(){setDrawer(false);});
@@ -602,7 +614,7 @@ html[data-first-visit] .modal,.modal.open{display:grid}
   document.addEventListener('click',function(e){
     var b=e.target.closest('.code-more');if(!b)return;
     var box=b.closest('.code'),open=box.classList.toggle('open');
-    b.setAttribute('aria-expanded',String(open));b.textContent=open?'たたむ':'すべて表示';
+    b.setAttribute('aria-expanded',String(open));b.textContent=open?L('たたむ'):L('すべて表示');
     if(!open&&box.getBoundingClientRect().top<0)box.scrollIntoView({block:'start'});
   });
 
@@ -610,7 +622,7 @@ html[data-first-visit] .modal,.modal.open{display:grid}
   document.addEventListener('click',function(e){
     var b=e.target.closest('.copy');if(!b)return;
     var text=b.closest('.code').querySelector('pre').textContent;
-    var done=function(ok){b.textContent=ok?'コピーしました':'コピーできませんでした';setTimeout(function(){b.textContent='コピー';},1800);};
+    var done=function(ok){b.textContent=ok?L('コピーしました'):L('コピーできませんでした');setTimeout(function(){b.textContent=L('コピー');},1800);};
     try{navigator.clipboard.writeText(text).then(function(){done(true);},function(){done(false);});}catch(err){done(false);}
   });
 

@@ -19,7 +19,7 @@ const server = createServer(async (req, res) => {
 });
 await new Promise((r) => server.listen(0, '127.0.0.1', r));
 const base = `http://127.0.0.1:${server.address().port}/`;
-const pages = ['', 'about/', 'principles/', 'color/', 'input/', 'performance/', 'integrate/'];
+const pages = ['', 'about/', 'principles/', 'color/', 'input/', 'performance/', 'integrate/', 'en/', 'en/color/'];
 let ok = true;
 try {
   const results = await audit(pages.map((p) => base + p), { presets: ['mobile', 'desktop'], runs: Number(process.env.LH_RUNS || 1) });

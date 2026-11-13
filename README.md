@@ -1,5 +1,7 @@
 # Kasane
 
+日本語 | [English](README.en.md)
+
 面を重ねて区切り、アクセントの色を9色から選べる、Webサイトと Webアプリのためのデザインシステムです。
 
 - 枠も影も使わず、面の色の差で区切ります(枠を持つのは入力の部品だけ)。
@@ -25,7 +27,7 @@
 - `data-accent`: パレットの名前(省略すると `yamabuki`)
 - `data-theme`: `light` か `dark`(省略すると端末の設定。製品では指定せず、切り替えボタンも置かない)
 
-くわしくは、ドキュメントサイト(https://kasane.y-n0.de/)と仕様書(https://kasane.y-n0.de/v1/kasane.md 、英語版 https://kasane.y-n0.de/v1/kasane.en.md)を見てください。製品への組み込み方(既定の色、利用者が色を変える場所)は、ドキュメントサイトの「組み込み方と使用例」にあります。
+くわしくは、ドキュメントサイト(https://kasane.y-n0.de/ 、英語版 https://kasane.y-n0.de/en/)と仕様書(https://kasane.y-n0.de/v1/kasane.md 、英語版 https://kasane.y-n0.de/v1/kasane.en.md)を見てください。製品への組み込み方(既定の色、利用者が色を変える場所)は、ドキュメントサイトの「組み込み方と使用例」にあります。
 
 ## AI に使ってもらう
 
@@ -88,10 +90,10 @@ Lighthouse の最低点は、パフォーマンス 90、アクセシビリティ
 | `v1/kasane.en.md` | 仕様書の英語版(同じ内容。AI が読むときのトークンが少なく済む) |
 | `v1/tokens.json` | トークンの値(W3C Design Tokens 形式) |
 | `v1/fonts/` | LINE Seed JP(文字の範囲ごとに分割) |
-| `site/` | ドキュメントサイト(ページごとの HTML、sitemap.xml、robots.txt、アイコン、共有用の画像) |
+| `site/` | ドキュメントサイト(ページごとの HTML、`en/` に英語版、sitemap.xml、robots.txt、アイコン、共有用の画像) |
 | `llms.txt` | AI に仕様書の場所を知らせる案内 |
 | `lint/` | `kasane-lint`(Stylelint のルール、`kasane-check`、`kasane-image`、`kasane-lighthouse`)。`npm run dist` で `v1/kasane-lint-<版>.tgz` として配信 |
-| `tools/` | 上のファイルを生成するソース |
+| `tools/` | 上のファイルを生成するソース。英語版のドキュメントサイトは `tools/i18n/en.json` の訳で作る |
 
 ## 開発
 

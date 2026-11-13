@@ -17,6 +17,8 @@ jobs:
           python-version: "3.12"
       - run: npm ci
       # Rebuild from the sources and fail if the committed files are out of date.
+      # The English docs pages are translated with BeautifulSoup
+      - run: python -m pip install beautifulsoup4==4.15.0
       - run: npm run build
       - run: git diff --exit-code -- v1 site llms.txt lint/data
       # Lint rules work, and every palette meets the contrast rules.

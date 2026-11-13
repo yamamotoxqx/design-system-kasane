@@ -6,6 +6,9 @@
 <title>組み込み方と使用例 | Kasane デザインシステム</title>
 <meta name="description" content="Kasane は、色をデザイナーが決めることも、利用者が変えることもできます。製品に組み込むときの決め方と、実際の使い方の例をまとめます。">
 <link rel="canonical" href="https://kasane.y-n0.de/integrate/">
+<link rel="alternate" hreflang="ja" href="https://kasane.y-n0.de/integrate/">
+<link rel="alternate" hreflang="en" href="https://kasane.y-n0.de/en/integrate/">
+<link rel="alternate" hreflang="x-default" href="https://kasane.y-n0.de/integrate/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Kasane">
 <meta property="og:title" content="組み込み方と使用例 | Kasane デザインシステム">
@@ -82,6 +85,8 @@ code{font-family:var(--font-mono);font-size:.875em;background:var(--surface-2);b
 .color-btn{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 16px 0 10px;border:0;border-radius:999px;background:var(--surface-2);font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap}
 .color-btn:hover{background:var(--surface-3)}
 .color-btn i{display:block;width:22px;height:22px;border-radius:50%;background:var(--accent)}
+/* Narrow phones: the header keeps the icons, the words stay for screen readers */
+@media (max-width:420px){.color-btn{padding:0 9px}.color-btn span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
 
 /* Shell */
 .shell{display:grid;grid-template-columns:var(--side-w) minmax(0,1fr) var(--toc-w);gap:24px;max-width:1360px;margin:0 auto;padding:8px 16px 56px;align-items:start}
@@ -138,6 +143,11 @@ html.navigated .page{animation:k-enter var(--motion-slow) var(--ease-out)}
 .tile{display:flex;flex-direction:column;gap:8px;background:var(--surface-2);border-radius:var(--r-md);padding:20px;text-align:left;border:0;text-decoration:none}
 .tile h3,.tile .tile-h{font-size:18px;font-weight:800;font-family:var(--font-body);line-height:1.4}
 .tile p{font-size:15px;color:var(--muted)}
+/* Language switch in the header */
+.lang-link{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:999px;color:var(--ink);text-decoration:none;font-weight:700;font-size:14px;margin-right:8px}
+.lang-link:hover{background:var(--surface-2)}
+.lang-link svg{width:18px;height:18px}
+@media (max-width:600px){.lang-link{padding:0 10px;margin-right:4px}.lang-link span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
 /* Feature tiles with a small picture on top */
 .feat-vis{background:var(--bg);border-radius:14px;padding:14px;min-height:132px;display:flex;flex-direction:column;justify-content:center;margin-bottom:6px}
 .fv-card{background:var(--surface);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:6px;font-size:13px}
@@ -417,7 +427,8 @@ html[data-first-visit] .modal,.modal.open{display:grid}
   </a>
   <nav class="topnav" aria-label="セクション"><a href="/about/" data-sec="intro">はじめに</a><a href="/principles/" data-sec="principle">原則</a><a href="/color/" data-sec="style">スタイル</a><a href="/button/" data-sec="component">コンポーネント</a></nav>
   <div class="space"></div>
-  <button class="color-btn" type="button" data-open-chooser><i aria-hidden="true"></i>色を変える</button>
+  <a class="lang-link" href="/en/integrate/" hreflang="en" lang="en" data-i18n-skip><svg aria-hidden="true" class="lucide lucide-languages" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" ><path d="m5 8 6 6" /><path d="m4 14 6-6 2-3" /><path d="M2 5h12" /><path d="M7 2h1" /><path d="m22 22-5-10-5 10" /><path d="M14 18h6" /></svg><span>English</span></a>
+  <button class="color-btn" type="button" data-open-chooser><i aria-hidden="true"></i><span>色を変える</span></button>
 </header>
 
 <div class="drawer-scrim" id="drawer-scrim" hidden></div>
@@ -578,6 +589,7 @@ document.querySelectorAll(&#x27;.k-palette input[name=&quot;accent&quot;]&#x27;)
 (function(){
   var NAV=[{"id": "intro", "label": "はじめに", "pages": [["about", "Kasane とは"], ["start", "使い始める"], ["integrate", "組み込み方と使用例"], ["with-ai", "AI と使う"], ["updates", "更新情報"]]}, {"id": "principle", "label": "原則", "pages": [["principles", "デザイン原則"], ["accessibility", "アクセシビリティ"], ["performance", "パフォーマンス"], ["writing", "文章"]]}, {"id": "style", "label": "スタイル", "pages": [["color", "カラー"], ["typography", "タイポグラフィ"], ["shape", "角丸と余白"], ["layout", "レイアウト"], ["icons", "アイコン"], ["motion", "動き"]]}, {"id": "component", "label": "コンポーネント", "pages": [["button", "ボタン"], ["input", "入力欄"], ["card", "カードとリスト"], ["badge", "バッジ"], ["tabs", "タブ"], ["progress", "進捗バー"], ["dialog", "ダイアログとトースト"]]}];
   var root=document.documentElement;
+  var L=function(s){var t=window.KASANE_T;return t&&t[s]||s;};   /* UI strings on translated pages */
   var $=function(id){return document.getElementById(id);};
   var all=function(sel,el){return Array.prototype.slice.call((el||document).querySelectorAll(sel));};
   var store={get:function(k){try{return localStorage.getItem(k);}catch(e){return null;}},set:function(k,v){try{localStorage.setItem(k,v);}catch(e){}}};
@@ -591,7 +603,7 @@ document.querySelectorAll(&#x27;.k-palette input[name=&quot;accent&quot;]&#x27;)
     if(!first)root.classList.add('navigated');
     root.dataset.page=id;root.dataset.sec=window.KASANE_PAGES[id];
     var self=['#'+id,'/'+id+'/'];
-    all('.nav-link').forEach(function(a){if(self.indexOf(a.getAttribute('href'))>=0)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
+    all('.nav-link').forEach(function(a){if(self.indexOf(a.getAttribute('href').replace(/^\/en\//,'/'))>=0)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
     all('.topnav a').forEach(function(a){if(cur&&a.getAttribute('data-sec')===cur.sec)a.setAttribute('aria-current','true');else a.removeAttribute('aria-current');});
     if(!window.KASANE_PAGE)document.title=cur?cur.title+' | Kasane デザインシステム':'Kasane — 色を選べるデザインシステム';
     var tp=document.querySelector('.toc-page[data-page="'+id+'"]');
@@ -619,7 +631,7 @@ document.querySelectorAll(&#x27;.k-palette input[name=&quot;accent&quot;]&#x27;)
   var side=$('sidebar'),menu=$('menu-btn'),dscrim=$('drawer-scrim');
   function setDrawer(open){
     side.classList.toggle('open',open);dscrim.hidden=!open;
-    menu.setAttribute('aria-expanded',String(open));menu.setAttribute('aria-label',open?'メニューを閉じる':'メニューを開く');
+    menu.setAttribute('aria-expanded',String(open));menu.setAttribute('aria-label',open?L('メニューを閉じる'):L('メニューを開く'));
   }
   menu.addEventListener('click',function(){var o=!side.classList.contains('open');setDrawer(o);if(o){var f=side.querySelector('a');if(f)f.focus();}});
   dscrim.addEventListener('click',function(){setDrawer(false);});
@@ -720,7 +732,7 @@ document.querySelectorAll(&#x27;.k-palette input[name=&quot;accent&quot;]&#x27;)
   document.addEventListener('click',function(e){
     var b=e.target.closest('.code-more');if(!b)return;
     var box=b.closest('.code'),open=box.classList.toggle('open');
-    b.setAttribute('aria-expanded',String(open));b.textContent=open?'たたむ':'すべて表示';
+    b.setAttribute('aria-expanded',String(open));b.textContent=open?L('たたむ'):L('すべて表示');
     if(!open&&box.getBoundingClientRect().top<0)box.scrollIntoView({block:'start'});
   });
 
@@ -728,7 +740,7 @@ document.querySelectorAll(&#x27;.k-palette input[name=&quot;accent&quot;]&#x27;)
   document.addEventListener('click',function(e){
     var b=e.target.closest('.copy');if(!b)return;
     var text=b.closest('.code').querySelector('pre').textContent;
-    var done=function(ok){b.textContent=ok?'コピーしました':'コピーできませんでした';setTimeout(function(){b.textContent='コピー';},1800);};
+    var done=function(ok){b.textContent=ok?L('コピーしました'):L('コピーできませんでした');setTimeout(function(){b.textContent=L('コピー');},1800);};
     try{navigator.clipboard.writeText(text).then(function(){done(true);},function(){done(false);});}catch(err){done(false);}
   });
 
