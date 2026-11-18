@@ -319,13 +319,24 @@ open(os.path.join(ROOT, 'llms.txt'), 'w', encoding='utf-8').write(
 
 # ---------------------------------------------------------------- helpers
 CODE_FOLD = 14   # longer code starts folded, with a button to show all of it
+def sync_accent(h):
+    """Sample code follows the palette you picked, so it can be copied as is:
+    data-accent="…" shows the current palette, and in colour-picker samples the current palette is the checked one.
+    (Selectors such as [data-accent="…"] are left alone.)"""
+    ids = '|'.join(p['id'] for p in PAL)
+    h = re.sub(r'(?<!\[)data-accent=&quot;(%s)&quot;' % ids, r'data-accent=&quot;<span data-accent-code>\1</span>&quot;', h)
+    if 'k-palette-item' in h:
+        h = re.sub(r'value=&quot;(%s)&quot;( checked)?&gt;' % ids,
+                   lambda m: 'value=&quot;%s&quot;<span data-accent-checked="%s">%s</span>&gt;' % (m.group(1), m.group(1), m.group(2) or ''), h)
+    return h
 def code(lang, src):
     src = src.strip('\n'); n = src.count('\n') + 1
+    body = sync_accent(esc(src))
     if n <= CODE_FOLD:
         return ('<div class="code"><div class="code-head"><span>%s</span><button class="copy" type="button">コピー</button></div>'
-                '<pre><code>%s</code></pre></div>') % (lang, esc(src))
+                '<pre><code>%s</code></pre></div>') % (lang, body)
     return ('<div class="code long"><div class="code-head"><span>%s <small>%d行</small></span><button class="copy" type="button">コピー</button></div>'
-            '<pre><code>%s</code></pre><button class="code-more" type="button" aria-expanded="false">すべて表示</button></div>') % (lang, n, esc(src))
+            '<pre><code>%s</code></pre><button class="code-more" type="button" aria-expanded="false">すべて表示</button></div>') % (lang, n, body)
 
 def ex(src, stack=False):
     """Live demo + the same HTML as sample code."""
@@ -490,7 +501,7 @@ TOKENS = [('--bg', 'ページの背景'), ('--surface', 'カード、パネル')
           ('--info', '情報の文字'), ('--info-soft', '情報の面')]
 page('color', '色はすべてトークンで指定します。アクセントは9色のパレットから選べて、ライトとダークの値はパレットごとに決まっています。',
   sec('パレット', '<p>押すと、このサイト全体の色が切り替わります。<code>data-accent</code> には、下の英字の名前を書きます。</p><div class="pals">' + pal_btns + '</div>'
-      + code('HTML', '<html data-accent="yamabuki">').replace('&quot;yamabuki&quot;', '&quot;<span data-accent-code>yamabuki</span>&quot;'))
+      + code('HTML', '<html data-accent="yamabuki">'))
   + sec('面の重なり', '<p>Kasane は枠や影を使わず、面の色の差で区切ります。内側に入るほど、面の色を一段ずつ変えます。下の値は、いま表示しているパレットとテーマのものです。</p>' + LAYER_VIZ)
   + sec('トークンの一覧', '<p>値は、いま表示しているパレットとテーマのものです。</p>'
       + table_fixed(['32%', '43%', '25%'], ['トークン', '用途', 'いまの値'], [['<code>%s</code>' % k, d, '<span class="sw"><i style="background:var(%s)"></i><span data-token="%s">%s</span></span>' % (k, k, PAL[0]['light'][k])] for k, d in TOKENS]))

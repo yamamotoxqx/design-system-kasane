@@ -449,7 +449,7 @@ html[data-first-visit] .modal,.modal.open{display:grid}
 <div class="shell" id="shell">
   <nav class="sidebar" id="sidebar" aria-label="ページ"><div class="nav-group" data-sec="intro"><div class="nav-title">はじめに</div><a class="nav-link" href="/about/">Kasane とは</a><a class="nav-link" href="/start/">使い始める</a><a class="nav-link" href="/integrate/">組み込み方と使用例</a><a class="nav-link" href="/with-ai/">AI と使う</a><a class="nav-link" href="/updates/">更新情報</a></div><div class="nav-group" data-sec="principle"><div class="nav-title">原則</div><a class="nav-link" href="/principles/">デザイン原則</a><a class="nav-link" href="/accessibility/">アクセシビリティ</a><a class="nav-link" href="/performance/">パフォーマンス</a><a class="nav-link" href="/writing/">文章</a><a class="nav-link" href="/i18n/">多言語対応</a></div><div class="nav-group" data-sec="style"><div class="nav-title">スタイル</div><a class="nav-link" href="/color/">カラー</a><a class="nav-link" href="/typography/">タイポグラフィ</a><a class="nav-link" href="/shape/">角丸と余白</a><a class="nav-link" href="/layout/">レイアウト</a><a class="nav-link" href="/icons/">アイコン</a><a class="nav-link" href="/motion/">動き</a></div><div class="nav-group" data-sec="component"><div class="nav-title">コンポーネント</div><a class="nav-link" href="/button/">ボタン</a><a class="nav-link" href="/input/">入力欄</a><a class="nav-link" href="/card/">カードとリスト</a><a class="nav-link" href="/badge/">バッジ</a><a class="nav-link" href="/tabs/">タブ</a><a class="nav-link" href="/progress/">進捗バー</a><a class="nav-link" href="/dialog/">ダイアログとトースト</a></div></nav>
   <main class="main" id="main">
-    <article class="page" data-page="integrate"><div class="page-head"><div class="crumbs">はじめに / 組み込み方と使用例</div><h1>組み込み方と使用例</h1><p class="lead">Kasane は、色をデザイナーが決めることも、利用者が変えることもできます。製品に組み込むときの決め方と、実際の使い方の例をまとめます。</p></div><section class="sec" id="integrate-s1"><h2>決めること</h2><p>組み込むときに決めるのは、次の2つだけです。</p><div class="tbl"><table><thead><tr><th>決めること</th><th>やり方</th></tr></thead><tbody><tr><td>既定の色</td><td><code>&lt;html data-accent="…"&gt;</code> に書く</td></tr><tr><td>利用者が色を変えられるか</td><td>変えられるなら、設定ページかページ下部に色の選択を置く</td></tr></tbody></table></div><p>どちらも、作る人(デザイナーや開発者)が最初に決めます。</p><p>ライトとダークは、端末の設定に従います。製品には切り替えのボタンを置きません。このドキュメントサイトでは見本のために最初に色を聞いていますが、製品では既定の色ですぐに始めます。</p></section><section class="sec" id="integrate-s2"><h2>使用例</h2><p>同じ部品でも、パレットを変えるだけで印象が変わります。サービスの性格やブランドの色に近いパレットを、既定の色に選びます。</p><div class="showcase"><figure class="demo-scope show" data-accent="ai"><figcaption><b>予約サイト</b><span>藍 ・ <code>data-accent="ai"</code></span></figcaption><div class="k-card"><h3 class="k-card-title">11月20日(水)の空き</h3><ul class="k-list"><li class="k-list-item"><span class="k-list-item-main">14:00</span><span class="k-badge k-badge-accent">2席</span></li><li class="k-list-item"><span class="k-list-item-main">16:30</span><span class="k-badge k-badge-accent">残り1席</span></li></ul><div class="inline start"><button class="k-btn k-btn-primary" type="button" tabindex="-1">予約する</button><a class="demo-link" tabindex="-1">詳しく見る</a></div></div><p class="show-why">落ち着いた青で、信頼できる印象に。</p></figure><figure class="demo-scope show" data-accent="moegi"><figcaption><b>学習アプリ</b><span>萌黄 ・ <code>data-accent="moegi"</code></span></figcaption><div class="k-card"><h3 class="k-card-title">今日の学習</h3><ul class="k-list"><li class="k-list-item"><span class="k-list-item-main">英単語 20語</span><span class="k-badge k-badge-accent">完了</span></li><li class="k-list-item"><span class="k-list-item-main">文法ドリル</span><span class="k-badge k-badge-accent">残り5問</span></li></ul><div class="inline start"><button class="k-btn k-btn-primary" type="button" tabindex="-1">学習を始める</button><a class="demo-link" tabindex="-1">詳しく見る</a></div></div><p class="show-why">明るい黄緑で、続けたくなる雰囲気に。</p></figure><figure class="demo-scope show" data-accent="kobai"><figcaption><b>コミュニティ</b><span>紅梅 ・ <code>data-accent="kobai"</code></span></figcaption><div class="k-card"><h3 class="k-card-title">新しい投稿</h3><ul class="k-list"><li class="k-list-item"><span class="k-list-item-main">週末の写真</span><span class="k-badge k-badge-accent">12件</span></li><li class="k-list-item"><span class="k-list-item-main">おすすめの本</span><span class="k-badge k-badge-accent">8件</span></li></ul><div class="inline start"><button class="k-btn k-btn-primary" type="button" tabindex="-1">投稿する</button><a class="demo-link" tabindex="-1">詳しく見る</a></div></div><p class="show-why">やわらかいばら色で、話しかけやすく。</p></figure><figure class="demo-scope show" data-accent="sumi"><figcaption><b>業務ツール</b><span>墨 ・ <code>data-accent="sumi"</code></span></figcaption><div class="k-card"><h3 class="k-card-title">今月の申請</h3><ul class="k-list"><li class="k-list-item"><span class="k-list-item-main">交通費</span><span class="k-badge k-badge-accent">承認待ち</span></li><li class="k-list-item"><span class="k-list-item-main">備品購入</span><span class="k-badge k-badge-accent">承認済み</span></li></ul><div class="inline start"><button class="k-btn k-btn-primary" type="button" tabindex="-1">申請する</button><a class="demo-link" tabindex="-1">詳しく見る</a></div></div><p class="show-why">色を主張しない墨で、情報に集中できる。</p></figure></div></section><section class="sec" id="integrate-s3"><h2>既定の色を決める</h2><p>既定の色は、HTML に直接書きます。保存された色があればそちらを使い、なければ既定の色のまま表示します。どちらも描画の前に決まるので、色がちらつきません。</p><div class="code"><div class="code-head"><span>HTML</span><button class="copy" type="button">コピー</button></div><pre><code>&lt;html lang=&quot;ja&quot; data-accent=&quot;ai&quot;&gt;  &lt;!-- 既定の色 --&gt;
+    <article class="page" data-page="integrate"><div class="page-head"><div class="crumbs">はじめに / 組み込み方と使用例</div><h1>組み込み方と使用例</h1><p class="lead">Kasane は、色をデザイナーが決めることも、利用者が変えることもできます。製品に組み込むときの決め方と、実際の使い方の例をまとめます。</p></div><section class="sec" id="integrate-s1"><h2>決めること</h2><p>組み込むときに決めるのは、次の2つだけです。</p><div class="tbl"><table><thead><tr><th>決めること</th><th>やり方</th></tr></thead><tbody><tr><td>既定の色</td><td><code>&lt;html data-accent="…"&gt;</code> に書く</td></tr><tr><td>利用者が色を変えられるか</td><td>変えられるなら、設定ページかページ下部に色の選択を置く</td></tr></tbody></table></div><p>どちらも、作る人(デザイナーや開発者)が最初に決めます。</p><p>ライトとダークは、端末の設定に従います。製品には切り替えのボタンを置きません。このドキュメントサイトでは見本のために最初に色を聞いていますが、製品では既定の色ですぐに始めます。</p></section><section class="sec" id="integrate-s2"><h2>使用例</h2><p>同じ部品でも、パレットを変えるだけで印象が変わります。サービスの性格やブランドの色に近いパレットを、既定の色に選びます。</p><div class="showcase"><figure class="demo-scope show" data-accent="ai"><figcaption><b>予約サイト</b><span>藍 ・ <code>data-accent="ai"</code></span></figcaption><div class="k-card"><h3 class="k-card-title">11月20日(水)の空き</h3><ul class="k-list"><li class="k-list-item"><span class="k-list-item-main">14:00</span><span class="k-badge k-badge-accent">2席</span></li><li class="k-list-item"><span class="k-list-item-main">16:30</span><span class="k-badge k-badge-accent">残り1席</span></li></ul><div class="inline start"><button class="k-btn k-btn-primary" type="button" tabindex="-1">予約する</button><a class="demo-link" tabindex="-1">詳しく見る</a></div></div><p class="show-why">落ち着いた青で、信頼できる印象に。</p></figure><figure class="demo-scope show" data-accent="moegi"><figcaption><b>学習アプリ</b><span>萌黄 ・ <code>data-accent="moegi"</code></span></figcaption><div class="k-card"><h3 class="k-card-title">今日の学習</h3><ul class="k-list"><li class="k-list-item"><span class="k-list-item-main">英単語 20語</span><span class="k-badge k-badge-accent">完了</span></li><li class="k-list-item"><span class="k-list-item-main">文法ドリル</span><span class="k-badge k-badge-accent">残り5問</span></li></ul><div class="inline start"><button class="k-btn k-btn-primary" type="button" tabindex="-1">学習を始める</button><a class="demo-link" tabindex="-1">詳しく見る</a></div></div><p class="show-why">明るい黄緑で、続けたくなる雰囲気に。</p></figure><figure class="demo-scope show" data-accent="kobai"><figcaption><b>コミュニティ</b><span>紅梅 ・ <code>data-accent="kobai"</code></span></figcaption><div class="k-card"><h3 class="k-card-title">新しい投稿</h3><ul class="k-list"><li class="k-list-item"><span class="k-list-item-main">週末の写真</span><span class="k-badge k-badge-accent">12件</span></li><li class="k-list-item"><span class="k-list-item-main">おすすめの本</span><span class="k-badge k-badge-accent">8件</span></li></ul><div class="inline start"><button class="k-btn k-btn-primary" type="button" tabindex="-1">投稿する</button><a class="demo-link" tabindex="-1">詳しく見る</a></div></div><p class="show-why">やわらかいばら色で、話しかけやすく。</p></figure><figure class="demo-scope show" data-accent="sumi"><figcaption><b>業務ツール</b><span>墨 ・ <code>data-accent="sumi"</code></span></figcaption><div class="k-card"><h3 class="k-card-title">今月の申請</h3><ul class="k-list"><li class="k-list-item"><span class="k-list-item-main">交通費</span><span class="k-badge k-badge-accent">承認待ち</span></li><li class="k-list-item"><span class="k-list-item-main">備品購入</span><span class="k-badge k-badge-accent">承認済み</span></li></ul><div class="inline start"><button class="k-btn k-btn-primary" type="button" tabindex="-1">申請する</button><a class="demo-link" tabindex="-1">詳しく見る</a></div></div><p class="show-why">色を主張しない墨で、情報に集中できる。</p></figure></div></section><section class="sec" id="integrate-s3"><h2>既定の色を決める</h2><p>既定の色は、HTML に直接書きます。保存された色があればそちらを使い、なければ既定の色のまま表示します。どちらも描画の前に決まるので、色がちらつきません。</p><div class="code"><div class="code-head"><span>HTML</span><button class="copy" type="button">コピー</button></div><pre><code>&lt;html lang=&quot;ja&quot; data-accent=&quot;<span data-accent-code>ai</span>&quot;&gt;  &lt;!-- 既定の色 --&gt;
 &lt;head&gt;
   &lt;script&gt;
     try {
@@ -462,47 +462,47 @@ html[data-first-visit] .modal,.modal.open{display:grid}
   &lt;legend&gt;テーマカラー&lt;/legend&gt;
   &lt;div class=&quot;k-palette-items&quot;&gt;
     &lt;label class=&quot;k-palette-item&quot;&gt;
-      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;yamabuki&quot; checked&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;yamabuki&quot;<span data-accent-checked="yamabuki"> checked</span>&gt;
       &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;yamabuki&quot;&gt;&lt;/span&gt;
       &lt;span class=&quot;k-palette-name&quot;&gt;山吹&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class=&quot;k-palette-item&quot;&gt;
-      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;tachibana&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;tachibana&quot;<span data-accent-checked="tachibana"></span>&gt;
       &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;tachibana&quot;&gt;&lt;/span&gt;
       &lt;span class=&quot;k-palette-name&quot;&gt;橘&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class=&quot;k-palette-item&quot;&gt;
-      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;kobai&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;kobai&quot;<span data-accent-checked="kobai"></span>&gt;
       &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;kobai&quot;&gt;&lt;/span&gt;
       &lt;span class=&quot;k-palette-name&quot;&gt;紅梅&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class=&quot;k-palette-item&quot;&gt;
-      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;fuji&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;fuji&quot;<span data-accent-checked="fuji"></span>&gt;
       &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;fuji&quot;&gt;&lt;/span&gt;
       &lt;span class=&quot;k-palette-name&quot;&gt;藤&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class=&quot;k-palette-item&quot;&gt;
-      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;ai&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;ai&quot;<span data-accent-checked="ai"></span>&gt;
       &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;ai&quot;&gt;&lt;/span&gt;
       &lt;span class=&quot;k-palette-name&quot;&gt;藍&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class=&quot;k-palette-item&quot;&gt;
-      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;sora&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;sora&quot;<span data-accent-checked="sora"></span>&gt;
       &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;sora&quot;&gt;&lt;/span&gt;
       &lt;span class=&quot;k-palette-name&quot;&gt;空&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class=&quot;k-palette-item&quot;&gt;
-      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;seiji&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;seiji&quot;<span data-accent-checked="seiji"></span>&gt;
       &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;seiji&quot;&gt;&lt;/span&gt;
       &lt;span class=&quot;k-palette-name&quot;&gt;青磁&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class=&quot;k-palette-item&quot;&gt;
-      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;moegi&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;moegi&quot;<span data-accent-checked="moegi"></span>&gt;
       &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;moegi&quot;&gt;&lt;/span&gt;
       &lt;span class=&quot;k-palette-name&quot;&gt;萌黄&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class=&quot;k-palette-item&quot;&gt;
-      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;sumi&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;sumi&quot;<span data-accent-checked="sumi"></span>&gt;
       &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;sumi&quot;&gt;&lt;/span&gt;
       &lt;span class=&quot;k-palette-name&quot;&gt;墨&lt;/span&gt;
     &lt;/label&gt;
@@ -511,47 +511,47 @@ html[data-first-visit] .modal,.modal.open{display:grid}
   &lt;legend&gt;テーマカラー&lt;/legend&gt;
   &lt;div class=&quot;k-palette-items&quot;&gt;
     &lt;label class=&quot;k-palette-item&quot;&gt;
-      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;yamabuki&quot; checked&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;yamabuki&quot;<span data-accent-checked="yamabuki"> checked</span>&gt;
       &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;yamabuki&quot;&gt;&lt;/span&gt;
       &lt;span class=&quot;k-palette-name&quot;&gt;山吹&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class=&quot;k-palette-item&quot;&gt;
-      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;tachibana&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;tachibana&quot;<span data-accent-checked="tachibana"></span>&gt;
       &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;tachibana&quot;&gt;&lt;/span&gt;
       &lt;span class=&quot;k-palette-name&quot;&gt;橘&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class=&quot;k-palette-item&quot;&gt;
-      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;kobai&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;kobai&quot;<span data-accent-checked="kobai"></span>&gt;
       &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;kobai&quot;&gt;&lt;/span&gt;
       &lt;span class=&quot;k-palette-name&quot;&gt;紅梅&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class=&quot;k-palette-item&quot;&gt;
-      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;fuji&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;fuji&quot;<span data-accent-checked="fuji"></span>&gt;
       &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;fuji&quot;&gt;&lt;/span&gt;
       &lt;span class=&quot;k-palette-name&quot;&gt;藤&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class=&quot;k-palette-item&quot;&gt;
-      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;ai&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;ai&quot;<span data-accent-checked="ai"></span>&gt;
       &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;ai&quot;&gt;&lt;/span&gt;
       &lt;span class=&quot;k-palette-name&quot;&gt;藍&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class=&quot;k-palette-item&quot;&gt;
-      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;sora&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;sora&quot;<span data-accent-checked="sora"></span>&gt;
       &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;sora&quot;&gt;&lt;/span&gt;
       &lt;span class=&quot;k-palette-name&quot;&gt;空&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class=&quot;k-palette-item&quot;&gt;
-      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;seiji&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;seiji&quot;<span data-accent-checked="seiji"></span>&gt;
       &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;seiji&quot;&gt;&lt;/span&gt;
       &lt;span class=&quot;k-palette-name&quot;&gt;青磁&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class=&quot;k-palette-item&quot;&gt;
-      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;moegi&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;moegi&quot;<span data-accent-checked="moegi"></span>&gt;
       &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;moegi&quot;&gt;&lt;/span&gt;
       &lt;span class=&quot;k-palette-name&quot;&gt;萌黄&lt;/span&gt;
     &lt;/label&gt;
     &lt;label class=&quot;k-palette-item&quot;&gt;
-      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;sumi&quot;&gt;
+      &lt;input type=&quot;radio&quot; name=&quot;accent&quot; value=&quot;sumi&quot;<span data-accent-checked="sumi"></span>&gt;
       &lt;span class=&quot;k-palette-swatch&quot; data-swatch=&quot;sumi&quot;&gt;&lt;/span&gt;
       &lt;span class=&quot;k-palette-name&quot;&gt;墨&lt;/span&gt;
     &lt;/label&gt;
@@ -566,7 +566,7 @@ document.querySelectorAll(&#x27;.k-palette input[name=&quot;accent&quot;]&#x27;)
     try { localStorage.setItem(&quot;kasane-accent&quot;, radio.value); } catch (e) {}
   });
 });</code></pre></div></section><section class="sec" id="integrate-s7"><h2>使い方</h2><div class="dd"><figure class="dd-item dd-do"><div class="dd-demo"><div class="stack" style="font-size:14px"><span>開いたらすぐ既定の色</span><span class="k-badge k-badge-accent">設定 › 表示 › テーマカラー</span></div></div><figcaption class="dd-cap"><span class="dd-label"><svg aria-hidden="true" class="lucide lucide-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" ><path d="M20 6 9 17l-5-5" /></svg>Do</span>既定の色ですぐに始め、変えたい人は設定から変えられます。</figcaption></figure><figure class="dd-item dd-dont"><div class="dd-demo"><div class="stack" style="font-size:14px"><span>開くたびに「色を選んでください」</span><span class="k-badge">どの画面にも色の切り替え</span></div></div><figcaption class="dd-cap"><span class="dd-label"><svg aria-hidden="true" class="lucide lucide-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" ><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>Don't</span>最初に色を選ばせたり、色の切り替えをあちこちに置いたりしません。</figcaption></figure></div></section><section class="sec" id="integrate-s8"><h2>AI に伝えるとき</h2><p>AI に作ってもらうときは、既定の色と、色を変えられるかどうかを最初に伝えます。</p><div class="code"><div class="code-head"><span>Markdown</span><button class="copy" type="button">コピー</button></div><pre><code>デザインは Kasane に従う(仕様書: https://kasane.y-n0.de/v1/kasane.en.md)。
-既定の色は藍(data-accent=&quot;ai&quot;)。利用者が設定ページで色を変えられるようにする。
+既定の色は data-accent=&quot;<span data-accent-code>ai</span>&quot; のパレット。利用者が設定ページで色を変えられるようにする。
 ライト・ダークは端末の設定に従い、切り替えボタンは置かない。</code></pre></div></section><nav class="pager" aria-label="前後のページ"><a class="prev" href="/start/"><small>前のページ</small>使い始める</a><a class="next" href="/with-ai/"><small>次のページ</small>AI と使う</a></nav></article>
   </main>
   <aside class="toc" id="toc"><nav class="toc-page" data-page="integrate" aria-label="このページの目次"><div class="toc-title">このページの内容</div><button type="button" data-scroll="integrate-s1">決めること</button><button type="button" data-scroll="integrate-s2">使用例</button><button type="button" data-scroll="integrate-s3">既定の色を決める</button><button type="button" data-scroll="integrate-s4">設定ページに置く</button><button type="button" data-scroll="integrate-s5">ページ下部に置く</button><button type="button" data-scroll="integrate-s6">選んだ色を保存する</button><button type="button" data-scroll="integrate-s7">使い方</button><button type="button" data-scroll="integrate-s8">AI に伝えるとき</button></nav></aside>
@@ -667,6 +667,7 @@ document.querySelectorAll(&#x27;.k-palette input[name=&quot;accent&quot;]&#x27;)
     all('[data-accent-set]').forEach(function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-accent-set')===id));});
     all('.k-palette input[type=radio]').forEach(function(r){r.checked=r.value===id;});
     all('[data-accent-code]').forEach(function(el){el.textContent=id;});
+    all('[data-accent-checked]').forEach(function(el){el.textContent=el.getAttribute('data-accent-checked')===id?' checked':'';});
     paintTokens();
   }
   function paintTokens(){

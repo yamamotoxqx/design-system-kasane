@@ -565,6 +565,7 @@ npx kasane-lighthouse http://localhost:3000/                     # minimum score
     all('[data-accent-set]').forEach(function(b){b.setAttribute('aria-pressed',String(b.getAttribute('data-accent-set')===id));});
     all('.k-palette input[type=radio]').forEach(function(r){r.checked=r.value===id;});
     all('[data-accent-code]').forEach(function(el){el.textContent=id;});
+    all('[data-accent-checked]').forEach(function(el){el.textContent=el.getAttribute('data-accent-checked')===id?' checked':'';});
     paintTokens();
   }
   function paintTokens(){

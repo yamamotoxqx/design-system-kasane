@@ -392,4 +392,4 @@ page('integrate', 'Kasane は、色をデザイナーが決めることも、利
   + sec('使い方', dd('<div class="stack" style="font-size:14px"><span>開いたらすぐ既定の色</span><span class="k-badge k-badge-accent">設定 › 表示 › テーマカラー</span></div>', '既定の色ですぐに始め、変えたい人は設定から変えられます。',
                     '<div class="stack" style="font-size:14px"><span>開くたびに「色を選んでください」</span><span class="k-badge">どの画面にも色の切り替え</span></div>', '最初に色を選ばせたり、色の切り替えをあちこちに置いたりしません。'))
   + sec('AI に伝えるとき', '<p>AI に作ってもらうときは、既定の色と、色を変えられるかどうかを最初に伝えます。</p>'
-      + code('Markdown', 'デザインは Kasane に従う(仕様書: ' + BASE + '/kasane.en.md)。\n既定の色は藍(data-accent="ai")。利用者が設定ページで色を変えられるようにする。\nライト・ダークは端末の設定に従い、切り替えボタンは置かない。')))
+      + code('Markdown', 'デザインは Kasane に従う(仕様書: ' + BASE + '/kasane.en.md)。\n既定の色は data-accent="ai" のパレット。利用者が設定ページで色を変えられるようにする。\nライト・ダークは端末の設定に従い、切り替えボタンは置かない。')))

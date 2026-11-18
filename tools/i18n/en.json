@@ -1,4 +1,6 @@
 {
+ "\" のパレット。利用者が設定ページで色を変えられるようにする。": "\" palette. Let users change the color on the settings page.",
+ "\">  <!-- 既定の色 -->": "\">  <!-- default color -->",
  ".page  { display: flex; flex-direction: column; gap: var(--space-7); }  /* 章と章の間 */": ".page  { display: flex; flex-direction: column; gap: var(--space-7); }  /* between sections */",
  "/* Kasane の書体(LINE Seed JP)は日本語とラテン文字用。ほかの文字は、その言語のときだけ書体を足す */": "/* Kasane’s font (LINE Seed JP) covers Japanese and Latin. For other scripts, add a font for that language only */",
  "// hidden を付け外しすると、表示のたびに動きが最初から再生されます": "// Toggling hidden replays the animation every time the page is shown",
@@ -728,6 +730,7 @@
  "既定の色": "Default color",
  "既定の色ですぐに始め、変えたい人は設定から変えられます。": "Start right away with the default color; anyone who wants to can change it in settings.",
  "既定の色の決め方、利用者が色を変える場所、パレットごとの使用例": "Choosing the default color, where users change it, and examples for each palette",
+ "既定の色は data-accent=\"": "The default color is the data-accent=\"",
  "既定の色は、HTML に直接書きます。保存された色があればそちらを使い、なければ既定の色のまま表示します。どちらも描画の前に決まるので、色がちらつきません。": "Write the default color directly in the HTML. If a saved color exists it is used; otherwise the default stays. Both are decided before first paint, so the color never flickers.",
  "既定の色は藍(data-accent=\"ai\")。利用者が設定ページで色を変えられるようにする。": "The default color is Ai (data-accent=\"ai\"). Let users change the color on the settings page.",
  "既定の色を決める": "Setting the default color",
