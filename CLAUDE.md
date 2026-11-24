@@ -18,6 +18,8 @@ Kasane デザインシステム本体のリポジトリ。
 - ドキュメントサイト自身も Lighthouse の最低点(パフォーマンス 90、アクセシビリティ 100、ベストプラクティス 95、SEO 90)を満たすこと。`npm run dist && npm run lighthouse`(CI でも実行)。ページは `<head>` のスクリプトと CSS で最初から表示する(JavaScript で後から出さない)。
 - **`v1/` は凍結**: 出したときのまま残し、生成もしない(`v1/kasane-lint-1.2.0.tgz` も置いたまま)。書体 `v1/fonts/` だけは v1 と v2 で共通で使う(`build_site.py` の `FONT_DIR`)。
 - 生成する版は `build_site.py` の `VERSION`(今は `v2`)。見た目が大きく変わる変更(トークン名やクラス名の変更・削除)は次の版(`v3/`)として出し、今の版は凍結して残す。
-- `v2/kasane.js` は `tools/kasane.js` から作る(メニュー、ダイアログ、タブ、色の保存と上からの塗り替え)。ドキュメントサイトは読み込まず、`site.tpl.html` に同じ動きを持つ。
+- 色の切り替え・トースト・フォーカスの共通の処理は `tools/kasane-core.js`(型は `kasane-core.d.ts`)。ビルドで `v2/kasane.js`(`tools/kasane.js` に埋め込む)、ドキュメントサイト(`site.tpl.html` の `/*@@CORE@@*/`)、`packages/*/core.js` に入る。
+- `v2/kasane.js` はメニュー、ダイアログ、タブ、トースト、色の保存と上からの塗り替え。ドキュメントサイトは読み込まず、`site.tpl.html` に同じ動きを持つ。
+- React と Vue の部品は `packages/react/`、`packages/vue/`(`index.js` と `index.d.ts` は手で書く。`core.js` `core.d.ts` `kasane.css` はビルドで生成)。HTML は仕様書と同じにする。`npm test` がサーバーで描いた HTML を kasane-check にかける。部品を変えたら `package.json` の `version` を上げる(配信ファイル名に版が入る)。`npm run dist` で `v2/kasane-react-<版>.tgz` などになる。
 - 既定のパレットは `hidamari`(v1 の `yamabuki`)。v2 の CSS は `data-accent="yamabuki"` もひだまりとして表示する。
 - UI のルールは `v2/kasane.md` に従う。

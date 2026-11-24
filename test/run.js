@@ -122,5 +122,9 @@ console.log('\nDocs site links');
   (bad.length ? fail : pass)('no #name links left (every page link is a /name/ URL)' + (bad.length ? '\n      ' + bad.slice(0, 5).join('\n      ') : ''));
 }
 
+// ---------------------------------------------------------------- 7. kasane-react and kasane-vue
+console.log('\nkasane-react / kasane-vue');
+await (await import('./packages.js')).testPackages(fail, pass);
+
 console.log(failed ? `\n${failed} check(s) failed` : '\nAll checks passed');
 process.exit(failed ? 1 : 0);

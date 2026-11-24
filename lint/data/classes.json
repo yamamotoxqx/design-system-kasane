@@ -1,4 +1,7 @@
 [
+"k-affix",
+"k-affix-end",
+"k-affix-start",
 "k-app",
 "k-badge",
 "k-badge-accent",
@@ -66,6 +69,8 @@
 "k-palette-name",
 "k-palette-swatch",
 "k-radio",
+"k-range",
+"k-range-sep",
 "k-recolor",
 "k-scrim",
 "k-scroll-lock",
@@ -85,5 +90,9 @@
 "k-table-wrap",
 "k-title",
 "k-toast",
+"k-toast-action",
+"k-toast-close",
+"k-toast-text",
+"k-toasts",
 "k-visually-hidden"
 ]

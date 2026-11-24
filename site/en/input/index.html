@@ -33,7 +33,7 @@
 <script>
 /* Apply the saved palette and theme before first paint (no flash). */
 try{var a=localStorage.getItem('kasane-accent'),t=localStorage.getItem('kasane-theme');if(a==='yamabuki'){a='hidamari';localStorage.setItem('kasane-accent',a);}if(a)document.documentElement.dataset.accent=a;else document.documentElement.dataset.firstVisit='';if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}
-window.KASANE_PAGES={"home": "", "about": "intro", "start": "intro", "integrate": "intro", "with-ai": "intro", "updates": "intro", "migrate": "intro", "principles": "principle", "accessibility": "principle", "performance": "principle", "writing": "principle", "i18n": "principle", "color": "style", "typography": "style", "shape": "style", "layout": "style", "icons": "style", "motion": "style", "button": "component", "input": "component", "card": "component", "badge": "component", "tabs": "component", "progress": "component", "dialog": "component", "navigation": "component", "table": "component", "empty": "component"};
+window.KASANE_PAGES={"home": "", "about": "intro", "start": "intro", "integrate": "intro", "with-ai": "intro", "frameworks": "intro", "updates": "intro", "migrate": "intro", "principles": "principle", "accessibility": "principle", "performance": "principle", "writing": "principle", "i18n": "principle", "color": "style", "typography": "style", "shape": "style", "layout": "style", "icons": "style", "motion": "style", "button": "component", "input": "component", "card": "component", "badge": "component", "tabs": "component", "progress": "component", "dialog": "component", "navigation": "component", "table": "component", "empty": "component"};
 window.KASANE_PAGE='input';document.documentElement.dataset.page='input';document.documentElement.dataset.sec='component';window.KASANE_T={"メニューを開く": "Open menu", "メニューを閉じる": "Close menu", "コピー": "Copy", "コピーしました": "Copied", "コピーできませんでした": "Could not copy", "すべて表示": "Show all", "たたむ": "Collapse"};
 </script>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
@@ -325,7 +325,7 @@ td code{background:var(--surface-3)}
 .demo-footer{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;background:var(--surface-2);border-radius:var(--r-md);padding:12px 16px;font-size:13px;color:var(--muted)}
 .demo-footer legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
-html[data-page="home"] .page[data-page="home"],html[data-page="home"] .toc-page[data-page="home"]{display:flex}html[data-page="about"] .page[data-page="about"],html[data-page="about"] .toc-page[data-page="about"]{display:flex}html[data-page="start"] .page[data-page="start"],html[data-page="start"] .toc-page[data-page="start"]{display:flex}html[data-page="integrate"] .page[data-page="integrate"],html[data-page="integrate"] .toc-page[data-page="integrate"]{display:flex}html[data-page="with-ai"] .page[data-page="with-ai"],html[data-page="with-ai"] .toc-page[data-page="with-ai"]{display:flex}html[data-page="updates"] .page[data-page="updates"],html[data-page="updates"] .toc-page[data-page="updates"]{display:flex}html[data-page="migrate"] .page[data-page="migrate"],html[data-page="migrate"] .toc-page[data-page="migrate"]{display:flex}html[data-page="principles"] .page[data-page="principles"],html[data-page="principles"] .toc-page[data-page="principles"]{display:flex}html[data-page="accessibility"] .page[data-page="accessibility"],html[data-page="accessibility"] .toc-page[data-page="accessibility"]{display:flex}html[data-page="performance"] .page[data-page="performance"],html[data-page="performance"] .toc-page[data-page="performance"]{display:flex}html[data-page="writing"] .page[data-page="writing"],html[data-page="writing"] .toc-page[data-page="writing"]{display:flex}html[data-page="i18n"] .page[data-page="i18n"],html[data-page="i18n"] .toc-page[data-page="i18n"]{display:flex}html[data-page="color"] .page[data-page="color"],html[data-page="color"] .toc-page[data-page="color"]{display:flex}html[data-page="typography"] .page[data-page="typography"],html[data-page="typography"] .toc-page[data-page="typography"]{display:flex}html[data-page="shape"] .page[data-page="shape"],html[data-page="shape"] .toc-page[data-page="shape"]{display:flex}html[data-page="layout"] .page[data-page="layout"],html[data-page="layout"] .toc-page[data-page="layout"]{display:flex}html[data-page="icons"] .page[data-page="icons"],html[data-page="icons"] .toc-page[data-page="icons"]{display:flex}html[data-page="motion"] .page[data-page="motion"],html[data-page="motion"] .toc-page[data-page="motion"]{display:flex}html[data-page="button"] .page[data-page="button"],html[data-page="button"] .toc-page[data-page="button"]{display:flex}html[data-page="input"] .page[data-page="input"],html[data-page="input"] .toc-page[data-page="input"]{display:flex}html[data-page="card"] .page[data-page="card"],html[data-page="card"] .toc-page[data-page="card"]{display:flex}html[data-page="badge"] .page[data-page="badge"],html[data-page="badge"] .toc-page[data-page="badge"]{display:flex}html[data-page="tabs"] .page[data-page="tabs"],html[data-page="tabs"] .toc-page[data-page="tabs"]{display:flex}html[data-page="progress"] .page[data-page="progress"],html[data-page="progress"] .toc-page[data-page="progress"]{display:flex}html[data-page="dialog"] .page[data-page="dialog"],html[data-page="dialog"] .toc-page[data-page="dialog"]{display:flex}html[data-page="navigation"] .page[data-page="navigation"],html[data-page="navigation"] .toc-page[data-page="navigation"]{display:flex}html[data-page="table"] .page[data-page="table"],html[data-page="table"] .toc-page[data-page="table"]{display:flex}html[data-page="empty"] .page[data-page="empty"],html[data-page="empty"] .toc-page[data-page="empty"]{display:flex}html[data-sec="intro"] .nav-group[data-sec="intro"]{display:flex}html[data-sec="principle"] .nav-group[data-sec="principle"]{display:flex}html[data-sec="style"] .nav-group[data-sec="style"]{display:flex}html[data-sec="component"] .nav-group[data-sec="component"]{display:flex}
+html[data-page="home"] .page[data-page="home"],html[data-page="home"] .toc-page[data-page="home"]{display:flex}html[data-page="about"] .page[data-page="about"],html[data-page="about"] .toc-page[data-page="about"]{display:flex}html[data-page="start"] .page[data-page="start"],html[data-page="start"] .toc-page[data-page="start"]{display:flex}html[data-page="integrate"] .page[data-page="integrate"],html[data-page="integrate"] .toc-page[data-page="integrate"]{display:flex}html[data-page="with-ai"] .page[data-page="with-ai"],html[data-page="with-ai"] .toc-page[data-page="with-ai"]{display:flex}html[data-page="frameworks"] .page[data-page="frameworks"],html[data-page="frameworks"] .toc-page[data-page="frameworks"]{display:flex}html[data-page="updates"] .page[data-page="updates"],html[data-page="updates"] .toc-page[data-page="updates"]{display:flex}html[data-page="migrate"] .page[data-page="migrate"],html[data-page="migrate"] .toc-page[data-page="migrate"]{display:flex}html[data-page="principles"] .page[data-page="principles"],html[data-page="principles"] .toc-page[data-page="principles"]{display:flex}html[data-page="accessibility"] .page[data-page="accessibility"],html[data-page="accessibility"] .toc-page[data-page="accessibility"]{display:flex}html[data-page="performance"] .page[data-page="performance"],html[data-page="performance"] .toc-page[data-page="performance"]{display:flex}html[data-page="writing"] .page[data-page="writing"],html[data-page="writing"] .toc-page[data-page="writing"]{display:flex}html[data-page="i18n"] .page[data-page="i18n"],html[data-page="i18n"] .toc-page[data-page="i18n"]{display:flex}html[data-page="color"] .page[data-page="color"],html[data-page="color"] .toc-page[data-page="color"]{display:flex}html[data-page="typography"] .page[data-page="typography"],html[data-page="typography"] .toc-page[data-page="typography"]{display:flex}html[data-page="shape"] .page[data-page="shape"],html[data-page="shape"] .toc-page[data-page="shape"]{display:flex}html[data-page="layout"] .page[data-page="layout"],html[data-page="layout"] .toc-page[data-page="layout"]{display:flex}html[data-page="icons"] .page[data-page="icons"],html[data-page="icons"] .toc-page[data-page="icons"]{display:flex}html[data-page="motion"] .page[data-page="motion"],html[data-page="motion"] .toc-page[data-page="motion"]{display:flex}html[data-page="button"] .page[data-page="button"],html[data-page="button"] .toc-page[data-page="button"]{display:flex}html[data-page="input"] .page[data-page="input"],html[data-page="input"] .toc-page[data-page="input"]{display:flex}html[data-page="card"] .page[data-page="card"],html[data-page="card"] .toc-page[data-page="card"]{display:flex}html[data-page="badge"] .page[data-page="badge"],html[data-page="badge"] .toc-page[data-page="badge"]{display:flex}html[data-page="tabs"] .page[data-page="tabs"],html[data-page="tabs"] .toc-page[data-page="tabs"]{display:flex}html[data-page="progress"] .page[data-page="progress"],html[data-page="progress"] .toc-page[data-page="progress"]{display:flex}html[data-page="dialog"] .page[data-page="dialog"],html[data-page="dialog"] .toc-page[data-page="dialog"]{display:flex}html[data-page="navigation"] .page[data-page="navigation"],html[data-page="navigation"] .toc-page[data-page="navigation"]{display:flex}html[data-page="table"] .page[data-page="table"],html[data-page="table"] .toc-page[data-page="table"]{display:flex}html[data-page="empty"] .page[data-page="empty"],html[data-page="empty"] .toc-page[data-page="empty"]{display:flex}html[data-sec="intro"] .nav-group[data-sec="intro"]{display:flex}html[data-sec="principle"] .nav-group[data-sec="principle"]{display:flex}html[data-sec="style"] .nav-group[data-sec="style"]{display:flex}html[data-sec="component"] .nav-group[data-sec="component"]{display:flex}
 .demo-scope[data-accent="hidamari"]{--bg:#f0ece3;--surface:#fcfaf5;--surface-2:#e7e3d9;--surface-3:#dad5ca;--ink:#201f1c;--muted:#66635d;--line:#938f85;--accent:#eec96c;--accent-soft:#f9e6bb;--accent-ink:#6e5400;--on-accent:#201f1c;--focus:#8d6d00;--notice-head:#201f1c;--ok:#007131;--ok-soft:#d0f0d5;--danger:#9d3533;--danger-soft:#ffddd9;--info:#515f6e;--info-soft:#dfe7ef}@media (prefers-color-scheme:dark){html:not([data-theme="light"]) .demo-scope[data-accent="hidamari"]{--bg:#181715;--surface:#22211f;--surface-2:#2b2a27;--surface-3:#353431;--ink:#e9e8e6;--muted:#95928b;--line:#6e6c65;--accent:#ebca78;--accent-soft:#3e310e;--accent-ink:#dbba68;--on-accent:#181715;--focus:#ba9a48;--notice-head:#dbba68;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}}html[data-theme="dark"] .demo-scope[data-accent="hidamari"]{--bg:#181715;--surface:#22211f;--surface-2:#2b2a27;--surface-3:#353431;--ink:#e9e8e6;--muted:#95928b;--line:#6e6c65;--accent:#ebca78;--accent-soft:#3e310e;--accent-ink:#dbba68;--on-accent:#181715;--focus:#ba9a48;--notice-head:#dbba68;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}
 .demo-scope[data-accent="tachibana"]{--bg:#f4ebe4;--surface:#fef9f6;--surface-2:#eae1da;--surface-3:#ded4cc;--ink:#221f1c;--muted:#68625e;--line:#978d86;--accent:#e79a5d;--accent-soft:#ffe1cc;--accent-ink:#844500;--on-accent:#221f1c;--focus:#a45d1a;--notice-head:#221f1c;--ok:#007131;--ok-soft:#d0f0d5;--danger:#9d3533;--danger-soft:#ffddd9;--info:#515f6e;--info-soft:#dfe7ef}@media (prefers-color-scheme:dark){html:not([data-theme="light"]) .demo-scope[data-accent="tachibana"]{--bg:#191715;--surface:#232120;--surface-2:#2c2928;--surface-3:#363331;--ink:#e9e7e6;--muted:#97918c;--line:#706a66;--accent:#e19c67;--accent-soft:#472b15;--accent-ink:#f2ac76;--on-accent:#191715;--focus:#d18d57;--notice-head:#f2ac76;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}}html[data-theme="dark"] .demo-scope[data-accent="tachibana"]{--bg:#191715;--surface:#232120;--surface-2:#2c2928;--surface-3:#363331;--ink:#e9e7e6;--muted:#97918c;--line:#706a66;--accent:#e19c67;--accent-soft:#472b15;--accent-ink:#f2ac76;--on-accent:#191715;--focus:#d18d57;--notice-head:#f2ac76;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}
 .demo-scope[data-accent="kobai"]{--bg:#f4e9ee;--surface:#fef8fa;--surface-2:#ebdfe4;--surface-3:#dfd2d7;--ink:#221e1f;--muted:#686164;--line:#978c90;--accent:#d078a0;--accent-soft:#ffddeb;--accent-ink:#88375f;--on-accent:#221e1f;--focus:#a55179;--notice-head:#221e1f;--ok:#007131;--ok-soft:#d0f0d5;--danger:#9d3533;--danger-soft:#ffddd9;--info:#515f6e;--info-soft:#dfe7ef}@media (prefers-color-scheme:dark){html:not([data-theme="light"]) .demo-scope[data-accent="kobai"]{--bg:#191617;--surface:#232122;--surface-2:#2c292a;--surface-3:#363334;--ink:#e9e7e8;--muted:#979093;--line:#71696c;--accent:#d282a5;--accent-soft:#482736;--accent-ink:#f4a1c5;--on-accent:#191617;--focus:#d282a5;--notice-head:#f4a1c5;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}}html[data-theme="dark"] .demo-scope[data-accent="kobai"]{--bg:#191617;--surface:#232122;--surface-2:#2c292a;--surface-3:#363334;--ink:#e9e7e8;--muted:#979093;--line:#71696c;--accent:#d282a5;--accent-soft:#482736;--accent-ink:#f4a1c5;--on-accent:#191617;--focus:#d282a5;--notice-head:#f4a1c5;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}
@@ -472,7 +472,7 @@ html[data-first-visit] .modal,.modal.open{display:grid}
 </header>
 <div class="drawer-scrim" hidden="" id="drawer-scrim"></div>
 <div class="shell" id="shell">
-<nav aria-label="Pages" class="sidebar" id="sidebar"><div class="nav-group" data-sec="intro"><div class="nav-title">Introduction</div><a class="nav-link" href="/en/about/">About Kasane</a><a class="nav-link" href="/en/start/">Getting started</a><a class="nav-link" href="/en/integrate/">Integration and examples</a><a class="nav-link" href="/en/with-ai/">Using with AI</a><a class="nav-link" href="/en/updates/">Updates</a><a class="nav-link" href="/en/migrate/">From v1 to v2</a></div><div class="nav-group" data-sec="principle"><div class="nav-title">Principles</div><a class="nav-link" href="/en/principles/">Design principles</a><a class="nav-link" href="/en/accessibility/">Accessibility</a><a class="nav-link" href="/en/performance/">Performance</a><a class="nav-link" href="/en/writing/">Writing</a><a class="nav-link" href="/en/i18n/">Multiple languages</a></div><div class="nav-group" data-sec="style"><div class="nav-title">Styles</div><a class="nav-link" href="/en/color/">Color</a><a class="nav-link" href="/en/typography/">Typography</a><a class="nav-link" href="/en/shape/">Radius and spacing</a><a class="nav-link" href="/en/layout/">Layout</a><a class="nav-link" href="/en/icons/">Icons</a><a class="nav-link" href="/en/motion/">Motion</a></div><div class="nav-group" data-sec="component"><div class="nav-title">Components</div><a class="nav-link" href="/en/button/">Buttons</a><a class="nav-link" href="/en/input/">Inputs</a><a class="nav-link" href="/en/card/">Cards and lists</a><a class="nav-link" href="/en/badge/">Badges</a><a class="nav-link" href="/en/tabs/">Tabs</a><a class="nav-link" href="/en/progress/">Progress bar</a><a class="nav-link" href="/en/dialog/">Dialogs and toasts</a><a class="nav-link" href="/en/navigation/">Header and menu</a><a class="nav-link" href="/en/table/">Table</a><a class="nav-link" href="/en/empty/">Empty and loading states</a></div></nav>
+<nav aria-label="Pages" class="sidebar" id="sidebar"><div class="nav-group" data-sec="intro"><div class="nav-title">Introduction</div><a class="nav-link" href="/en/about/">About Kasane</a><a class="nav-link" href="/en/start/">Getting started</a><a class="nav-link" href="/en/integrate/">Integration and examples</a><a class="nav-link" href="/en/with-ai/">Using with AI</a><a class="nav-link" href="/en/frameworks/">React and Vue</a><a class="nav-link" href="/en/updates/">Updates</a><a class="nav-link" href="/en/migrate/">From v1 to v2</a></div><div class="nav-group" data-sec="principle"><div class="nav-title">Principles</div><a class="nav-link" href="/en/principles/">Design principles</a><a class="nav-link" href="/en/accessibility/">Accessibility</a><a class="nav-link" href="/en/performance/">Performance</a><a class="nav-link" href="/en/writing/">Writing</a><a class="nav-link" href="/en/i18n/">Multiple languages</a></div><div class="nav-group" data-sec="style"><div class="nav-title">Styles</div><a class="nav-link" href="/en/color/">Color</a><a class="nav-link" href="/en/typography/">Typography</a><a class="nav-link" href="/en/shape/">Radius and spacing</a><a class="nav-link" href="/en/layout/">Layout</a><a class="nav-link" href="/en/icons/">Icons</a><a class="nav-link" href="/en/motion/">Motion</a></div><div class="nav-group" data-sec="component"><div class="nav-title">Components</div><a class="nav-link" href="/en/button/">Buttons</a><a class="nav-link" href="/en/input/">Inputs</a><a class="nav-link" href="/en/card/">Cards and lists</a><a class="nav-link" href="/en/badge/">Badges</a><a class="nav-link" href="/en/tabs/">Tabs</a><a class="nav-link" href="/en/progress/">Progress bar</a><a class="nav-link" href="/en/dialog/">Dialogs and toasts</a><a class="nav-link" href="/en/navigation/">Header and menu</a><a class="nav-link" href="/en/table/">Table</a><a class="nav-link" href="/en/empty/">Empty and loading states</a></div></nav>
 <main class="main" id="main">
 <article class="page" data-page="input"><div class="page-head"><div class="crumbs">Components / Inputs</div><h1>Inputs</h1><p class="lead">Text inputs, checkboxes, switches and the color picker. In Kasane, only these input controls have a border.</p></div><section class="sec" id="input-s1"><h2>Text input</h2><div class="ex"><div class="ex-demo ex-stack"><label class="k-field">Name
   <input class="k-input" placeholder="e.g. Hanako Yamada" type="text"/>
@@ -502,13 +502,69 @@ html[data-first-visit] .modal,.modal.open{display:grid}
       &lt;option&gt;Fukuoka&lt;/option&gt;
     &lt;/select&gt;
   &lt;/span&gt;
-&lt;/label&gt;</code></pre></div></div></section><section class="sec" id="input-s4"><h2>Checkbox</h2><div class="ex"><div class="ex-demo"><label class="k-option"><input checked="" class="k-check" type="checkbox"/> Receive notifications</label>
+&lt;/label&gt;</code></pre></div></div></section><section class="sec" id="input-s4"><h2>Dates and times</h2><p>For dates and times, use the browser's own inputs (<code>type="date"</code>, <code>"time"</code>, <code>"datetime-local"</code>, <code>"month"</code>). They can be typed with a keyboard, open the usual picker on phones and work with screen readers. Do not build your own calendar: it would have to float over the page.</p><div class="ex"><div class="ex-demo ex-stack"><label class="k-field">Due date
+  <input class="k-input" type="date" value="2026-11-28"/>
+</label>
+<label class="k-field">Meeting time
+  <input class="k-input" type="time" value="09:30"/>
+</label>
+<label class="k-field">Booking date and time
+  <input class="k-input" type="datetime-local" value="2026-12-01T14:00"/>
+</label></div><div class="code"><div class="code-head"><span>HTML</span><button class="copy" type="button">Copy</button></div><pre><code>&lt;label class="k-field"&gt;Due date
+  &lt;input class="k-input" type="date" value="2026-11-28"&gt;
+&lt;/label&gt;
+&lt;label class="k-field"&gt;Meeting time
+  &lt;input class="k-input" type="time" value="09:30"&gt;
+&lt;/label&gt;
+&lt;label class="k-field"&gt;Booking date and time
+  &lt;input class="k-input" type="datetime-local" value="2026-12-01T14:00"&gt;
+&lt;/label&gt;</code></pre></div></div><p>Limit the range with <code>min</code> and <code>max</code>. The date format (the order of year, month and day) follows the language of the user's device.</p></section><section class="sec" id="input-s5"><h2>Period</h2><p>Group the start and end in <code>&lt;fieldset class="k-range"&gt;</code> with a separator between them. Under 480px the two fields stack. When the start date is chosen, set the end date's <code>min</code> to it so they cannot be picked in reverse.</p><div class="ex"><div class="ex-demo ex-stack"><fieldset class="k-range">
+<legend>Period</legend>
+<label class="k-field">Start date
+    <input class="k-input" type="date" value="2026-12-01"/>
+</label>
+<span aria-hidden="true" class="k-range-sep">〜</span>
+<label class="k-field">End date
+    <input class="k-input" min="2026-12-01" type="date"/>
+</label>
+</fieldset></div><div class="code"><div class="code-head"><span>HTML</span><button class="copy" type="button">Copy</button></div><pre><code>&lt;fieldset class="k-range"&gt;
+  &lt;legend&gt;Period&lt;/legend&gt;
+  &lt;label class="k-field"&gt;Start date
+    &lt;input class="k-input" type="date" value="2026-12-01"&gt;
+  &lt;/label&gt;
+  &lt;span class="k-range-sep" aria-hidden="true"&gt;〜&lt;/span&gt;
+  &lt;label class="k-field"&gt;End date
+    &lt;input class="k-input" type="date" min="2026-12-01"&gt;
+  &lt;/label&gt;
+&lt;/fieldset&gt;</code></pre></div></div></section><section class="sec" id="input-s6"><h2>Units and search</h2><p>Amounts and quantities get a unit on the right of the field (<code>.k-affix-end</code>). Search fields get a magnifier icon on the left (<code>.k-affix-start</code>). Wrap both in <code>.k-affix</code>.</p><div class="ex"><div class="ex-demo ex-stack"><label class="k-field">Amount
+  <span class="k-affix">
+<input class="k-input" inputmode="numeric" type="number" value="1200"/>
+<span class="k-affix-end">JPY</span>
+</span>
+</label>
+<label class="k-field">Search notes
+  <span class="k-affix">
+<span aria-hidden="true" class="k-affix-start"><svg aria-hidden="true" class="lucide lucide-search" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg></span>
+<input class="k-input" placeholder="Type a word" type="search"/>
+</span>
+</label></div><div class="code"><div class="code-head"><span>HTML</span><button class="copy" type="button">Copy</button></div><pre><code>&lt;label class="k-field"&gt;Amount
+  &lt;span class="k-affix"&gt;
+    &lt;input class="k-input" type="number" inputmode="numeric" value="1200"&gt;
+    &lt;span class="k-affix-end"&gt;JPY&lt;/span&gt;
+  &lt;/span&gt;
+&lt;/label&gt;
+&lt;label class="k-field"&gt;Search notes
+  &lt;span class="k-affix"&gt;
+    &lt;span class="k-affix-start" aria-hidden="true"&gt;&lt;svg aria-hidden="true" class="lucide lucide-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" &gt;&lt;path d="m21 21-4.34-4.34" /&gt;&lt;circle cx="11" cy="11" r="8" /&gt;&lt;/svg&gt;&lt;/span&gt;
+    &lt;input class="k-input" type="search" placeholder="Type a word"&gt;
+  &lt;/span&gt;
+&lt;/label&gt;</code></pre></div></div></section><section class="sec" id="input-s7"><h2>Checkbox</h2><div class="ex"><div class="ex-demo"><label class="k-option"><input checked="" class="k-check" type="checkbox"/> Receive notifications</label>
 <label class="k-option"><input class="k-check" type="checkbox"/> Receive the weekly summary</label></div><div class="code"><div class="code-head"><span>HTML</span><button class="copy" type="button">Copy</button></div><pre><code>&lt;label class="k-option"&gt;&lt;input class="k-check" type="checkbox" checked&gt; Receive notifications&lt;/label&gt;
-&lt;label class="k-option"&gt;&lt;input class="k-check" type="checkbox"&gt; Receive the weekly summary&lt;/label&gt;</code></pre></div></div></section><section class="sec" id="input-s5"><h2>Radio button</h2><div class="ex"><div class="ex-demo"><label class="k-option"><input checked="" class="k-radio" name="density" type="radio"/> Comfortable</label>
+&lt;label class="k-option"&gt;&lt;input class="k-check" type="checkbox"&gt; Receive the weekly summary&lt;/label&gt;</code></pre></div></div></section><section class="sec" id="input-s8"><h2>Radio button</h2><div class="ex"><div class="ex-demo"><label class="k-option"><input checked="" class="k-radio" name="density" type="radio"/> Comfortable</label>
 <label class="k-option"><input class="k-radio" name="density" type="radio"/> Regular</label>
 <label class="k-option"><input class="k-radio" name="density" type="radio"/> Compact</label></div><div class="code"><div class="code-head"><span>HTML</span><button class="copy" type="button">Copy</button></div><pre><code>&lt;label class="k-option"&gt;&lt;input class="k-radio" type="radio" name="density" checked&gt; Comfortable&lt;/label&gt;
 &lt;label class="k-option"&gt;&lt;input class="k-radio" type="radio" name="density"&gt; Regular&lt;/label&gt;
-&lt;label class="k-option"&gt;&lt;input class="k-radio" type="radio" name="density"&gt; Compact&lt;/label&gt;</code></pre></div></div></section><section class="sec" id="input-s6"><h2>Switch</h2><p>For settings that apply immediately. On and off also show in the knob position.</p><div class="ex"><div class="ex-demo"><label class="k-switch">
+&lt;label class="k-option"&gt;&lt;input class="k-radio" type="radio" name="density"&gt; Compact&lt;/label&gt;</code></pre></div></div></section><section class="sec" id="input-s9"><h2>Switch</h2><p>For settings that apply immediately. On and off also show in the knob position.</p><div class="ex"><div class="ex-demo"><label class="k-switch">
 <input checked="" type="checkbox"/>
 <span aria-hidden="true" class="k-switch-track"></span>
   Save automatically
@@ -516,7 +572,7 @@ html[data-first-visit] .modal,.modal.open{display:grid}
   &lt;input type="checkbox" checked&gt;
   &lt;span class="k-switch-track" aria-hidden="true"&gt;&lt;/span&gt;
   Save automatically
-&lt;/label&gt;</code></pre></div></div></section><section class="sec" id="input-s7"><h2>Color picker</h2><p>Lets users choose the accent color. It is a group of radio buttons, so the arrow keys work too. <code>.k-palette-compact</code> shows the swatches only. Where to put it and how to save the choice are in <a href="/en/integrate/">Integration and examples</a>. Pressing one changes this site’s color too.</p><div class="ex"><div class="ex-demo ex-stack"><div class="wide"><fieldset class="k-palette"><legend>Theme color</legend><div class="k-palette-items"><label class="k-palette-item"><input checked="" name="accent-input" type="radio" value="hidamari"/><span class="k-palette-swatch" data-swatch="hidamari"></span><span class="k-palette-name">ひだまり</span></label><label class="k-palette-item"><input name="accent-input" type="radio" value="tachibana"/><span class="k-palette-swatch" data-swatch="tachibana"></span><span class="k-palette-name">橘</span></label><label class="k-palette-item"><input name="accent-input" type="radio" value="kobai"/><span class="k-palette-swatch" data-swatch="kobai"></span><span class="k-palette-name">紅梅</span></label><label class="k-palette-item"><input name="accent-input" type="radio" value="fuji"/><span class="k-palette-swatch" data-swatch="fuji"></span><span class="k-palette-name">藤</span></label><label class="k-palette-item"><input name="accent-input" type="radio" value="ai"/><span class="k-palette-swatch" data-swatch="ai"></span><span class="k-palette-name">藍</span></label><label class="k-palette-item"><input name="accent-input" type="radio" value="sora"/><span class="k-palette-swatch" data-swatch="sora"></span><span class="k-palette-name">空</span></label><label class="k-palette-item"><input name="accent-input" type="radio" value="seiji"/><span class="k-palette-swatch" data-swatch="seiji"></span><span class="k-palette-name">青磁</span></label><label class="k-palette-item"><input name="accent-input" type="radio" value="moegi"/><span class="k-palette-swatch" data-swatch="moegi"></span><span class="k-palette-name">萌黄</span></label><label class="k-palette-item"><input name="accent-input" type="radio" value="sumi"/><span class="k-palette-swatch" data-swatch="sumi"></span><span class="k-palette-name">墨</span></label></div></fieldset></div></div><div class="code long"><div class="code-head"><span>HTML <small>50 lines</small></span><button class="copy" type="button">Copy</button></div><pre><code>&lt;fieldset class="k-palette"&gt;
+&lt;/label&gt;</code></pre></div></div></section><section class="sec" id="input-s10"><h2>Color picker</h2><p>Lets users choose the accent color. It is a group of radio buttons, so the arrow keys work too. <code>.k-palette-compact</code> shows the swatches only. Where to put it and how to save the choice are in <a href="/en/integrate/">Integration and examples</a>. Pressing one changes this site’s color too.</p><div class="ex"><div class="ex-demo ex-stack"><div class="wide"><fieldset class="k-palette"><legend>Theme color</legend><div class="k-palette-items"><label class="k-palette-item"><input checked="" name="accent-input" type="radio" value="hidamari"/><span class="k-palette-swatch" data-swatch="hidamari"></span><span class="k-palette-name">ひだまり</span></label><label class="k-palette-item"><input name="accent-input" type="radio" value="tachibana"/><span class="k-palette-swatch" data-swatch="tachibana"></span><span class="k-palette-name">橘</span></label><label class="k-palette-item"><input name="accent-input" type="radio" value="kobai"/><span class="k-palette-swatch" data-swatch="kobai"></span><span class="k-palette-name">紅梅</span></label><label class="k-palette-item"><input name="accent-input" type="radio" value="fuji"/><span class="k-palette-swatch" data-swatch="fuji"></span><span class="k-palette-name">藤</span></label><label class="k-palette-item"><input name="accent-input" type="radio" value="ai"/><span class="k-palette-swatch" data-swatch="ai"></span><span class="k-palette-name">藍</span></label><label class="k-palette-item"><input name="accent-input" type="radio" value="sora"/><span class="k-palette-swatch" data-swatch="sora"></span><span class="k-palette-name">空</span></label><label class="k-palette-item"><input name="accent-input" type="radio" value="seiji"/><span class="k-palette-swatch" data-swatch="seiji"></span><span class="k-palette-name">青磁</span></label><label class="k-palette-item"><input name="accent-input" type="radio" value="moegi"/><span class="k-palette-swatch" data-swatch="moegi"></span><span class="k-palette-name">萌黄</span></label><label class="k-palette-item"><input name="accent-input" type="radio" value="sumi"/><span class="k-palette-swatch" data-swatch="sumi"></span><span class="k-palette-name">墨</span></label></div></fieldset></div></div><div class="code long"><div class="code-head"><span>HTML <small>50 lines</small></span><button class="copy" type="button">Copy</button></div><pre><code>&lt;fieldset class="k-palette"&gt;
   &lt;legend&gt;Theme color&lt;/legend&gt;
   &lt;div class="k-palette-items"&gt;
     &lt;label class="k-palette-item"&gt;
@@ -565,9 +621,9 @@ html[data-first-visit] .modal,.modal.open{display:grid}
       &lt;span class="k-palette-name"&gt;墨&lt;/span&gt;
     &lt;/label&gt;
   &lt;/div&gt;
-&lt;/fieldset&gt;</code></pre><button aria-expanded="false" class="code-more" type="button">Show all</button></div></div><p>To show only the swatches, add <code>k-palette-compact</code> to <code>k-palette</code>. The names are hidden, but keep <code>k-palette-name</code> for screen readers.</p></section><section class="sec" id="input-s8"><h2>CSS</h2><div class="code long"><div class="code-head"><span>CSS <small>105 lines</small></span><button class="copy" type="button">Copy</button></div><pre><code>.k-field { display: flex; flex-direction: column; gap: 6px; font-weight: 700; font-size: var(--text-sm); }
+&lt;/fieldset&gt;</code></pre><button aria-expanded="false" class="code-more" type="button">Show all</button></div></div><p>To show only the swatches, add <code>k-palette-compact</code> to <code>k-palette</code>. The names are hidden, but keep <code>k-palette-name</code> for screen readers.</p></section><section class="sec" id="input-s11"><h2>CSS</h2><div class="code long"><div class="code-head"><span>CSS <small>125 lines</small></span><button class="copy" type="button">Copy</button></div><pre><code>.k-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; font-weight: 700; font-size: var(--text-sm); }
 .k-input {
-  width: 100%; min-height: 46px; padding: 8px 14px;
+  width: 100%; min-width: 0; min-height: 46px; padding: 8px 14px;
   background: var(--surface); color: var(--ink);
   border: 2px solid var(--line); border-radius: var(--r-sm);
   font: inherit; font-weight: 400; font-size: var(--text-base);
@@ -578,6 +634,26 @@ html[data-first-visit] .modal,.modal.open{display:grid}
 .k-hint { font-weight: 400; font-size: 13px; color: var(--muted); }
 .k-error { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--danger); }
 .k-error svg { width: 16px; height: 16px; flex: none; }
+
+/* Dates and times use the browser's own picker (keyboard, screen readers and phone pickers come with it) */
+.k-input[type="date"], .k-input[type="time"], .k-input[type="datetime-local"], .k-input[type="month"], .k-input[type="week"], .k-input[type="number"] { font-variant-numeric: tabular-nums; }
+.k-input::-webkit-date-and-time-value { min-height: 1.8em; text-align: left; }
+.k-input::-webkit-calendar-picker-indicator { padding: 4px; border-radius: 8px; cursor: pointer; opacity: .75; }
+.k-input::-webkit-calendar-picker-indicator:hover { opacity: 1; background-color: var(--surface-2); }
+.k-range { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-2) var(--space-3); min-width: 0; margin: 0; padding: 0; border: 0; }
+.k-range legend { margin-bottom: var(--space-2); padding: 0; font-weight: 700; font-size: var(--text-sm); }
+.k-range &gt; .k-field { flex: 1 1 170px; }
+.k-range-sep { padding-bottom: 12px; color: var(--muted); font-weight: 700; }
+@media (max-width: 479px) { .k-range &gt; .k-field { flex-basis: 100%; } .k-range-sep { display: none; } }
+
+/* An icon at the start (search) or a unit at the end (number) */
+.k-affix { position: relative; display: flex; align-items: center; }
+.k-affix-start, .k-affix-end { position: absolute; display: flex; align-items: center; color: var(--muted); pointer-events: none; }
+.k-affix-start { left: 14px; }
+.k-affix-start svg { width: 20px; height: 20px; }
+.k-affix-end { right: 16px; font-weight: 700; font-size: var(--text-sm); }
+.k-affix-start ~ .k-input { padding-left: 44px; }
+.k-affix .k-input:has(~ .k-affix-end) { padding-right: 56px; }
 
 .k-select { position: relative; }
 .k-select select { appearance: none; -webkit-appearance: none; padding-right: 44px; cursor: pointer; }
@@ -671,11 +747,11 @@ html[data-first-visit] .modal,.modal.open{display:grid}
 :root[data-theme="dark"] .k-palette-swatch[data-swatch="moegi"] { --sw: #cfd990; --sw-on: #171715; }
 :root[data-theme="dark"] .k-palette-swatch[data-swatch="sumi"] { --sw: #d7d7d7; --sw-on: #171717; }</code></pre><button aria-expanded="false" class="code-more" type="button">Show all</button></div></section><nav aria-label="Previous and next pages" class="pager"><a class="prev" href="/en/button/"><small>Previous</small>Buttons</a><a class="next" href="/en/card/"><small>Next</small>Cards and lists</a></nav></article>
 </main>
-<aside class="toc" id="toc"><nav aria-label="Table of contents" class="toc-page" data-page="input"><div class="toc-title">On this page</div><button data-scroll="input-s1" type="button">Text input</button><button data-scroll="input-s2" type="button">Error</button><button data-scroll="input-s3" type="button">Select</button><button data-scroll="input-s4" type="button">Checkbox</button><button data-scroll="input-s5" type="button">Radio button</button><button data-scroll="input-s6" type="button">Switch</button><button data-scroll="input-s7" type="button">Color picker</button><button data-scroll="input-s8" type="button">CSS</button></nav></aside>
+<aside class="toc" id="toc"><nav aria-label="Table of contents" class="toc-page" data-page="input"><div class="toc-title">On this page</div><button data-scroll="input-s1" type="button">Text input</button><button data-scroll="input-s2" type="button">Error</button><button data-scroll="input-s3" type="button">Select</button><button data-scroll="input-s4" type="button">Dates and times</button><button data-scroll="input-s5" type="button">Period</button><button data-scroll="input-s6" type="button">Units and search</button><button data-scroll="input-s7" type="button">Checkbox</button><button data-scroll="input-s8" type="button">Radio button</button><button data-scroll="input-s9" type="button">Switch</button><button data-scroll="input-s10" type="button">Color picker</button><button data-scroll="input-s11" type="button">CSS</button></nav></aside>
 </div>
 <footer class="footer">
 <div class="footer-in">
-<div class="f-cols"><div class="f-col"><div class="f-title">Introduction</div><a href="/en/about/">About Kasane</a><a href="/en/start/">Getting started</a><a href="/en/integrate/">Integration and examples</a><a href="/en/with-ai/">Using with AI</a><a href="/en/updates/">Updates</a><a href="/en/migrate/">From v1 to v2</a></div><div class="f-col"><div class="f-title">Principles</div><a href="/en/principles/">Design principles</a><a href="/en/accessibility/">Accessibility</a><a href="/en/performance/">Performance</a><a href="/en/writing/">Writing</a><a href="/en/i18n/">Multiple languages</a></div><div class="f-col"><div class="f-title">Styles</div><a href="/en/color/">Color</a><a href="/en/typography/">Typography</a><a href="/en/shape/">Radius and spacing</a><a href="/en/layout/">Layout</a><a href="/en/icons/">Icons</a><a href="/en/motion/">Motion</a></div><div class="f-col"><div class="f-title">Components</div><a href="/en/button/">Buttons</a><a href="/en/input/">Inputs</a><a href="/en/card/">Cards and lists</a><a href="/en/badge/">Badges</a><a href="/en/tabs/">Tabs</a><a href="/en/progress/">Progress bar</a><a href="/en/dialog/">Dialogs and toasts</a><a href="/en/navigation/">Header and menu</a><a href="/en/table/">Table</a><a href="/en/empty/">Empty and loading states</a></div><div class="f-col"><div class="f-title">For AI</div><a href="https://kasane.y-n0.de/v2/kasane.md">Spec (kasane.md, Japanese)</a><a href="https://kasane.y-n0.de/v2/kasane.en.md">Spec (kasane.en.md)</a><a href="https://kasane.y-n0.de/llms.txt">llms.txt</a><a href="https://kasane.y-n0.de/v2/tokens.json">tokens.json</a></div></div>
+<div class="f-cols"><div class="f-col"><div class="f-title">Introduction</div><a href="/en/about/">About Kasane</a><a href="/en/start/">Getting started</a><a href="/en/integrate/">Integration and examples</a><a href="/en/with-ai/">Using with AI</a><a href="/en/frameworks/">React and Vue</a><a href="/en/updates/">Updates</a><a href="/en/migrate/">From v1 to v2</a></div><div class="f-col"><div class="f-title">Principles</div><a href="/en/principles/">Design principles</a><a href="/en/accessibility/">Accessibility</a><a href="/en/performance/">Performance</a><a href="/en/writing/">Writing</a><a href="/en/i18n/">Multiple languages</a></div><div class="f-col"><div class="f-title">Styles</div><a href="/en/color/">Color</a><a href="/en/typography/">Typography</a><a href="/en/shape/">Radius and spacing</a><a href="/en/layout/">Layout</a><a href="/en/icons/">Icons</a><a href="/en/motion/">Motion</a></div><div class="f-col"><div class="f-title">Components</div><a href="/en/button/">Buttons</a><a href="/en/input/">Inputs</a><a href="/en/card/">Cards and lists</a><a href="/en/badge/">Badges</a><a href="/en/tabs/">Tabs</a><a href="/en/progress/">Progress bar</a><a href="/en/dialog/">Dialogs and toasts</a><a href="/en/navigation/">Header and menu</a><a href="/en/table/">Table</a><a href="/en/empty/">Empty and loading states</a></div><div class="f-col"><div class="f-title">For AI</div><a href="https://kasane.y-n0.de/v2/kasane.md">Spec (kasane.md, Japanese)</a><a href="https://kasane.y-n0.de/v2/kasane.en.md">Spec (kasane.en.md)</a><a href="https://kasane.y-n0.de/llms.txt">llms.txt</a><a href="https://kasane.y-n0.de/v2/tokens.json">tokens.json</a></div></div>
 <div class="f-bottom">
 <div class="f-brand">Kasane<small>A design system that separates content with layered surfaces and lets you choose the color</small>
 <small class="f-meta"><a href="https://github.com/yamamotoxqx/design-system-kasane">GitHub</a><span aria-hidden="true">·</span><a href="https://github.com/yamamotoxqx/design-system-kasane/blob/main/LICENSE">MIT License</a></small>
@@ -699,7 +775,7 @@ html[data-first-visit] .modal,.modal.open{display:grid}
 </div>
 <script>
 (function(){
-  var NAV=[{"id": "intro", "label": "はじめに", "pages": [["about", "Kasane とは"], ["start", "使い始める"], ["integrate", "組み込み方と使用例"], ["with-ai", "AI と使う"], ["updates", "更新情報"], ["migrate", "v1 から v2 へ"]]}, {"id": "principle", "label": "原則", "pages": [["principles", "デザイン原則"], ["accessibility", "アクセシビリティ"], ["performance", "パフォーマンス"], ["writing", "文章"], ["i18n", "多言語対応"]]}, {"id": "style", "label": "スタイル", "pages": [["color", "カラー"], ["typography", "タイポグラフィ"], ["shape", "角丸と余白"], ["layout", "レイアウト"], ["icons", "アイコン"], ["motion", "動き"]]}, {"id": "component", "label": "コンポーネント", "pages": [["button", "ボタン"], ["input", "入力欄"], ["card", "カードとリスト"], ["badge", "バッジ"], ["tabs", "タブ"], ["progress", "進捗バー"], ["dialog", "ダイアログとトースト"], ["navigation", "ヘッダーとメニュー"], ["table", "表"], ["empty", "空の状態と読み込み中"]]}];
+  var NAV=[{"id": "intro", "label": "はじめに", "pages": [["about", "Kasane とは"], ["start", "使い始める"], ["integrate", "組み込み方と使用例"], ["with-ai", "AI と使う"], ["frameworks", "React と Vue"], ["updates", "更新情報"], ["migrate", "v1 から v2 へ"]]}, {"id": "principle", "label": "原則", "pages": [["principles", "デザイン原則"], ["accessibility", "アクセシビリティ"], ["performance", "パフォーマンス"], ["writing", "文章"], ["i18n", "多言語対応"]]}, {"id": "style", "label": "スタイル", "pages": [["color", "カラー"], ["typography", "タイポグラフィ"], ["shape", "角丸と余白"], ["layout", "レイアウト"], ["icons", "アイコン"], ["motion", "動き"]]}, {"id": "component", "label": "コンポーネント", "pages": [["button", "ボタン"], ["input", "入力欄"], ["card", "カードとリスト"], ["badge", "バッジ"], ["tabs", "タブ"], ["progress", "進捗バー"], ["dialog", "ダイアログとトースト"], ["navigation", "ヘッダーとメニュー"], ["table", "表"], ["empty", "空の状態と読み込み中"]]}];
   var root=document.documentElement;
   var L=function(s){var t=window.KASANE_T;return t&&t[s]||s;};   /* UI strings on translated pages */
   var $=function(id){return document.getElementById(id);};
@@ -777,6 +853,144 @@ html[data-first-visit] .modal,.modal.open{display:grid}
 
   /* ---------- Accent palette ---------- */
   function currentAccent(){return root.dataset.accent||'hidamari';}
+  /* Toasts: the same code as kasane.js (tools/kasane-core.js) */
+  var KasaneCore=(function(){
+var PALETTES = [{"id": "hidamari", "name": "ひだまり", "en": "Hidamari"}, {"id": "tachibana", "name": "橘", "en": "Tachibana"}, {"id": "kobai", "name": "紅梅", "en": "Kobai"}, {"id": "fuji", "name": "藤", "en": "Fuji"}, {"id": "ai", "name": "藍", "en": "Ai"}, {"id": "sora", "name": "空", "en": "Sora"}, {"id": "seiji", "name": "青磁", "en": "Seiji"}, {"id": "moegi", "name": "萌黄", "en": "Moegi"}, {"id": "sumi", "name": "墨", "en": "Sumi"}];
+var ICONS = {"check": [["path", {"d": "M20 6 9 17l-5-5"}]], "circle-alert": [["circle", {"cx": "12", "cy": "12", "r": "10"}], ["line", {"x1": "12", "x2": "12", "y1": "8", "y2": "12"}], ["line", {"x1": "12", "x2": "12.01", "y1": "16", "y2": "16"}]], "info": [["circle", {"cx": "12", "cy": "12", "r": "10"}], ["path", {"d": "M12 16v-4"}], ["path", {"d": "M12 8h.01"}]], "x": [["path", {"d": "M18 6 6 18"}], ["path", {"d": "m6 6 12 12"}]], "menu": [["path", {"d": "M4 5h16"}], ["path", {"d": "M4 12h16"}], ["path", {"d": "M4 19h16"}]], "search": [["path", {"d": "m21 21-4.34-4.34"}], ["circle", {"cx": "11", "cy": "11", "r": "8"}]]};
+var hasDOM = typeof document !== 'undefined';
+var KEY_ACCENT = 'kasane-accent';
+var store = {
+get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+set: function (k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {} }
+};
+function isPalette(id) { for (var i = 0; i < PALETTES.length; i++) if (PALETTES[i].id === id) return true; return false; }
+function reduced() { return hasDOM && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+function lang() { return hasDOM && /^en/.test(document.documentElement.lang || '') ? 'en' : 'ja'; }
+function iconSvg(name) {
+var d = ICONS[name]; if (!d) return '';
+return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-' + name + '" aria-hidden="true">'
++ d.map(function (c) { return '<' + c[0] + Object.keys(c[1]).map(function (k) { return ' ' + k + '="' + c[1][k] + '"'; }).join('') + '/>'; }).join('') + '</svg>';
+}
+function getAccent() {
+if (!hasDOM) return 'hidamari';
+var a = document.documentElement.dataset.accent;
+return a && a !== 'yamabuki' ? a : 'hidamari';
+}
+var running = 0;
+function recolor(update) {
+if (!hasDOM || !document.startViewTransition || reduced() || document.visibilityState !== 'visible') { update(); return; }
+var root = document.documentElement;
+running++; root.classList.add('k-recolor');
+var done = function () { if (--running === 0) root.classList.remove('k-recolor'); };
+document.startViewTransition(update).finished.then(done, done);
+}
+function setAccent(id, opts) {
+if (id === 'yamabuki') id = 'hidamari';
+if (!hasDOM || !isPalette(id)) return;
+opts = opts || {};
+var root = document.documentElement;
+if (opts.save !== false) store.set(KEY_ACCENT, id);
+if (root.dataset.accent === id) return;
+var apply = function () {
+root.dataset.accent = id;
+root.dispatchEvent(new CustomEvent('kasane:accent', { detail: { accent: id } }));
+};
+if (opts.animate === false) apply(); else recolor(apply);
+}
+function onAccent(fn) {
+if (!hasDOM) return function () {};
+var h = function (e) { fn(e.detail.accent); };
+document.documentElement.addEventListener('kasane:accent', h);
+return function () { document.documentElement.removeEventListener('kasane:accent', h); };
+}
+function restoreAccent() {
+if (!hasDOM) return;
+var a = store.get(KEY_ACCENT);
+if (a === 'yamabuki') { a = 'hidamari'; store.set(KEY_ACCENT, a); }
+if (a && isPalette(a)) document.documentElement.dataset.accent = a;
+else if (document.documentElement.dataset.accent === 'yamabuki') document.documentElement.dataset.accent = 'hidamari';
+}
+var FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+function focusables(el) {
+return Array.prototype.slice.call(el.querySelectorAll(FOCUSABLE)).filter(function (e) { return e.offsetWidth || e.offsetHeight || e.getClientRects().length; });
+}
+function trapFocus(e, box) {
+if (e.key !== 'Tab' || !box) return;
+var f = focusables(box); if (!f.length) return;
+var first = f[0], last = f[f.length - 1];
+if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+}
+var locks = 0;
+function lockScroll(on) {
+if (!hasDOM) return;
+locks = Math.max(0, locks + (on ? 1 : -1));
+document.documentElement.classList.toggle('k-scroll-lock', locks > 0);
+}
+var TOAST_MAX = 3;
+function toastRegion() {
+if (!hasDOM || !document.body) return null;
+var r = document.querySelector('.k-toasts');
+if (!r) { r = document.createElement('div'); r.className = 'k-toasts'; r.setAttribute('aria-live', 'polite'); document.body.appendChild(r); }
+return r;
+}
+function toast(message, opts) {
+var region = toastRegion();
+if (!region) return { close: function () {} };
+opts = opts || {};
+var type = opts.type, en = lang() === 'en';
+var el = document.createElement('div');
+el.className = 'k-toast';
+if (type === 'danger') el.setAttribute('role', 'alert');
+var icon = { ok: 'check', danger: 'circle-alert', info: 'info' }[type];
+if (icon) el.insertAdjacentHTML('beforeend', iconSvg(icon));
+var text = document.createElement('span');
+text.className = 'k-toast-text'; text.textContent = message; el.appendChild(text);
+var closed = false, timer = null, left, started;
+function close() {
+if (closed) return; closed = true; clearTimeout(timer);
+document.removeEventListener('visibilitychange', vis);
+var hadFocus = el.contains(document.activeElement);
+if (el.parentNode) el.parentNode.removeChild(el);
+if (hadFocus && opts.returnFocus && opts.returnFocus.focus) opts.returnFocus.focus();
+if (opts.onClose) opts.onClose();
+}
+if (opts.action) {
+var b = document.createElement('button');
+b.type = 'button'; b.className = 'k-toast-action'; b.textContent = opts.action.label;
+b.addEventListener('click', function () { if (opts.action.onClick) opts.action.onClick(); close(); });
+el.appendChild(b);
+}
+var duration = opts.duration != null ? opts.duration : type === 'danger' ? 0 : opts.action ? 10000 : 5000;
+if (duration === 0 || opts.action || opts.closable) {
+var c = document.createElement('button');
+c.type = 'button'; c.className = 'k-toast-close';
+c.setAttribute('aria-label', opts.closeLabel || (en ? 'Close' : '閉じる'));
+c.innerHTML = iconSvg('x');
+c.addEventListener('click', close);
+el.appendChild(c);
+}
+function run() { if (closed || !duration || timer) return; started = Date.now(); timer = setTimeout(close, left); }
+function pause() { if (!timer) return; clearTimeout(timer); timer = null; left -= Date.now() - started; }
+function vis() { if (document.visibilityState === 'hidden') pause(); else if (!hovered && !focused) run(); }
+var hovered = false, focused = false;
+left = duration;
+el.addEventListener('mouseenter', function () { hovered = true; pause(); });
+el.addEventListener('mouseleave', function () { hovered = false; if (!focused) run(); });
+el.addEventListener('focusin', function () { focused = true; pause(); });
+el.addEventListener('focusout', function (e) { if (!el.contains(e.relatedTarget)) { focused = false; if (!hovered) run(); } });
+document.addEventListener('visibilitychange', vis);
+el.kasaneClose = close;
+region.appendChild(el);
+while (region.children.length > TOAST_MAX) {
+var f = region.firstChild;
+if (f.kasaneClose) f.kasaneClose(); else region.removeChild(f);
+}
+if (document.visibilityState !== 'hidden') run();
+return { close: close };
+}
+  return {toast:toast};})();
+  document.addEventListener('click',function(e){var b=e.target.closest('[data-k-toast]');if(!b)return;var a=b.getAttribute('data-k-toast-action');KasaneCore.toast(b.getAttribute('data-k-toast'),{type:b.getAttribute('data-k-toast-type')||undefined,action:a?{label:a}:undefined});});
   /* Colour changes flow down from the top (View Transitions; the same as kasane.js) */
   var recoloring=0,rmq=window.matchMedia('(prefers-reduced-motion: reduce)');
   function recolor(update){

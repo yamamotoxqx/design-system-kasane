@@ -65,8 +65,9 @@ If the user's instructions conflict with a Kasane rule, follow the instructions 
 | `[data-k-dialog="id"]` | Opens the `.k-scrim` with that `id`. `data-k-close` and Esc close it |
 | `.k-seg[role="tablist"]` | Switches panels on click and with the arrow keys |
 | `.k-palette` | Applies and saves the chosen colour. The new colour flows down from the top |
+| `[data-k-toast="text"]` | Shows a toast when pressed (`data-k-toast-type="ok"` etc. for the kind) |
 
-To change the colour from JavaScript, call `Kasane.setAccent("ai")`. Writing `data-accent` yourself skips the recolour motion.
+To change the colour from JavaScript, call `Kasane.setAccent("ai")`; for a toast, `Kasane.toast("Saved", { type: "ok" })`. Writing `data-accent` yourself skips the recolour motion.
 
 ### Colour and theme
 
@@ -285,6 +286,32 @@ Classes start with `k-`. Use the HTML here as is. Sample text is in English; wri
 </label>
 ```
 
+### Dates, times, ranges, units, search
+
+```html
+<!-- Dates and times: the browser's own input (date / time / datetime-local / month) -->
+<label class="k-field">Due date<input class="k-input" type="date" min="2026-11-25"></label>
+
+<!-- Range: when the start is chosen, set the end's min to it -->
+<fieldset class="k-range">
+  <legend>Period</legend>
+  <label class="k-field">Start date<input class="k-input" type="date"></label>
+  <span class="k-range-sep" aria-hidden="true">–</span>
+  <label class="k-field">End date<input class="k-input" type="date"></label>
+</fieldset>
+
+<!-- A unit (end) and a search icon (start) -->
+<label class="k-field">Amount
+  <span class="k-affix"><input class="k-input" type="number" inputmode="numeric"><span class="k-affix-end">JPY</span></span>
+</label>
+<label class="k-field">Search notes
+  <span class="k-affix"><span class="k-affix-start" aria-hidden="true"><svg …(search)></svg></span><input class="k-input" type="search"></span>
+</label>
+```
+
+- **Do not build your own calendar or time picker.** The browser's input can be typed with a keyboard, opens the usual picker on phones and works with screen readers. Limit the range with `min` and `max`.
+- Under 480px wide, a range stacks vertically and the separator hides.
+
 ### Checkboxes, radio buttons, switches
 
 ```html
@@ -394,12 +421,23 @@ Show progress as a number too. `style="width:…"` here is the only inline style
   </div>
 </div>
 
-<div class="k-toast" role="status">Saved</div>
+<!-- Toasts go inside .k-toasts (Kasane.toast() makes them) -->
+<div class="k-toasts" aria-live="polite">
+  <div class="k-toast"><svg …(check)></svg><span class="k-toast-text">Saved</span></div>
+  <div class="k-toast">
+    <span class="k-toast-text">Note deleted</span>
+    <button class="k-toast-action" type="button">Undo</button>
+    <button class="k-toast-close" type="button" aria-label="Close"><svg …(x)></svg></button>
+  </div>
+</div>
 ```
 
 - When a dialog opens, move focus to its first button; Esc closes it.
 - With `kasane.js`, give the `.k-scrim` an `id` and `hidden`, the opening button `data-k-dialog="that id"`, and closing buttons `data-k-close`.
-- Toasts disappear after a few seconds. Do not use them for important content.
+- Show a toast with `Kasane.toast("Saved", { type: "ok" })` (`type` is `ok` / `info` / `danger`). Add an action with `{ action: { label: "Undo", onClick } }`.
+- Toasts close by themselves: after 5 seconds, or 10 with an action. They pause while hovered, while focused and while the page is hidden. Failures (`danger`) never close by themselves and get a close button.
+- At most three at a time (the oldest closes first). They rise in when shown and close without motion.
+- Not for important content. Input mistakes go under the field (`.k-error`), not in a toast.
 
 ### Page frame (header, menu, sidebar)
 
@@ -631,6 +669,9 @@ Example: calendar days
 | Rules or stripes on a `<table>` | `.k-table` |
 | Spinners or shimmering skeletons while loading | `.k-skeleton` (still) |
 | Changing colour with `root.dataset.accent = "ai"` | `Kasane.setAccent("ai")` (adds the recolour motion) |
+| A home-made date-picking calendar | `<input class="k-input" type="date">` |
+| A home-made toast with `setTimeout` | `Kasane.toast()` (pausing, closing and announcing are built in) |
+| Hand-writing `.k-` HTML in React or Vue | The `kasane-react` / `kasane-vue` components |
 
 ---
 
@@ -880,3 +921,55 @@ When one product ships in several languages, do the following. If the request do
 <!-- Language switch (fetch Lucide's languages icon and paste it) -->
 <a class="k-btn k-btn-quiet" href="/en/pricing/" hreflang="en" lang="en"><svg …(languages)></svg>English</a>
 ```
+
+---
+
+## 16. React and Vue
+
+In React and Vue, do not hand-write `.k-` HTML: use the component packages. They render the same HTML as this spec.
+
+```bash
+npm install {{BASE}}/kasane-react-{{PKG_VERSION}}.tgz   # React 18 or later
+npm install {{BASE}}/kasane-vue-{{PKG_VERSION}}.tgz     # Vue 3.5 or later
+```
+
+```jsx
+import { AppShell, NavGroup, NavLink, DateField, Button, toast } from "kasane-react";
+import "kasane-react/kasane.css";
+
+<AppShell brand="Kasane Notes" sidebar={<NavGroup><NavLink href="/" current>Today</NavLink></NavGroup>}>
+  <DateField label="Due date" value={due} onChange={(e) => setDue(e.target.value)} />
+  <Button variant="primary" onClick={() => toast("Saved", { type: "ok" })}>Save</Button>
+</AppShell>
+```
+
+```vue
+<KAppShell brand="Kasane Notes" lang="en">
+  <template #sidebar><KNavGroup><KNavLink href="/" current>Today</KNavLink></KNavGroup></template>
+  <KDateField v-model="due" label="Due date" />
+  <KButton variant="primary" @click="toast('Saved', { type: 'ok' })">Save</KButton>
+</KAppShell>
+```
+
+| React | Vue | HTML |
+|---|---|---|
+| `Button` | `KButton` | `.k-btn` |
+| `TextField` `DateField` `SearchField` `TextArea` `Select` | `KTextField` `KDateField` `KSearchField` `KTextArea` `KSelect` | `.k-field` `.k-input` |
+| `DateRange` | `KDateRange` | `.k-range` |
+| `Checkbox` `Radio` `Switch` | `KCheckbox` `KRadio` `KSwitch` | `.k-check` `.k-radio` `.k-switch` |
+| `Card` `Nest` `Notice` `List` `ListItem` | `KCard` `KNest` `KNotice` `KList` `KListItem` | `.k-card` `.k-nest` `.k-notice` `.k-list` |
+| `Badge` | `KBadge` | `.k-badge` |
+| `Tabs` `Segmented` | `KTabs` `KSegmented` | `.k-seg` |
+| `Progress` | `KProgress` | `.k-bar` |
+| `Dialog` | `KDialog` | `.k-dialog` |
+| `toast()` | `toast()` | `.k-toast` |
+| `Palette` `useAccent()` | `KPalette` `useAccent()` | `.k-palette` |
+| `AppShell` `NavGroup` `NavLink` `Breadcrumb` `Footer` | `KAppShell` `KNavGroup` `KNavLink` `KBreadcrumb` `KFooter` | `.k-app` `.k-sidebar` `.k-nav` `.k-breadcrumb` `.k-footer` |
+| `Table` | `KTable` | `.k-table` |
+| `Empty` `Skeleton` | `KEmpty` `KSkeleton` | `.k-empty` `.k-skeleton` |
+
+- Fields given `label`, `hint` and `error` get `aria-describedby` and `aria-invalid`. Use `value` and `onChange` in React, `v-model` in Vue.
+- Icons: pass a `lucide-react` / `lucide-vue-next` component as `icon`. `check` `circle-alert` `info` `x` `menu` `search` also work by name.
+- Router links: pass `Link` (Next.js) or `RouterLink` (Vue Router) as `as` on `NavLink` / `KNavLink`.
+- Load the fonts and put the `<head>` script that applies the saved colour before paint as in "1. Loading". Pass `lang="en"` to get English labels for the menu, breadcrumb and loading text.
+- For anything missing, follow "8. Building a component Kasane does not have".

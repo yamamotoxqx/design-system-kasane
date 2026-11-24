@@ -1,0 +1,19 @@
+{
+  "name": "kasane-react",
+  "version": "2.0.0",
+  "description": "Kasane design system components for React (the same HTML as kasane.md).",
+  "license": "MIT",
+  "type": "module",
+  "main": "./index.js",
+  "module": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": { "types": "./index.d.ts", "default": "./index.js" },
+    "./core": { "types": "./core.d.ts", "default": "./core.js" },
+    "./kasane.css": "./kasane.css"
+  },
+  "sideEffects": ["./kasane.css"],
+  "files": ["index.js", "index.d.ts", "core.js", "core.d.ts", "kasane.css", "README.md"],
+  "peerDependencies": { "react": ">=18" },
+  "homepage": "https://kasane.y-n0.de/frameworks/"
+}

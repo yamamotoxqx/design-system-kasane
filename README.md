@@ -31,6 +31,15 @@
 
 くわしくは、[ドキュメントサイト](https://kasane.y-n0.de/)([英語版](https://kasane.y-n0.de/en/))と[仕様書](https://kasane.y-n0.de/v2/kasane.md)([英語版](https://kasane.y-n0.de/v2/kasane.en.md))を見てください。製品への組み込み方(既定の色、利用者が色を変える場所)は、ドキュメントサイトの「[組み込み方と使用例](https://kasane.y-n0.de/integrate/)」にあります。
 
+### React と Vue
+
+```bash
+npm install https://kasane.y-n0.de/v2/kasane-react-2.0.0.tgz   # React 18 以上
+npm install https://kasane.y-n0.de/v2/kasane-vue-2.0.0.tgz     # Vue 3.5 以上
+```
+
+部品の一覧と使い方は「[React と Vue](https://kasane.y-n0.de/frameworks/)」にあります。
+
 ## AI に使ってもらう
 
 プロジェクトの `CLAUDE.md`(Claude Code)や `AGENTS.md`(Codex)に、次のように書きます。
@@ -52,7 +61,7 @@ https://kasane.y-n0.de/v2/kasane.min.css
 CSS は Stylelint、HTML は `kasane-check` で、ルールを機械的に確かめます。
 
 ```bash
-npm install --save-dev stylelint https://kasane.y-n0.de/v2/kasane-lint-2.0.0.tgz
+npm install --save-dev stylelint https://kasane.y-n0.de/v2/kasane-lint-2.1.0.tgz
 ```
 
 ```json
@@ -88,7 +97,8 @@ Lighthouse の最低点は、パフォーマンス 90、アクセシビリティ
 | パス | 内容 |
 |---|---|
 | `v2/kasane.css` / `kasane.min.css` | すべてのトークンと部品 |
-| `v2/kasane.js` | メニュー、ダイアログ、タブ、色の保存と塗り替えの動き(任意) |
+| `v2/kasane.js` | メニュー、ダイアログ、タブ、トースト、色の保存と塗り替えの動き(任意) |
+| `packages/react/` `packages/vue/` | React と Vue の部品 `kasane-react` `kasane-vue`。`npm run dist` で `v2/kasane-react-<版>.tgz` などとして配信 |
 | `v2/kasane.md` | 仕様書(AI と人が読む) |
 | `v2/kasane.en.md` | 仕様書の英語版(同じ内容。AI が読むときのトークンが少なく済む) |
 | `v2/tokens.json` | トークンの値(W3C Design Tokens 形式) |

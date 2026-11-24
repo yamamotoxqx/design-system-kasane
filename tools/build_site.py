@@ -81,9 +81,9 @@ CSS['button'] = '''.k-btn {
 .k-btn[disabled] { opacity: .45; cursor: not-allowed; transform: none; }
 @media (prefers-reduced-motion: reduce) { .k-btn { transition: none; } }'''
 
-CSS['input'] = '''.k-field { display: flex; flex-direction: column; gap: 6px; font-weight: 700; font-size: var(--text-sm); }
+CSS['input'] = '''.k-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; font-weight: 700; font-size: var(--text-sm); }
 .k-input {
-  width: 100%; min-height: 46px; padding: 8px 14px;
+  width: 100%; min-width: 0; min-height: 46px; padding: 8px 14px;
   background: var(--surface); color: var(--ink);
   border: 2px solid var(--line); border-radius: var(--r-sm);
   font: inherit; font-weight: 400; font-size: var(--text-base);
@@ -94,6 +94,26 @@ CSS['input'] = '''.k-field { display: flex; flex-direction: column; gap: 6px; fo
 .k-hint { font-weight: 400; font-size: 13px; color: var(--muted); }
 .k-error { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--danger); }
 .k-error svg { width: 16px; height: 16px; flex: none; }
+
+/* Dates and times use the browser's own picker (keyboard, screen readers and phone pickers come with it) */
+.k-input[type="date"], .k-input[type="time"], .k-input[type="datetime-local"], .k-input[type="month"], .k-input[type="week"], .k-input[type="number"] { font-variant-numeric: tabular-nums; }
+.k-input::-webkit-date-and-time-value { min-height: 1.8em; text-align: left; }
+.k-input::-webkit-calendar-picker-indicator { padding: 4px; border-radius: 8px; cursor: pointer; opacity: .75; }
+.k-input::-webkit-calendar-picker-indicator:hover { opacity: 1; background-color: var(--surface-2); }
+.k-range { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-2) var(--space-3); min-width: 0; margin: 0; padding: 0; border: 0; }
+.k-range legend { margin-bottom: var(--space-2); padding: 0; font-weight: 700; font-size: var(--text-sm); }
+.k-range > .k-field { flex: 1 1 170px; }
+.k-range-sep { padding-bottom: 12px; color: var(--muted); font-weight: 700; }
+@media (max-width: 479px) { .k-range > .k-field { flex-basis: 100%; } .k-range-sep { display: none; } }
+
+/* An icon at the start (search) or a unit at the end (number) */
+.k-affix { position: relative; display: flex; align-items: center; }
+.k-affix-start, .k-affix-end { position: absolute; display: flex; align-items: center; color: var(--muted); pointer-events: none; }
+.k-affix-start { left: 14px; }
+.k-affix-start svg { width: 20px; height: 20px; }
+.k-affix-end { right: 16px; font-weight: 700; font-size: var(--text-sm); }
+.k-affix-start ~ .k-input { padding-left: 44px; }
+.k-affix .k-input:has(~ .k-affix-end) { padding-right: 56px; }
 
 .k-select { position: relative; }
 .k-select select { appearance: none; -webkit-appearance: none; padding-right: 44px; cursor: pointer; }
@@ -225,11 +245,30 @@ CSS['dialog'] = '''.k-scrim {
 .k-dialog-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
 .k-toast {
   position: fixed; left: 50%; bottom: 24px; z-index: 11; transform: translateX(-50%);
-  padding: 12px 22px; border-radius: var(--r-full);
+  display: flex; align-items: center; gap: var(--space-2);
+  min-height: 48px; padding: 6px 22px; border-radius: var(--r-full);
   background: var(--ink); color: var(--bg); font-weight: 700; font-size: 15px;
 }
+/* Toasts that close by themselves live in .k-toasts (kasane.js makes it when missing) */
+.k-toasts {
+  position: fixed; left: 50%; bottom: 24px; z-index: 60; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: var(--space-2);
+  width: max-content; max-width: calc(100vw - 32px); pointer-events: none;
+}
+.k-toasts .k-toast { position: static; transform: none; max-width: 100%; pointer-events: auto; animation: k-enter var(--motion-base) var(--ease-out); }
+.k-toast svg { width: 18px; height: 18px; flex: none; }
+.k-toast:has(.k-toast-close) { padding-right: 6px; }
+.k-toast-text { min-width: 0; }
+.k-toast-action, .k-toast-close {
+  display: grid; place-items: center; flex: none; min-height: 36px; padding: 0 var(--space-3); border: 0; border-radius: var(--r-full);
+  background: transparent; color: inherit; font: inherit; font-weight: 800; cursor: pointer;
+  text-decoration: underline; text-underline-offset: 3px;
+}
+.k-toast-close { width: 36px; padding: 0; }
+.k-toast-action:hover, .k-toast-close:hover { background: color-mix(in oklab, var(--bg) 18%, transparent); }
+.k-toast-action:focus-visible, .k-toast-close:focus-visible { outline: 3px solid var(--bg); outline-offset: -3px; }
 .k-scrim[hidden] { display: none; }
-@media (prefers-reduced-motion: reduce) { .k-scrim, .k-dialog { animation: none; } }'''
+@media (prefers-reduced-motion: reduce) { .k-scrim, .k-dialog, .k-toasts .k-toast { animation: none; } }'''
 
 CSS['motion'] = '''/* Motion: short and quiet */
 :root { --motion-fast: 150ms; --motion-base: 220ms; --motion-slow: 450ms; --motion-recolor: 600ms; --ease-out: cubic-bezier(.2, .7, .3, 1); --ease-in-out: cubic-bezier(.45, 0, .2, 1); }
@@ -410,7 +449,7 @@ def _palette_css():
     return '\n'.join(rules)
 CSS['palette'] = _palette_css()
 
-COMPONENTS_CSS = BASE_CSS + '\n\n/* Button */\n' + CSS['button'] + '\n\n/* Input, checkbox, switch */\n' + CSS['input'] + '\n\n/* Card and list */\n' + CSS['card'] + '\n\n/* Badge */\n' + CSS['badge'] + '\n\n/* Segmented control, tabs */\n' + CSS['tabs'] + '\n\n/* Progress bar */\n' + CSS['progress'] + '\n\n/* Dialog and toast */\n' + CSS['dialog'] + '\n\n/* Layout: header, menu button, sidebar / drawer, footer */\n' + CSS['layout'] + '\n\n/* Navigation and breadcrumb */\n' + CSS['nav'] + '\n\n/* Table */\n' + CSS['table'] + '\n\n/* Empty state and skeleton */\n' + CSS['empty'] + '\n\n/* Palette picker */\n' + CSS['palette'] + '\n\n' + CSS['motion'] + '\n'
+COMPONENTS_CSS = BASE_CSS + '\n\n/* Every Kasane part measures its width with padding and border included */\n[class^="k-"], [class*=" k-"] { box-sizing: border-box; }\n\n/* Button */\n' + CSS['button'] + '\n\n/* Input, checkbox, switch */\n' + CSS['input'] + '\n\n/* Card and list */\n' + CSS['card'] + '\n\n/* Badge */\n' + CSS['badge'] + '\n\n/* Segmented control, tabs */\n' + CSS['tabs'] + '\n\n/* Progress bar */\n' + CSS['progress'] + '\n\n/* Dialog and toast */\n' + CSS['dialog'] + '\n\n/* Layout: header, menu button, sidebar / drawer, footer */\n' + CSS['layout'] + '\n\n/* Navigation and breadcrumb */\n' + CSS['nav'] + '\n\n/* Table */\n' + CSS['table'] + '\n\n/* Empty state and skeleton */\n' + CSS['empty'] + '\n\n/* Palette picker */\n' + CSS['palette'] + '\n\n' + CSS['motion'] + '\n'
 
 # ---------------------------------------------------------------- distributable files
 HEADER = '/*! Kasane %s — design tokens and components. Docs: index.html / kasane.md */\n' % VERSION
@@ -427,10 +466,27 @@ os.makedirs(os.path.join(ROOT, VERSION), exist_ok=True)
 CHARSET = '@charset "UTF-8";\n'
 open(os.path.join(ROOT, VERSION, 'kasane.css'), 'w', encoding='utf-8').write(CHARSET + FULL_CSS)
 open(os.path.join(ROOT, VERSION, 'kasane.min.css'), 'w', encoding='utf-8').write(CHARSET + minify(FULL_CSS))
+PKG_VERSION = json.load(open(os.path.join(ROOT, 'packages', 'react', 'package.json'), encoding='utf-8'))['version']
+CORE_ICONS = ['check', 'circle-alert', 'info', 'x', 'menu', 'search']
+def lucide_children(name):
+    """A Lucide icon's shapes as [[tag, {attr: value}], ...] for the core and the React / Vue packages."""
+    svg = re.sub(r'<!--.*?-->', '', open(os.path.join(LUCIDE_DIR, name + '.svg'), encoding='utf-8').read(), flags=re.S)
+    inner = svg[svg.index('>', svg.index('<svg')) + 1:svg.rindex('</svg>')]
+    return [[tag, dict(re.findall(r'([\w-]+)="([^"]*)"', attrs))] for tag, attrs in re.findall(r'<(\w+)\b([^>]*?)/?>', inner)]
+CORE_JS = (open(os.path.join(HERE, 'kasane-core.js'), encoding='utf-8').read()
+           .replace('{{VERSION}}', VERSION)
+           .replace('{{PALETTES}}', json.dumps([{'id': p['id'], 'name': p['name'], 'en': p['en']} for p in PAL], ensure_ascii=False))
+           .replace('{{ICONS}}', json.dumps({n: lucide_children(n) for n in CORE_ICONS})))
 KASANE_JS = (open(os.path.join(HERE, 'kasane.js'), encoding='utf-8').read()
              .replace('{{VERSION}}', VERSION).replace('{{BASE}}', BASE)
-             .replace('{{PALETTES}}', json.dumps([p['id'] for p in PAL])))
+             .replace('/*@@CORE@@*/', '\n'.join(('  ' + l if l else l) for l in re.sub(r'^export ', '', CORE_JS, flags=re.M).split('\n'))))
 open(os.path.join(ROOT, VERSION, 'kasane.js'), 'w', encoding='utf-8').write(KASANE_JS)
+# kasane-react and kasane-vue: their own index.js is hand-written; core.js and kasane.css come from here
+for pkg in ('react', 'vue'):
+    d = os.path.join(ROOT, 'packages', pkg)
+    open(os.path.join(d, 'core.js'), 'w', encoding='utf-8').write(CORE_JS)
+    open(os.path.join(d, 'core.d.ts'), 'w', encoding='utf-8').write(open(os.path.join(HERE, 'kasane-core.d.ts'), encoding='utf-8').read())
+    open(os.path.join(d, 'kasane.css'), 'w', encoding='utf-8').write(open(os.path.join(ROOT, VERSION, 'kasane.css'), encoding='utf-8').read())
 
 # Data for the HTML check: Kasane class names and Lucide icon names
 k_classes = sorted(set(re.findall(r'\.(k-[a-z0-9-]+)', FULL_CSS)))
@@ -453,7 +509,7 @@ json.dump(tokens, open(os.path.join(ROOT, VERSION, 'tokens.json'), 'w', encoding
 
 # Rules and spec for AI tools and people
 def spec(tpl):
-    return open(tpl, encoding='utf-8').read().replace('{{BASE}}', BASE).replace('{{VERSION}}', VERSION).replace('{{LINT_URL}}', LINT_URL).replace('{{SITE}}', BASE.rsplit('/', 1)[0]).replace('{{FONTS}}', FONTS).replace('{{LUCIDE_VER}}', LUCIDE_VER).replace('{{LUCIDE_URL}}', LUCIDE_URL)
+    return open(tpl, encoding='utf-8').read().replace('{{BASE}}', BASE).replace('{{VERSION}}', VERSION).replace('{{LINT_URL}}', LINT_URL).replace('{{SITE}}', BASE.rsplit('/', 1)[0]).replace('{{FONTS}}', FONTS).replace('{{LUCIDE_VER}}', LUCIDE_VER).replace('{{LUCIDE_URL}}', LUCIDE_URL).replace('{{PKG_VERSION}}', PKG_VERSION)
 md = spec('kasane.md.tpl')
 open(os.path.join(ROOT, VERSION, 'kasane.md'), 'w', encoding='utf-8').write(md)
 # English edition: same content, fewer tokens for AI tools
@@ -466,7 +522,9 @@ open(os.path.join(ROOT, 'llms.txt'), 'w', encoding='utf-8').write(
     '- [Kasane %s 仕様書(日本語)](%s/kasane.md): 同じ内容の日本語版\n'
     '- [kasane.css](%s/kasane.css): all tokens and component CSS\n'
     '- [tokens.json](%s/tokens.json): token values (W3C Design Tokens format)\n'
-    '- [Source](https://github.com/yamamotoxqx/design-system-kasane): GitHub repository (MIT License)\n' % (VERSION, BASE, VERSION, BASE, BASE, BASE))
+    '- [kasane.js](%s/kasane.js): optional script for the menu, dialogs, tabs, toasts and the palette\n'
+    '- [kasane-react](%s/kasane-react-%s.tgz) / [kasane-vue](%s/kasane-vue-%s.tgz): the components for React and Vue (npm install the URL); see section 16 of the spec\n'
+    '- [Source](https://github.com/yamamotoxqx/design-system-kasane): GitHub repository (MIT License)\n' % (VERSION, BASE, VERSION, BASE, BASE, BASE, BASE, BASE, PKG_VERSION, BASE, PKG_VERSION))
 
 # ---------------------------------------------------------------- helpers
 CODE_FOLD = 14   # longer code starts folded, with a button to show all of it
@@ -518,7 +576,7 @@ def table(head, rows):
         ''.join('<th>%s</th>' % h for h in head), ''.join('<tr>%s</tr>' % ''.join('<td>%s</td>' % c for c in r) for r in rows))
 
 NAV = [
-    ('intro', 'はじめに', [('about', 'Kasane とは'), ('start', '使い始める'), ('integrate', '組み込み方と使用例'), ('with-ai', 'AI と使う'), ('updates', '更新情報'), ('migrate', 'v1 から v2 へ')]),
+    ('intro', 'はじめに', [('about', 'Kasane とは'), ('start', '使い始める'), ('integrate', '組み込み方と使用例'), ('with-ai', 'AI と使う'), ('frameworks', 'React と Vue'), ('updates', '更新情報'), ('migrate', 'v1 から v2 へ')]),
     ('principle', '原則', [('principles', 'デザイン原則'), ('accessibility', 'アクセシビリティ'), ('performance', 'パフォーマンス'), ('writing', '文章'), ('i18n', '多言語対応')]),
     ('style', 'スタイル', [('color', 'カラー'), ('typography', 'タイポグラフィ'), ('shape', '角丸と余白'), ('layout', 'レイアウト'), ('icons', 'アイコン'), ('motion', '動き')]),
     ('component', 'コンポーネント', [('button', 'ボタン'), ('input', '入力欄'), ('card', 'カードとリスト'), ('badge', 'バッジ'), ('tabs', 'タブ'), ('progress', '進捗バー'), ('dialog', 'ダイアログとトースト'), ('navigation', 'ヘッダーとメニュー'), ('table', '表'), ('empty', '空の状態と読み込み中')]),
@@ -574,6 +632,7 @@ SITEMAP_DESC = {
     'with-ai': 'Claude Code などに Kasane のルールを渡す方法と、自動チェック',
     'updates': 'Kasane の変更の記録',
     'migrate': 'v1 から v2 に移るときに変えるところ',
+    'frameworks': 'React と Vue で Kasane の部品を使う',
     'principle': '設計の考え方、アクセシビリティ、パフォーマンス、文章の書き方',
     'style': 'カラー、タイポグラフィ、角丸と余白、レイアウト、アイコン、動き',
     'component': '部品の見本とサンプルコード',
@@ -708,6 +767,13 @@ page('input', '文字の入力欄、チェックボックス、スイッチ、�
   + sec('エラー', '<p>枠を赤くするだけでなく、何が問題で、どう直せばよいかを文で伝えます。</p>'
         + ex('<label class="k-field">メールアドレス\n  <input class="k-input" type="email" value="hanako@" aria-invalid="true" aria-describedby="mail-error">\n  <span class="k-error" id="mail-error">%s「@」のあとにドメインを入力してください。</span>\n</label>' % I_WARN, True))
   + sec('選択欄', ex('<label class="k-field">場所\n  <span class="k-select">\n    <select class="k-input">\n      <option>東京</option>\n      <option>大阪</option>\n      <option>福岡</option>\n    </select>\n  </span>\n</label>', True))
+  + sec('日付と時刻', '<p>日付や時刻は、ブラウザーの入力欄(<code>type="date"</code>、<code>"time"</code>、<code>"datetime-local"</code>、<code>"month"</code>)をそのまま使います。キーボードでも打てて、スマートフォンではいつもの選択画面が開き、読み上げにも対応しています。自作のカレンダーは浮かせて出すことになるので作りません。</p>'
+        + ex('<label class="k-field">締め切り\n  <input class="k-input" type="date" value="2026-11-28">\n</label>\n<label class="k-field">集合時刻\n  <input class="k-input" type="time" value="09:30">\n</label>\n<label class="k-field">予約の日時\n  <input class="k-input" type="datetime-local" value="2026-12-01T14:00">\n</label>', True)
+        + '<p>選べる範囲は <code>min</code> と <code>max</code> で決めます。日付の書き方(年月日の並び)は、利用者の端末の言語に合わせて変わります。</p>')
+  + sec('期間', '<p>開始と終了の2つを <code>&lt;fieldset class="k-range"&gt;</code> でまとめ、間に「〜」を置きます。幅が480px未満では、2つの欄を縦に並べます。開始日を選んだら、終了日の <code>min</code> をその日にしておくと、逆の順に選べません。</p>'
+        + ex('<fieldset class="k-range">\n  <legend>期間</legend>\n  <label class="k-field">開始日\n    <input class="k-input" type="date" value="2026-12-01">\n  </label>\n  <span class="k-range-sep" aria-hidden="true">〜</span>\n  <label class="k-field">終了日\n    <input class="k-input" type="date" min="2026-12-01">\n  </label>\n</fieldset>', True))
+  + sec('単位と検索', '<p>金額や数量には、欄の右に単位を添えます(<code>.k-affix-end</code>)。検索の欄には、左に虫めがねのアイコンを置きます(<code>.k-affix-start</code>)。どちらも <code>.k-affix</code> で包みます。</p>'
+        + ex('<label class="k-field">金額\n  <span class="k-affix">\n    <input class="k-input" type="number" inputmode="numeric" value="1200">\n    <span class="k-affix-end">円</span>\n  </span>\n</label>\n<label class="k-field">メモを探す\n  <span class="k-affix">\n    <span class="k-affix-start" aria-hidden="true">%s</span>\n    <input class="k-input" type="search" placeholder="言葉を入れる">\n  </span>\n</label>' % icon('search'), True))
   + sec('チェックボックス', ex('<label class="k-option"><input class="k-check" type="checkbox" checked> お知らせを受け取る</label>\n<label class="k-option"><input class="k-check" type="checkbox"> 週のまとめを受け取る</label>'))
   + sec('ラジオボタン', ex('<label class="k-option"><input class="k-radio" type="radio" name="density" checked> ゆったり</label>\n<label class="k-option"><input class="k-radio" type="radio" name="density"> ふつう</label>\n<label class="k-option"><input class="k-radio" type="radio" name="density"> コンパクト</label>'))
   + sec('スイッチ', '<p>すぐに反映される設定に使います。オンとオフは、つまみの位置でも分かります。</p>'
@@ -752,8 +818,18 @@ page('dialog', '確認が必要な操作と、操作の結果を伝える部品�
       + ex('<div class="k-dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title">\n  <h3 class="k-dialog-title" id="dialog-title">このメモを削除しますか?</h3>\n  <p class="k-dialog-text">削除すると元に戻せません。</p>\n  <div class="k-dialog-actions">\n    <button class="k-btn k-btn-quiet" type="button">キャンセル</button>\n    <button class="k-btn k-btn-danger" type="button">削除する</button>\n  </div>\n</div>', True)
       + '<p>実際に使うときは、全体を <code>.k-scrim</code> で包んで画面の中央に重ねます。開いたら最初のボタンにフォーカスを移し、Esc キーで閉じられるようにします。</p>'
       + code('HTML', '<div class="k-scrim">\n  <div class="k-dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title">\n    ...\n  </div>\n</div>'))
-  + sec('トースト', '<p>操作の結果を、画面の下に短く表示します。数秒で消えるので、大事な内容には使いません。</p>'
-      + ex('<div class="k-toast" role="status">保存しました</div>'))
+  + sec('トースト', '<p>操作の結果を、画面の下に短く表示します。自動で消えるので、大事な内容には使いません。下のボタンで試せます。</p>'
+      + '<div class="ex"><div class="ex-demo"><button class="k-btn" type="button" data-k-toast="保存しました" data-k-toast-type="ok">保存の結果</button>'
+      + '<button class="k-btn" type="button" data-k-toast="メモを削除しました" data-k-toast-action="元に戻す">元に戻せる操作</button>'
+      + '<button class="k-btn" type="button" data-k-toast="保存できませんでした。通信を確かめてください。" data-k-toast-type="danger">失敗したとき</button></div>'
+      + code('JavaScript', '// kasane.js(または kasane-react / kasane-vue)の toast()\nKasane.toast("保存しました", { type: "ok" });\nKasane.toast("メモを削除しました", { action: { label: "元に戻す", onClick: undo } });\nKasane.toast("保存できませんでした。通信を確かめてください。", { type: "danger" });') + '</div>'
+      + '<ul class="links">'
+        '<li><b>5秒で消える</b><span>「元に戻す」などの操作が付くときは10秒。ポインターを重ねている間、フォーカスがある間、ページが裏に回っている間は時間を止めます。</span></li>'
+        '<li><b>失敗は自動で消さない</b><span>閉じるボタンを押すまで残します。入力の間違いはトーストではなく、入力欄の下に書きます。</span></li>'
+        '<li><b>3つまで</b><span>4つ目を出すと、いちばん古いものから閉じます。新しいものが下に並びます。</span></li>'
+        '<li><b>閉じるときは動かさない</b><span>出るときだけ下から浮かび、消えるときはすぐ消えます。</span></li></ul>'
+      + '<p>トーストは <code>&lt;div class="k-toasts" aria-live="polite"&gt;</code> の中に並べます。<code>kasane.js</code> は、この入れ物がなければ自分で作ります。自分で書くときは、ページを開いた時点で入れ物を置いておくと、読み上げで確実に伝わります。</p>'
+      + code('HTML', '<div class="k-toasts" aria-live="polite">\n  <div class="k-toast">%s<span class="k-toast-text">保存しました</span></div>\n</div>' % icon('check')))
   + sec('CSS', code('CSS', CSS['dialog'])))
 
 exec(open('pages_v2.py', encoding='utf-8').read())
@@ -905,6 +981,9 @@ def seo(pid, title, desc, robots=None, lang='ja', tr=lambda s: s):
     return '\n'.join(tags)
 
 T = open('site.tpl.html', encoding='utf-8').read()
+_core_docs = re.sub(r'^export ', '', CORE_JS, flags=re.M)
+_core_docs = re.sub(r'/\*.*?\*/', '', _core_docs, flags=re.S)
+T = T.replace('/*@@CORE@@*/', '\n'.join(l.strip() for l in _core_docs.split('\n') if l.strip()))
 T = re.sub(r'<!--@@ICON:([a-z0-9-]+)@@-->', lambda m: icon(m.group(1)), T)
 T = T.replace('/* Log, icon grid */', DOCS_EXTRA + '\n/* Log, icon grid */', 1)
 T = (T.replace('<!--@@SIDEBAR@@-->', sidebar).replace('<!--@@TOPNAV@@-->', topnav)

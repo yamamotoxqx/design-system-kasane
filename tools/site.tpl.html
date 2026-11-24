@@ -517,6 +517,11 @@ html[data-first-visit] .modal,.modal.open{display:grid}
 
   /* ---------- Accent palette ---------- */
   function currentAccent(){return root.dataset.accent||'hidamari';}
+  /* Toasts: the same code as kasane.js (tools/kasane-core.js) */
+  var KasaneCore=(function(){
+/*@@CORE@@*/
+  return {toast:toast};})();
+  document.addEventListener('click',function(e){var b=e.target.closest('[data-k-toast]');if(!b)return;var a=b.getAttribute('data-k-toast-action');KasaneCore.toast(b.getAttribute('data-k-toast'),{type:b.getAttribute('data-k-toast-type')||undefined,action:a?{label:a}:undefined});});
   /* Colour changes flow down from the top (View Transitions; the same as kasane.js) */
   var recoloring=0,rmq=window.matchMedia('(prefers-reduced-motion: reduce)');
   function recolor(update){

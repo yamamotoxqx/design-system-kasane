@@ -31,6 +31,15 @@ A design system for websites and web apps. It separates content by layering surf
 
 See the [documentation site](https://kasane.y-n0.de/en/) and the [spec](https://kasane.y-n0.de/v2/kasane.en.md) ([Japanese](https://kasane.y-n0.de/v2/kasane.md)) for details. How to build Kasane into a product (the default color, where users change it) is on the documentation site’s “[Integration and examples](https://kasane.y-n0.de/en/integrate/)” page.
 
+### React and Vue
+
+```bash
+npm install https://kasane.y-n0.de/v2/kasane-react-2.0.0.tgz   # React 18 or later
+npm install https://kasane.y-n0.de/v2/kasane-vue-2.0.0.tgz     # Vue 3.5 or later
+```
+
+See “[React and Vue](https://kasane.y-n0.de/en/frameworks/)” for the components and how to use them.
+
 ## Using it with AI
 
 Add this to your project’s `CLAUDE.md` (Claude Code) or `AGENTS.md` (Codex):
@@ -52,7 +61,7 @@ At the end of the work, go through every item in the spec’s end-of-work checkl
 Stylelint checks the CSS and `kasane-check` checks the HTML against the rules.
 
 ```bash
-npm install --save-dev stylelint https://kasane.y-n0.de/v2/kasane-lint-2.0.0.tgz
+npm install --save-dev stylelint https://kasane.y-n0.de/v2/kasane-lint-2.1.0.tgz
 ```
 
 ```json
@@ -88,7 +97,8 @@ Icons are [Lucide](https://lucide.dev/icons/) (ISC License) only, with a stroke 
 | Path | Contents |
 |---|---|
 | `v2/kasane.css` / `kasane.min.css` | All tokens and components |
-| `v2/kasane.js` | Menu, dialogs, tabs, saving the colour and the recolour motion (optional) |
+| `v2/kasane.js` | Menu, dialogs, tabs, toasts, saving the colour and the recolour motion (optional) |
+| `packages/react/` `packages/vue/` | The React and Vue components `kasane-react` `kasane-vue`, served as `v2/kasane-react-<version>.tgz` etc. by `npm run dist` |
 | `v2/kasane.md` | The spec, in Japanese (for AI and people) |
 | `v2/kasane.en.md` | The spec in English (same content; fewer tokens for AI) |
 | `v2/tokens.json` | Token values (W3C Design Tokens format) |

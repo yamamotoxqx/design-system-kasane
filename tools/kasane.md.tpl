@@ -65,8 +65,9 @@ Kasane(かさね)は、Webサイトと Webアプリのためのデザインシ�
 | `[data-k-dialog="id"]` | 押すと、その `id` の `.k-scrim` を開く。`data-k-close` と Esc キーで閉じる |
 | `.k-seg[role="tablist"]` | タブを押す・矢印キーで、パネルを切り替える |
 | `.k-palette` | 選んだ色を適用して保存する。色は上から下へ塗り替わる |
+| `[data-k-toast="文"]` | 押すとトーストを出す(`data-k-toast-type="ok"` などで種類) |
 
-JavaScript から色を変えるときは `Kasane.setAccent("ai")` を使います。自分で `data-accent` を書き換えると、塗り替えの動きが付きません。
+JavaScript から色を変えるときは `Kasane.setAccent("ai")`、トーストは `Kasane.toast("保存しました", { type: "ok" })` を使います。自分で `data-accent` を書き換えると、塗り替えの動きが付きません。
 
 ### 色とテーマ
 
@@ -285,6 +286,32 @@ JavaScript から色を変えるときは `Kasane.setAccent("ai")` を使いま�
 </label>
 ```
 
+### 日付、時刻、期間、単位、検索
+
+```html
+<!-- 日付と時刻: ブラウザーの入力欄をそのまま使う(date / time / datetime-local / month) -->
+<label class="k-field">締め切り<input class="k-input" type="date" min="2026-11-25"></label>
+
+<!-- 期間: 開始を選んだら、終了の min をその日にする -->
+<fieldset class="k-range">
+  <legend>期間</legend>
+  <label class="k-field">開始日<input class="k-input" type="date"></label>
+  <span class="k-range-sep" aria-hidden="true">〜</span>
+  <label class="k-field">終了日<input class="k-input" type="date"></label>
+</fieldset>
+
+<!-- 単位(右)と検索のアイコン(左) -->
+<label class="k-field">金額
+  <span class="k-affix"><input class="k-input" type="number" inputmode="numeric"><span class="k-affix-end">円</span></span>
+</label>
+<label class="k-field">メモを探す
+  <span class="k-affix"><span class="k-affix-start" aria-hidden="true"><svg …(search)></svg></span><input class="k-input" type="search"></span>
+</label>
+```
+
+- **日付や時刻のために、自作のカレンダーや時刻の選択を作りません。** ブラウザーの入力欄なら、キーボードでも打てて、スマートフォンではいつもの選択画面が開き、読み上げにも対応しています。選べる範囲は `min` と `max` で決めます。
+- 期間は幅480px未満で縦に並び、「〜」は隠れます。
+
 ### チェックボックス、ラジオボタン、スイッチ
 
 ```html
@@ -394,12 +421,23 @@ JavaScript から色を変えるときは `Kasane.setAccent("ai")` を使いま�
   </div>
 </div>
 
-<div class="k-toast" role="status">保存しました</div>
+<!-- トーストは .k-toasts の中に並べる(Kasane.toast() が作る) -->
+<div class="k-toasts" aria-live="polite">
+  <div class="k-toast"><svg …(check)></svg><span class="k-toast-text">保存しました</span></div>
+  <div class="k-toast">
+    <span class="k-toast-text">メモを削除しました</span>
+    <button class="k-toast-action" type="button">元に戻す</button>
+    <button class="k-toast-close" type="button" aria-label="閉じる"><svg …(x)></svg></button>
+  </div>
+</div>
 ```
 
 - ダイアログを開いたら最初のボタンにフォーカスを移し、Esc キーで閉じられるようにします。
 - `kasane.js` を使うなら、`.k-scrim` に `id` と `hidden` を付け、開くボタンに `data-k-dialog="その id"`、閉じるボタンに `data-k-close` を付けます。
-- トーストは数秒で消します。大事な内容には使いません。
+- トーストは `Kasane.toast("保存しました", { type: "ok" })` で出します(`type` は `ok` / `info` / `danger`)。操作を付けるときは `{ action: { label: "元に戻す", onClick } }`。
+- トーストは自動で消えます。ふつうは5秒、操作が付くときは10秒。ポインターを重ねている間、フォーカスがある間、ページが裏にある間は止まります。失敗(`danger`)は自動で消さず、閉じるボタンを付けます。
+- 並ぶのは3つまで(古いものから閉じる)。出るときだけ下から浮かび、閉じるときは動かしません。
+- 大事な内容には使いません。入力の間違いはトーストではなく、入力欄の下(`.k-error`)に書きます。
 
 ### 画面の骨組み(ヘッダー、メニュー、サイドバー)
 
@@ -630,6 +668,9 @@ JavaScript から色を変えるときは `Kasane.setAccent("ai")` を使いま�
 | `<table>` に罫線や縞模様 | `.k-table` |
 | 読み込み中に回るアイコン、光るスケルトン | `.k-skeleton`(動かない) |
 | `root.dataset.accent = "ai"` で色を変える | `Kasane.setAccent("ai")`(塗り替えの動きが付く) |
+| 日付を選ぶカレンダーを自作する | `<input class="k-input" type="date">` |
+| トーストを `setTimeout` で自作する | `Kasane.toast()`(止める・閉じる・読み上げまで入っている) |
+| React や Vue で `.k-` の HTML を手で組む | `kasane-react` / `kasane-vue` の部品 |
 
 ---
 
@@ -879,3 +920,55 @@ document.querySelectorAll('.k-palette input[name="accent"]').forEach((radio) => 
 <!-- 言語の切り替え(アイコンは Lucide の languages を取得して貼る) -->
 <a class="k-btn k-btn-quiet" href="/en/pricing/" hreflang="en" lang="en"><svg …(languages)></svg>English</a>
 ```
+
+---
+
+## 16. React と Vue
+
+React と Vue では、`.k-` の HTML を手で組まず、部品のパッケージを使います。出てくる HTML はこの仕様書と同じです。
+
+```bash
+npm install {{BASE}}/kasane-react-{{PKG_VERSION}}.tgz   # React 18 以上
+npm install {{BASE}}/kasane-vue-{{PKG_VERSION}}.tgz     # Vue 3.5 以上
+```
+
+```jsx
+import { AppShell, NavGroup, NavLink, DateField, Button, toast } from "kasane-react";
+import "kasane-react/kasane.css";
+
+<AppShell brand="かさね帳" sidebar={<NavGroup><NavLink href="/" current>きょう</NavLink></NavGroup>}>
+  <DateField label="締め切り" value={due} onChange={(e) => setDue(e.target.value)} />
+  <Button variant="primary" onClick={() => toast("保存しました", { type: "ok" })}>保存する</Button>
+</AppShell>
+```
+
+```vue
+<KAppShell brand="かさね帳">
+  <template #sidebar><KNavGroup><KNavLink href="/" current>きょう</KNavLink></KNavGroup></template>
+  <KDateField v-model="due" label="締め切り" />
+  <KButton variant="primary" @click="toast('保存しました', { type: 'ok' })">保存する</KButton>
+</KAppShell>
+```
+
+| React | Vue | HTML |
+|---|---|---|
+| `Button` | `KButton` | `.k-btn` |
+| `TextField` `DateField` `SearchField` `TextArea` `Select` | `KTextField` `KDateField` `KSearchField` `KTextArea` `KSelect` | `.k-field` `.k-input` |
+| `DateRange` | `KDateRange` | `.k-range` |
+| `Checkbox` `Radio` `Switch` | `KCheckbox` `KRadio` `KSwitch` | `.k-check` `.k-radio` `.k-switch` |
+| `Card` `Nest` `Notice` `List` `ListItem` | `KCard` `KNest` `KNotice` `KList` `KListItem` | `.k-card` `.k-nest` `.k-notice` `.k-list` |
+| `Badge` | `KBadge` | `.k-badge` |
+| `Tabs` `Segmented` | `KTabs` `KSegmented` | `.k-seg` |
+| `Progress` | `KProgress` | `.k-bar` |
+| `Dialog` | `KDialog` | `.k-dialog` |
+| `toast()` | `toast()` | `.k-toast` |
+| `Palette` `useAccent()` | `KPalette` `useAccent()` | `.k-palette` |
+| `AppShell` `NavGroup` `NavLink` `Breadcrumb` `Footer` | `KAppShell` `KNavGroup` `KNavLink` `KBreadcrumb` `KFooter` | `.k-app` `.k-sidebar` `.k-nav` `.k-breadcrumb` `.k-footer` |
+| `Table` | `KTable` | `.k-table` |
+| `Empty` `Skeleton` | `KEmpty` `KSkeleton` | `.k-empty` `.k-skeleton` |
+
+- 入力欄に `label` `hint` `error` を渡すと、`aria-describedby` と `aria-invalid` が付きます。React は `value` と `onChange`、Vue は `v-model` で使います。
+- アイコンは `lucide-react` / `lucide-vue-next` の部品を `icon` に渡します。`check` `circle-alert` `info` `x` `menu` `search` は名前でも書けます。
+- ルーターのリンクは、`NavLink` / `KNavLink` の `as` に `Link`(Next.js)や `RouterLink`(Vue Router)を渡します。
+- 書体の読み込みと、選んだ色を表示の前に当てる `<head>` のスクリプトは「1. 読み込み方」のとおりに書きます。
+- ないものを作るときは「8. Kasane にない部品を作るとき」に従います。

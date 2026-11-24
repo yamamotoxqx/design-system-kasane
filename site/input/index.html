@@ -32,7 +32,7 @@
 <script>
 /* Apply the saved palette and theme before first paint (no flash). */
 try{var a=localStorage.getItem('kasane-accent'),t=localStorage.getItem('kasane-theme');if(a==='yamabuki'){a='hidamari';localStorage.setItem('kasane-accent',a);}if(a)document.documentElement.dataset.accent=a;else document.documentElement.dataset.firstVisit='';if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}
-window.KASANE_PAGES={"home": "", "about": "intro", "start": "intro", "integrate": "intro", "with-ai": "intro", "updates": "intro", "migrate": "intro", "principles": "principle", "accessibility": "principle", "performance": "principle", "writing": "principle", "i18n": "principle", "color": "style", "typography": "style", "shape": "style", "layout": "style", "icons": "style", "motion": "style", "button": "component", "input": "component", "card": "component", "badge": "component", "tabs": "component", "progress": "component", "dialog": "component", "navigation": "component", "table": "component", "empty": "component"};
+window.KASANE_PAGES={"home": "", "about": "intro", "start": "intro", "integrate": "intro", "with-ai": "intro", "frameworks": "intro", "updates": "intro", "migrate": "intro", "principles": "principle", "accessibility": "principle", "performance": "principle", "writing": "principle", "i18n": "principle", "color": "style", "typography": "style", "shape": "style", "layout": "style", "icons": "style", "motion": "style", "button": "component", "input": "component", "card": "component", "badge": "component", "tabs": "component", "progress": "component", "dialog": "component", "navigation": "component", "table": "component", "empty": "component"};
 window.KASANE_PAGE='input';document.documentElement.dataset.page='input';document.documentElement.dataset.sec='component';
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -320,7 +320,7 @@ td code{background:var(--surface-3)}
 .demo-footer{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;background:var(--surface-2);border-radius:var(--r-md);padding:12px 16px;font-size:13px;color:var(--muted)}
 .demo-footer legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
-html[data-page="home"] .page[data-page="home"],html[data-page="home"] .toc-page[data-page="home"]{display:flex}html[data-page="about"] .page[data-page="about"],html[data-page="about"] .toc-page[data-page="about"]{display:flex}html[data-page="start"] .page[data-page="start"],html[data-page="start"] .toc-page[data-page="start"]{display:flex}html[data-page="integrate"] .page[data-page="integrate"],html[data-page="integrate"] .toc-page[data-page="integrate"]{display:flex}html[data-page="with-ai"] .page[data-page="with-ai"],html[data-page="with-ai"] .toc-page[data-page="with-ai"]{display:flex}html[data-page="updates"] .page[data-page="updates"],html[data-page="updates"] .toc-page[data-page="updates"]{display:flex}html[data-page="migrate"] .page[data-page="migrate"],html[data-page="migrate"] .toc-page[data-page="migrate"]{display:flex}html[data-page="principles"] .page[data-page="principles"],html[data-page="principles"] .toc-page[data-page="principles"]{display:flex}html[data-page="accessibility"] .page[data-page="accessibility"],html[data-page="accessibility"] .toc-page[data-page="accessibility"]{display:flex}html[data-page="performance"] .page[data-page="performance"],html[data-page="performance"] .toc-page[data-page="performance"]{display:flex}html[data-page="writing"] .page[data-page="writing"],html[data-page="writing"] .toc-page[data-page="writing"]{display:flex}html[data-page="i18n"] .page[data-page="i18n"],html[data-page="i18n"] .toc-page[data-page="i18n"]{display:flex}html[data-page="color"] .page[data-page="color"],html[data-page="color"] .toc-page[data-page="color"]{display:flex}html[data-page="typography"] .page[data-page="typography"],html[data-page="typography"] .toc-page[data-page="typography"]{display:flex}html[data-page="shape"] .page[data-page="shape"],html[data-page="shape"] .toc-page[data-page="shape"]{display:flex}html[data-page="layout"] .page[data-page="layout"],html[data-page="layout"] .toc-page[data-page="layout"]{display:flex}html[data-page="icons"] .page[data-page="icons"],html[data-page="icons"] .toc-page[data-page="icons"]{display:flex}html[data-page="motion"] .page[data-page="motion"],html[data-page="motion"] .toc-page[data-page="motion"]{display:flex}html[data-page="button"] .page[data-page="button"],html[data-page="button"] .toc-page[data-page="button"]{display:flex}html[data-page="input"] .page[data-page="input"],html[data-page="input"] .toc-page[data-page="input"]{display:flex}html[data-page="card"] .page[data-page="card"],html[data-page="card"] .toc-page[data-page="card"]{display:flex}html[data-page="badge"] .page[data-page="badge"],html[data-page="badge"] .toc-page[data-page="badge"]{display:flex}html[data-page="tabs"] .page[data-page="tabs"],html[data-page="tabs"] .toc-page[data-page="tabs"]{display:flex}html[data-page="progress"] .page[data-page="progress"],html[data-page="progress"] .toc-page[data-page="progress"]{display:flex}html[data-page="dialog"] .page[data-page="dialog"],html[data-page="dialog"] .toc-page[data-page="dialog"]{display:flex}html[data-page="navigation"] .page[data-page="navigation"],html[data-page="navigation"] .toc-page[data-page="navigation"]{display:flex}html[data-page="table"] .page[data-page="table"],html[data-page="table"] .toc-page[data-page="table"]{display:flex}html[data-page="empty"] .page[data-page="empty"],html[data-page="empty"] .toc-page[data-page="empty"]{display:flex}html[data-sec="intro"] .nav-group[data-sec="intro"]{display:flex}html[data-sec="principle"] .nav-group[data-sec="principle"]{display:flex}html[data-sec="style"] .nav-group[data-sec="style"]{display:flex}html[data-sec="component"] .nav-group[data-sec="component"]{display:flex}
+html[data-page="home"] .page[data-page="home"],html[data-page="home"] .toc-page[data-page="home"]{display:flex}html[data-page="about"] .page[data-page="about"],html[data-page="about"] .toc-page[data-page="about"]{display:flex}html[data-page="start"] .page[data-page="start"],html[data-page="start"] .toc-page[data-page="start"]{display:flex}html[data-page="integrate"] .page[data-page="integrate"],html[data-page="integrate"] .toc-page[data-page="integrate"]{display:flex}html[data-page="with-ai"] .page[data-page="with-ai"],html[data-page="with-ai"] .toc-page[data-page="with-ai"]{display:flex}html[data-page="frameworks"] .page[data-page="frameworks"],html[data-page="frameworks"] .toc-page[data-page="frameworks"]{display:flex}html[data-page="updates"] .page[data-page="updates"],html[data-page="updates"] .toc-page[data-page="updates"]{display:flex}html[data-page="migrate"] .page[data-page="migrate"],html[data-page="migrate"] .toc-page[data-page="migrate"]{display:flex}html[data-page="principles"] .page[data-page="principles"],html[data-page="principles"] .toc-page[data-page="principles"]{display:flex}html[data-page="accessibility"] .page[data-page="accessibility"],html[data-page="accessibility"] .toc-page[data-page="accessibility"]{display:flex}html[data-page="performance"] .page[data-page="performance"],html[data-page="performance"] .toc-page[data-page="performance"]{display:flex}html[data-page="writing"] .page[data-page="writing"],html[data-page="writing"] .toc-page[data-page="writing"]{display:flex}html[data-page="i18n"] .page[data-page="i18n"],html[data-page="i18n"] .toc-page[data-page="i18n"]{display:flex}html[data-page="color"] .page[data-page="color"],html[data-page="color"] .toc-page[data-page="color"]{display:flex}html[data-page="typography"] .page[data-page="typography"],html[data-page="typography"] .toc-page[data-page="typography"]{display:flex}html[data-page="shape"] .page[data-page="shape"],html[data-page="shape"] .toc-page[data-page="shape"]{display:flex}html[data-page="layout"] .page[data-page="layout"],html[data-page="layout"] .toc-page[data-page="layout"]{display:flex}html[data-page="icons"] .page[data-page="icons"],html[data-page="icons"] .toc-page[data-page="icons"]{display:flex}html[data-page="motion"] .page[data-page="motion"],html[data-page="motion"] .toc-page[data-page="motion"]{display:flex}html[data-page="button"] .page[data-page="button"],html[data-page="button"] .toc-page[data-page="button"]{display:flex}html[data-page="input"] .page[data-page="input"],html[data-page="input"] .toc-page[data-page="input"]{display:flex}html[data-page="card"] .page[data-page="card"],html[data-page="card"] .toc-page[data-page="card"]{display:flex}html[data-page="badge"] .page[data-page="badge"],html[data-page="badge"] .toc-page[data-page="badge"]{display:flex}html[data-page="tabs"] .page[data-page="tabs"],html[data-page="tabs"] .toc-page[data-page="tabs"]{display:flex}html[data-page="progress"] .page[data-page="progress"],html[data-page="progress"] .toc-page[data-page="progress"]{display:flex}html[data-page="dialog"] .page[data-page="dialog"],html[data-page="dialog"] .toc-page[data-page="dialog"]{display:flex}html[data-page="navigation"] .page[data-page="navigation"],html[data-page="navigation"] .toc-page[data-page="navigation"]{display:flex}html[data-page="table"] .page[data-page="table"],html[data-page="table"] .toc-page[data-page="table"]{display:flex}html[data-page="empty"] .page[data-page="empty"],html[data-page="empty"] .toc-page[data-page="empty"]{display:flex}html[data-sec="intro"] .nav-group[data-sec="intro"]{display:flex}html[data-sec="principle"] .nav-group[data-sec="principle"]{display:flex}html[data-sec="style"] .nav-group[data-sec="style"]{display:flex}html[data-sec="component"] .nav-group[data-sec="component"]{display:flex}
 .demo-scope[data-accent="hidamari"]{--bg:#f0ece3;--surface:#fcfaf5;--surface-2:#e7e3d9;--surface-3:#dad5ca;--ink:#201f1c;--muted:#66635d;--line:#938f85;--accent:#eec96c;--accent-soft:#f9e6bb;--accent-ink:#6e5400;--on-accent:#201f1c;--focus:#8d6d00;--notice-head:#201f1c;--ok:#007131;--ok-soft:#d0f0d5;--danger:#9d3533;--danger-soft:#ffddd9;--info:#515f6e;--info-soft:#dfe7ef}@media (prefers-color-scheme:dark){html:not([data-theme="light"]) .demo-scope[data-accent="hidamari"]{--bg:#181715;--surface:#22211f;--surface-2:#2b2a27;--surface-3:#353431;--ink:#e9e8e6;--muted:#95928b;--line:#6e6c65;--accent:#ebca78;--accent-soft:#3e310e;--accent-ink:#dbba68;--on-accent:#181715;--focus:#ba9a48;--notice-head:#dbba68;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}}html[data-theme="dark"] .demo-scope[data-accent="hidamari"]{--bg:#181715;--surface:#22211f;--surface-2:#2b2a27;--surface-3:#353431;--ink:#e9e8e6;--muted:#95928b;--line:#6e6c65;--accent:#ebca78;--accent-soft:#3e310e;--accent-ink:#dbba68;--on-accent:#181715;--focus:#ba9a48;--notice-head:#dbba68;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}
 .demo-scope[data-accent="tachibana"]{--bg:#f4ebe4;--surface:#fef9f6;--surface-2:#eae1da;--surface-3:#ded4cc;--ink:#221f1c;--muted:#68625e;--line:#978d86;--accent:#e79a5d;--accent-soft:#ffe1cc;--accent-ink:#844500;--on-accent:#221f1c;--focus:#a45d1a;--notice-head:#221f1c;--ok:#007131;--ok-soft:#d0f0d5;--danger:#9d3533;--danger-soft:#ffddd9;--info:#515f6e;--info-soft:#dfe7ef}@media (prefers-color-scheme:dark){html:not([data-theme="light"]) .demo-scope[data-accent="tachibana"]{--bg:#191715;--surface:#232120;--surface-2:#2c2928;--surface-3:#363331;--ink:#e9e7e6;--muted:#97918c;--line:#706a66;--accent:#e19c67;--accent-soft:#472b15;--accent-ink:#f2ac76;--on-accent:#191715;--focus:#d18d57;--notice-head:#f2ac76;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}}html[data-theme="dark"] .demo-scope[data-accent="tachibana"]{--bg:#191715;--surface:#232120;--surface-2:#2c2928;--surface-3:#363331;--ink:#e9e7e6;--muted:#97918c;--line:#706a66;--accent:#e19c67;--accent-soft:#472b15;--accent-ink:#f2ac76;--on-accent:#191715;--focus:#d18d57;--notice-head:#f2ac76;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}
 .demo-scope[data-accent="kobai"]{--bg:#f4e9ee;--surface:#fef8fa;--surface-2:#ebdfe4;--surface-3:#dfd2d7;--ink:#221e1f;--muted:#686164;--line:#978c90;--accent:#d078a0;--accent-soft:#ffddeb;--accent-ink:#88375f;--on-accent:#221e1f;--focus:#a55179;--notice-head:#221e1f;--ok:#007131;--ok-soft:#d0f0d5;--danger:#9d3533;--danger-soft:#ffddd9;--info:#515f6e;--info-soft:#dfe7ef}@media (prefers-color-scheme:dark){html:not([data-theme="light"]) .demo-scope[data-accent="kobai"]{--bg:#191617;--surface:#232122;--surface-2:#2c292a;--surface-3:#363334;--ink:#e9e7e8;--muted:#979093;--line:#71696c;--accent:#d282a5;--accent-soft:#482736;--accent-ink:#f4a1c5;--on-accent:#191617;--focus:#d282a5;--notice-head:#f4a1c5;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}}html[data-theme="dark"] .demo-scope[data-accent="kobai"]{--bg:#191617;--surface:#232122;--surface-2:#2c292a;--surface-3:#363334;--ink:#e9e7e8;--muted:#979093;--line:#71696c;--accent:#d282a5;--accent-soft:#482736;--accent-ink:#f4a1c5;--on-accent:#191617;--focus:#d282a5;--notice-head:#f4a1c5;--ok:#7cd591;--ok-soft:#1c3422;--danger:#ffa098;--danger-soft:#422522;--info:#b0c0d1;--info-soft:#292e34}
@@ -470,7 +470,7 @@ html[data-first-visit] .modal,.modal.open{display:grid}
 <div class="drawer-scrim" id="drawer-scrim" hidden></div>
 
 <div class="shell" id="shell">
-  <nav class="sidebar" id="sidebar" aria-label="ページ"><div class="nav-group" data-sec="intro"><div class="nav-title">はじめに</div><a class="nav-link" href="/about/">Kasane とは</a><a class="nav-link" href="/start/">使い始める</a><a class="nav-link" href="/integrate/">組み込み方と使用例</a><a class="nav-link" href="/with-ai/">AI と使う</a><a class="nav-link" href="/updates/">更新情報</a><a class="nav-link" href="/migrate/">v1 から v2 へ</a></div><div class="nav-group" data-sec="principle"><div class="nav-title">原則</div><a class="nav-link" href="/principles/">デザイン原則</a><a class="nav-link" href="/accessibility/">アクセシビリティ</a><a class="nav-link" href="/performance/">パフォーマンス</a><a class="nav-link" href="/writing/">文章</a><a class="nav-link" href="/i18n/">多言語対応</a></div><div class="nav-group" data-sec="style"><div class="nav-title">スタイル</div><a class="nav-link" href="/color/">カラー</a><a class="nav-link" href="/typography/">タイポグラフィ</a><a class="nav-link" href="/shape/">角丸と余白</a><a class="nav-link" href="/layout/">レイアウト</a><a class="nav-link" href="/icons/">アイコン</a><a class="nav-link" href="/motion/">動き</a></div><div class="nav-group" data-sec="component"><div class="nav-title">コンポーネント</div><a class="nav-link" href="/button/">ボタン</a><a class="nav-link" href="/input/">入力欄</a><a class="nav-link" href="/card/">カードとリスト</a><a class="nav-link" href="/badge/">バッジ</a><a class="nav-link" href="/tabs/">タブ</a><a class="nav-link" href="/progress/">進捗バー</a><a class="nav-link" href="/dialog/">ダイアログとトースト</a><a class="nav-link" href="/navigation/">ヘッダーとメニュー</a><a class="nav-link" href="/table/">表</a><a class="nav-link" href="/empty/">空の状態と読み込み中</a></div></nav>
+  <nav class="sidebar" id="sidebar" aria-label="ページ"><div class="nav-group" data-sec="intro"><div class="nav-title">はじめに</div><a class="nav-link" href="/about/">Kasane とは</a><a class="nav-link" href="/start/">使い始める</a><a class="nav-link" href="/integrate/">組み込み方と使用例</a><a class="nav-link" href="/with-ai/">AI と使う</a><a class="nav-link" href="/frameworks/">React と Vue</a><a class="nav-link" href="/updates/">更新情報</a><a class="nav-link" href="/migrate/">v1 から v2 へ</a></div><div class="nav-group" data-sec="principle"><div class="nav-title">原則</div><a class="nav-link" href="/principles/">デザイン原則</a><a class="nav-link" href="/accessibility/">アクセシビリティ</a><a class="nav-link" href="/performance/">パフォーマンス</a><a class="nav-link" href="/writing/">文章</a><a class="nav-link" href="/i18n/">多言語対応</a></div><div class="nav-group" data-sec="style"><div class="nav-title">スタイル</div><a class="nav-link" href="/color/">カラー</a><a class="nav-link" href="/typography/">タイポグラフィ</a><a class="nav-link" href="/shape/">角丸と余白</a><a class="nav-link" href="/layout/">レイアウト</a><a class="nav-link" href="/icons/">アイコン</a><a class="nav-link" href="/motion/">動き</a></div><div class="nav-group" data-sec="component"><div class="nav-title">コンポーネント</div><a class="nav-link" href="/button/">ボタン</a><a class="nav-link" href="/input/">入力欄</a><a class="nav-link" href="/card/">カードとリスト</a><a class="nav-link" href="/badge/">バッジ</a><a class="nav-link" href="/tabs/">タブ</a><a class="nav-link" href="/progress/">進捗バー</a><a class="nav-link" href="/dialog/">ダイアログとトースト</a><a class="nav-link" href="/navigation/">ヘッダーとメニュー</a><a class="nav-link" href="/table/">表</a><a class="nav-link" href="/empty/">空の状態と読み込み中</a></div></nav>
   <main class="main" id="main">
     <article class="page" data-page="input"><div class="page-head"><div class="crumbs">コンポーネント / 入力欄</div><h1>入力欄</h1><p class="lead">文字の入力欄、チェックボックス、スイッチ、色の選択です。Kasane で枠線を持つのは、この入力の部品だけです。</p></div><section class="sec" id="input-s1"><h2>文字の入力欄</h2><div class="ex"><div class="ex-demo ex-stack"><label class="k-field">お名前
   <input class="k-input" type="text" placeholder="例:山田 花子">
@@ -500,13 +500,69 @@ html[data-first-visit] .modal,.modal.open{display:grid}
       &lt;option&gt;福岡&lt;/option&gt;
     &lt;/select&gt;
   &lt;/span&gt;
-&lt;/label&gt;</code></pre></div></div></section><section class="sec" id="input-s4"><h2>チェックボックス</h2><div class="ex"><div class="ex-demo"><label class="k-option"><input class="k-check" type="checkbox" checked> お知らせを受け取る</label>
+&lt;/label&gt;</code></pre></div></div></section><section class="sec" id="input-s4"><h2>日付と時刻</h2><p>日付や時刻は、ブラウザーの入力欄(<code>type="date"</code>、<code>"time"</code>、<code>"datetime-local"</code>、<code>"month"</code>)をそのまま使います。キーボードでも打てて、スマートフォンではいつもの選択画面が開き、読み上げにも対応しています。自作のカレンダーは浮かせて出すことになるので作りません。</p><div class="ex"><div class="ex-demo ex-stack"><label class="k-field">締め切り
+  <input class="k-input" type="date" value="2026-11-28">
+</label>
+<label class="k-field">集合時刻
+  <input class="k-input" type="time" value="09:30">
+</label>
+<label class="k-field">予約の日時
+  <input class="k-input" type="datetime-local" value="2026-12-01T14:00">
+</label></div><div class="code"><div class="code-head"><span>HTML</span><button class="copy" type="button">コピー</button></div><pre><code>&lt;label class=&quot;k-field&quot;&gt;締め切り
+  &lt;input class=&quot;k-input&quot; type=&quot;date&quot; value=&quot;2026-11-28&quot;&gt;
+&lt;/label&gt;
+&lt;label class=&quot;k-field&quot;&gt;集合時刻
+  &lt;input class=&quot;k-input&quot; type=&quot;time&quot; value=&quot;09:30&quot;&gt;
+&lt;/label&gt;
+&lt;label class=&quot;k-field&quot;&gt;予約の日時
+  &lt;input class=&quot;k-input&quot; type=&quot;datetime-local&quot; value=&quot;2026-12-01T14:00&quot;&gt;
+&lt;/label&gt;</code></pre></div></div><p>選べる範囲は <code>min</code> と <code>max</code> で決めます。日付の書き方(年月日の並び)は、利用者の端末の言語に合わせて変わります。</p></section><section class="sec" id="input-s5"><h2>期間</h2><p>開始と終了の2つを <code>&lt;fieldset class="k-range"&gt;</code> でまとめ、間に「〜」を置きます。幅が480px未満では、2つの欄を縦に並べます。開始日を選んだら、終了日の <code>min</code> をその日にしておくと、逆の順に選べません。</p><div class="ex"><div class="ex-demo ex-stack"><fieldset class="k-range">
+  <legend>期間</legend>
+  <label class="k-field">開始日
+    <input class="k-input" type="date" value="2026-12-01">
+  </label>
+  <span class="k-range-sep" aria-hidden="true">〜</span>
+  <label class="k-field">終了日
+    <input class="k-input" type="date" min="2026-12-01">
+  </label>
+</fieldset></div><div class="code"><div class="code-head"><span>HTML</span><button class="copy" type="button">コピー</button></div><pre><code>&lt;fieldset class=&quot;k-range&quot;&gt;
+  &lt;legend&gt;期間&lt;/legend&gt;
+  &lt;label class=&quot;k-field&quot;&gt;開始日
+    &lt;input class=&quot;k-input&quot; type=&quot;date&quot; value=&quot;2026-12-01&quot;&gt;
+  &lt;/label&gt;
+  &lt;span class=&quot;k-range-sep&quot; aria-hidden=&quot;true&quot;&gt;〜&lt;/span&gt;
+  &lt;label class=&quot;k-field&quot;&gt;終了日
+    &lt;input class=&quot;k-input&quot; type=&quot;date&quot; min=&quot;2026-12-01&quot;&gt;
+  &lt;/label&gt;
+&lt;/fieldset&gt;</code></pre></div></div></section><section class="sec" id="input-s6"><h2>単位と検索</h2><p>金額や数量には、欄の右に単位を添えます(<code>.k-affix-end</code>)。検索の欄には、左に虫めがねのアイコンを置きます(<code>.k-affix-start</code>)。どちらも <code>.k-affix</code> で包みます。</p><div class="ex"><div class="ex-demo ex-stack"><label class="k-field">金額
+  <span class="k-affix">
+    <input class="k-input" type="number" inputmode="numeric" value="1200">
+    <span class="k-affix-end">円</span>
+  </span>
+</label>
+<label class="k-field">メモを探す
+  <span class="k-affix">
+    <span class="k-affix-start" aria-hidden="true"><svg aria-hidden="true" class="lucide lucide-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" ><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></svg></span>
+    <input class="k-input" type="search" placeholder="言葉を入れる">
+  </span>
+</label></div><div class="code"><div class="code-head"><span>HTML</span><button class="copy" type="button">コピー</button></div><pre><code>&lt;label class=&quot;k-field&quot;&gt;金額
+  &lt;span class=&quot;k-affix&quot;&gt;
+    &lt;input class=&quot;k-input&quot; type=&quot;number&quot; inputmode=&quot;numeric&quot; value=&quot;1200&quot;&gt;
+    &lt;span class=&quot;k-affix-end&quot;&gt;円&lt;/span&gt;
+  &lt;/span&gt;
+&lt;/label&gt;
+&lt;label class=&quot;k-field&quot;&gt;メモを探す
+  &lt;span class=&quot;k-affix&quot;&gt;
+    &lt;span class=&quot;k-affix-start&quot; aria-hidden=&quot;true&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; class=&quot;lucide lucide-search&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2.5&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot; &gt;&lt;path d=&quot;m21 21-4.34-4.34&quot; /&gt;&lt;circle cx=&quot;11&quot; cy=&quot;11&quot; r=&quot;8&quot; /&gt;&lt;/svg&gt;&lt;/span&gt;
+    &lt;input class=&quot;k-input&quot; type=&quot;search&quot; placeholder=&quot;言葉を入れる&quot;&gt;
+  &lt;/span&gt;
+&lt;/label&gt;</code></pre></div></div></section><section class="sec" id="input-s7"><h2>チェックボックス</h2><div class="ex"><div class="ex-demo"><label class="k-option"><input class="k-check" type="checkbox" checked> お知らせを受け取る</label>
 <label class="k-option"><input class="k-check" type="checkbox"> 週のまとめを受け取る</label></div><div class="code"><div class="code-head"><span>HTML</span><button class="copy" type="button">コピー</button></div><pre><code>&lt;label class=&quot;k-option&quot;&gt;&lt;input class=&quot;k-check&quot; type=&quot;checkbox&quot; checked&gt; お知らせを受け取る&lt;/label&gt;
-&lt;label class=&quot;k-option&quot;&gt;&lt;input class=&quot;k-check&quot; type=&quot;checkbox&quot;&gt; 週のまとめを受け取る&lt;/label&gt;</code></pre></div></div></section><section class="sec" id="input-s5"><h2>ラジオボタン</h2><div class="ex"><div class="ex-demo"><label class="k-option"><input class="k-radio" type="radio" name="density" checked> ゆったり</label>
+&lt;label class=&quot;k-option&quot;&gt;&lt;input class=&quot;k-check&quot; type=&quot;checkbox&quot;&gt; 週のまとめを受け取る&lt;/label&gt;</code></pre></div></div></section><section class="sec" id="input-s8"><h2>ラジオボタン</h2><div class="ex"><div class="ex-demo"><label class="k-option"><input class="k-radio" type="radio" name="density" checked> ゆったり</label>
 <label class="k-option"><input class="k-radio" type="radio" name="density"> ふつう</label>
 <label class="k-option"><input class="k-radio" type="radio" name="density"> コンパクト</label></div><div class="code"><div class="code-head"><span>HTML</span><button class="copy" type="button">コピー</button></div><pre><code>&lt;label class=&quot;k-option&quot;&gt;&lt;input class=&quot;k-radio&quot; type=&quot;radio&quot; name=&quot;density&quot; checked&gt; ゆったり&lt;/label&gt;
 &lt;label class=&quot;k-option&quot;&gt;&lt;input class=&quot;k-radio&quot; type=&quot;radio&quot; name=&quot;density&quot;&gt; ふつう&lt;/label&gt;
-&lt;label class=&quot;k-option&quot;&gt;&lt;input class=&quot;k-radio&quot; type=&quot;radio&quot; name=&quot;density&quot;&gt; コンパクト&lt;/label&gt;</code></pre></div></div></section><section class="sec" id="input-s6"><h2>スイッチ</h2><p>すぐに反映される設定に使います。オンとオフは、つまみの位置でも分かります。</p><div class="ex"><div class="ex-demo"><label class="k-switch">
+&lt;label class=&quot;k-option&quot;&gt;&lt;input class=&quot;k-radio&quot; type=&quot;radio&quot; name=&quot;density&quot;&gt; コンパクト&lt;/label&gt;</code></pre></div></div></section><section class="sec" id="input-s9"><h2>スイッチ</h2><p>すぐに反映される設定に使います。オンとオフは、つまみの位置でも分かります。</p><div class="ex"><div class="ex-demo"><label class="k-switch">
   <input type="checkbox" checked>
   <span class="k-switch-track" aria-hidden="true"></span>
   自動で保存する
@@ -514,7 +570,7 @@ html[data-first-visit] .modal,.modal.open{display:grid}
   &lt;input type=&quot;checkbox&quot; checked&gt;
   &lt;span class=&quot;k-switch-track&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;
   自動で保存する
-&lt;/label&gt;</code></pre></div></div></section><section class="sec" id="input-s7"><h2>色の選択</h2><p>利用者がアクセントの色を選ぶための部品です。中身はラジオボタンなので、キーボードの矢印キーでも選べます。色の丸だけを並べる <code>.k-palette-compact</code> もあります。置き場所と保存の仕方は <a href="/integrate/">組み込み方と使用例</a> にあります。押すと、このサイトの色も変わります。</p><div class="ex"><div class="ex-demo ex-stack"><div class="wide"><fieldset class="k-palette"><legend>テーマカラー</legend><div class="k-palette-items"><label class="k-palette-item"><input type="radio" name="accent-input" value="hidamari" checked><span class="k-palette-swatch" data-swatch="hidamari"></span><span class="k-palette-name">ひだまり</span></label><label class="k-palette-item"><input type="radio" name="accent-input" value="tachibana"><span class="k-palette-swatch" data-swatch="tachibana"></span><span class="k-palette-name">橘</span></label><label class="k-palette-item"><input type="radio" name="accent-input" value="kobai"><span class="k-palette-swatch" data-swatch="kobai"></span><span class="k-palette-name">紅梅</span></label><label class="k-palette-item"><input type="radio" name="accent-input" value="fuji"><span class="k-palette-swatch" data-swatch="fuji"></span><span class="k-palette-name">藤</span></label><label class="k-palette-item"><input type="radio" name="accent-input" value="ai"><span class="k-palette-swatch" data-swatch="ai"></span><span class="k-palette-name">藍</span></label><label class="k-palette-item"><input type="radio" name="accent-input" value="sora"><span class="k-palette-swatch" data-swatch="sora"></span><span class="k-palette-name">空</span></label><label class="k-palette-item"><input type="radio" name="accent-input" value="seiji"><span class="k-palette-swatch" data-swatch="seiji"></span><span class="k-palette-name">青磁</span></label><label class="k-palette-item"><input type="radio" name="accent-input" value="moegi"><span class="k-palette-swatch" data-swatch="moegi"></span><span class="k-palette-name">萌黄</span></label><label class="k-palette-item"><input type="radio" name="accent-input" value="sumi"><span class="k-palette-swatch" data-swatch="sumi"></span><span class="k-palette-name">墨</span></label></div></fieldset></div></div><div class="code long"><div class="code-head"><span>HTML <small>50行</small></span><button class="copy" type="button">コピー</button></div><pre><code>&lt;fieldset class=&quot;k-palette&quot;&gt;
+&lt;/label&gt;</code></pre></div></div></section><section class="sec" id="input-s10"><h2>色の選択</h2><p>利用者がアクセントの色を選ぶための部品です。中身はラジオボタンなので、キーボードの矢印キーでも選べます。色の丸だけを並べる <code>.k-palette-compact</code> もあります。置き場所と保存の仕方は <a href="/integrate/">組み込み方と使用例</a> にあります。押すと、このサイトの色も変わります。</p><div class="ex"><div class="ex-demo ex-stack"><div class="wide"><fieldset class="k-palette"><legend>テーマカラー</legend><div class="k-palette-items"><label class="k-palette-item"><input type="radio" name="accent-input" value="hidamari" checked><span class="k-palette-swatch" data-swatch="hidamari"></span><span class="k-palette-name">ひだまり</span></label><label class="k-palette-item"><input type="radio" name="accent-input" value="tachibana"><span class="k-palette-swatch" data-swatch="tachibana"></span><span class="k-palette-name">橘</span></label><label class="k-palette-item"><input type="radio" name="accent-input" value="kobai"><span class="k-palette-swatch" data-swatch="kobai"></span><span class="k-palette-name">紅梅</span></label><label class="k-palette-item"><input type="radio" name="accent-input" value="fuji"><span class="k-palette-swatch" data-swatch="fuji"></span><span class="k-palette-name">藤</span></label><label class="k-palette-item"><input type="radio" name="accent-input" value="ai"><span class="k-palette-swatch" data-swatch="ai"></span><span class="k-palette-name">藍</span></label><label class="k-palette-item"><input type="radio" name="accent-input" value="sora"><span class="k-palette-swatch" data-swatch="sora"></span><span class="k-palette-name">空</span></label><label class="k-palette-item"><input type="radio" name="accent-input" value="seiji"><span class="k-palette-swatch" data-swatch="seiji"></span><span class="k-palette-name">青磁</span></label><label class="k-palette-item"><input type="radio" name="accent-input" value="moegi"><span class="k-palette-swatch" data-swatch="moegi"></span><span class="k-palette-name">萌黄</span></label><label class="k-palette-item"><input type="radio" name="accent-input" value="sumi"><span class="k-palette-swatch" data-swatch="sumi"></span><span class="k-palette-name">墨</span></label></div></fieldset></div></div><div class="code long"><div class="code-head"><span>HTML <small>50行</small></span><button class="copy" type="button">コピー</button></div><pre><code>&lt;fieldset class=&quot;k-palette&quot;&gt;
   &lt;legend&gt;テーマカラー&lt;/legend&gt;
   &lt;div class=&quot;k-palette-items&quot;&gt;
     &lt;label class=&quot;k-palette-item&quot;&gt;
@@ -563,9 +619,9 @@ html[data-first-visit] .modal,.modal.open{display:grid}
       &lt;span class=&quot;k-palette-name&quot;&gt;墨&lt;/span&gt;
     &lt;/label&gt;
   &lt;/div&gt;
-&lt;/fieldset&gt;</code></pre><button class="code-more" type="button" aria-expanded="false">すべて表示</button></div></div><p>色の丸だけを並べるときは、<code>k-palette</code> に <code>k-palette-compact</code> を足します。名前は見えなくなりますが、読み上げのために <code>k-palette-name</code> は残します。</p></section><section class="sec" id="input-s8"><h2>CSS</h2><div class="code long"><div class="code-head"><span>CSS <small>105行</small></span><button class="copy" type="button">コピー</button></div><pre><code>.k-field { display: flex; flex-direction: column; gap: 6px; font-weight: 700; font-size: var(--text-sm); }
+&lt;/fieldset&gt;</code></pre><button class="code-more" type="button" aria-expanded="false">すべて表示</button></div></div><p>色の丸だけを並べるときは、<code>k-palette</code> に <code>k-palette-compact</code> を足します。名前は見えなくなりますが、読み上げのために <code>k-palette-name</code> は残します。</p></section><section class="sec" id="input-s11"><h2>CSS</h2><div class="code long"><div class="code-head"><span>CSS <small>125行</small></span><button class="copy" type="button">コピー</button></div><pre><code>.k-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; font-weight: 700; font-size: var(--text-sm); }
 .k-input {
-  width: 100%; min-height: 46px; padding: 8px 14px;
+  width: 100%; min-width: 0; min-height: 46px; padding: 8px 14px;
   background: var(--surface); color: var(--ink);
   border: 2px solid var(--line); border-radius: var(--r-sm);
   font: inherit; font-weight: 400; font-size: var(--text-base);
@@ -576,6 +632,26 @@ html[data-first-visit] .modal,.modal.open{display:grid}
 .k-hint { font-weight: 400; font-size: 13px; color: var(--muted); }
 .k-error { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--danger); }
 .k-error svg { width: 16px; height: 16px; flex: none; }
+
+/* Dates and times use the browser&#x27;s own picker (keyboard, screen readers and phone pickers come with it) */
+.k-input[type=&quot;date&quot;], .k-input[type=&quot;time&quot;], .k-input[type=&quot;datetime-local&quot;], .k-input[type=&quot;month&quot;], .k-input[type=&quot;week&quot;], .k-input[type=&quot;number&quot;] { font-variant-numeric: tabular-nums; }
+.k-input::-webkit-date-and-time-value { min-height: 1.8em; text-align: left; }
+.k-input::-webkit-calendar-picker-indicator { padding: 4px; border-radius: 8px; cursor: pointer; opacity: .75; }
+.k-input::-webkit-calendar-picker-indicator:hover { opacity: 1; background-color: var(--surface-2); }
+.k-range { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-2) var(--space-3); min-width: 0; margin: 0; padding: 0; border: 0; }
+.k-range legend { margin-bottom: var(--space-2); padding: 0; font-weight: 700; font-size: var(--text-sm); }
+.k-range &gt; .k-field { flex: 1 1 170px; }
+.k-range-sep { padding-bottom: 12px; color: var(--muted); font-weight: 700; }
+@media (max-width: 479px) { .k-range &gt; .k-field { flex-basis: 100%; } .k-range-sep { display: none; } }
+
+/* An icon at the start (search) or a unit at the end (number) */
+.k-affix { position: relative; display: flex; align-items: center; }
+.k-affix-start, .k-affix-end { position: absolute; display: flex; align-items: center; color: var(--muted); pointer-events: none; }
+.k-affix-start { left: 14px; }
+.k-affix-start svg { width: 20px; height: 20px; }
+.k-affix-end { right: 16px; font-weight: 700; font-size: var(--text-sm); }
+.k-affix-start ~ .k-input { padding-left: 44px; }
+.k-affix .k-input:has(~ .k-affix-end) { padding-right: 56px; }
 
 .k-select { position: relative; }
 .k-select select { appearance: none; -webkit-appearance: none; padding-right: 44px; cursor: pointer; }
@@ -669,12 +745,12 @@ html[data-first-visit] .modal,.modal.open{display:grid}
 :root[data-theme=&quot;dark&quot;] .k-palette-swatch[data-swatch=&quot;moegi&quot;] { --sw: #cfd990; --sw-on: #171715; }
 :root[data-theme=&quot;dark&quot;] .k-palette-swatch[data-swatch=&quot;sumi&quot;] { --sw: #d7d7d7; --sw-on: #171717; }</code></pre><button class="code-more" type="button" aria-expanded="false">すべて表示</button></div></section><nav class="pager" aria-label="前後のページ"><a class="prev" href="/button/"><small>前のページ</small>ボタン</a><a class="next" href="/card/"><small>次のページ</small>カードとリスト</a></nav></article>
   </main>
-  <aside class="toc" id="toc"><nav class="toc-page" data-page="input" aria-label="このページの目次"><div class="toc-title">このページの内容</div><button type="button" data-scroll="input-s1">文字の入力欄</button><button type="button" data-scroll="input-s2">エラー</button><button type="button" data-scroll="input-s3">選択欄</button><button type="button" data-scroll="input-s4">チェックボックス</button><button type="button" data-scroll="input-s5">ラジオボタン</button><button type="button" data-scroll="input-s6">スイッチ</button><button type="button" data-scroll="input-s7">色の選択</button><button type="button" data-scroll="input-s8">CSS</button></nav></aside>
+  <aside class="toc" id="toc"><nav class="toc-page" data-page="input" aria-label="このページの目次"><div class="toc-title">このページの内容</div><button type="button" data-scroll="input-s1">文字の入力欄</button><button type="button" data-scroll="input-s2">エラー</button><button type="button" data-scroll="input-s3">選択欄</button><button type="button" data-scroll="input-s4">日付と時刻</button><button type="button" data-scroll="input-s5">期間</button><button type="button" data-scroll="input-s6">単位と検索</button><button type="button" data-scroll="input-s7">チェックボックス</button><button type="button" data-scroll="input-s8">ラジオボタン</button><button type="button" data-scroll="input-s9">スイッチ</button><button type="button" data-scroll="input-s10">色の選択</button><button type="button" data-scroll="input-s11">CSS</button></nav></aside>
 </div>
 
 <footer class="footer">
   <div class="footer-in">
-    <div class="f-cols"><div class="f-col"><div class="f-title">はじめに</div><a href="/about/">Kasane とは</a><a href="/start/">使い始める</a><a href="/integrate/">組み込み方と使用例</a><a href="/with-ai/">AI と使う</a><a href="/updates/">更新情報</a><a href="/migrate/">v1 から v2 へ</a></div><div class="f-col"><div class="f-title">原則</div><a href="/principles/">デザイン原則</a><a href="/accessibility/">アクセシビリティ</a><a href="/performance/">パフォーマンス</a><a href="/writing/">文章</a><a href="/i18n/">多言語対応</a></div><div class="f-col"><div class="f-title">スタイル</div><a href="/color/">カラー</a><a href="/typography/">タイポグラフィ</a><a href="/shape/">角丸と余白</a><a href="/layout/">レイアウト</a><a href="/icons/">アイコン</a><a href="/motion/">動き</a></div><div class="f-col"><div class="f-title">コンポーネント</div><a href="/button/">ボタン</a><a href="/input/">入力欄</a><a href="/card/">カードとリスト</a><a href="/badge/">バッジ</a><a href="/tabs/">タブ</a><a href="/progress/">進捗バー</a><a href="/dialog/">ダイアログとトースト</a><a href="/navigation/">ヘッダーとメニュー</a><a href="/table/">表</a><a href="/empty/">空の状態と読み込み中</a></div><div class="f-col"><div class="f-title">AI 向け</div><a href="https://kasane.y-n0.de/v2/kasane.md">仕様書(kasane.md)</a><a href="https://kasane.y-n0.de/v2/kasane.en.md">英語版(kasane.en.md)</a><a href="https://kasane.y-n0.de/llms.txt">llms.txt</a><a href="https://kasane.y-n0.de/v2/tokens.json">tokens.json</a></div></div>
+    <div class="f-cols"><div class="f-col"><div class="f-title">はじめに</div><a href="/about/">Kasane とは</a><a href="/start/">使い始める</a><a href="/integrate/">組み込み方と使用例</a><a href="/with-ai/">AI と使う</a><a href="/frameworks/">React と Vue</a><a href="/updates/">更新情報</a><a href="/migrate/">v1 から v2 へ</a></div><div class="f-col"><div class="f-title">原則</div><a href="/principles/">デザイン原則</a><a href="/accessibility/">アクセシビリティ</a><a href="/performance/">パフォーマンス</a><a href="/writing/">文章</a><a href="/i18n/">多言語対応</a></div><div class="f-col"><div class="f-title">スタイル</div><a href="/color/">カラー</a><a href="/typography/">タイポグラフィ</a><a href="/shape/">角丸と余白</a><a href="/layout/">レイアウト</a><a href="/icons/">アイコン</a><a href="/motion/">動き</a></div><div class="f-col"><div class="f-title">コンポーネント</div><a href="/button/">ボタン</a><a href="/input/">入力欄</a><a href="/card/">カードとリスト</a><a href="/badge/">バッジ</a><a href="/tabs/">タブ</a><a href="/progress/">進捗バー</a><a href="/dialog/">ダイアログとトースト</a><a href="/navigation/">ヘッダーとメニュー</a><a href="/table/">表</a><a href="/empty/">空の状態と読み込み中</a></div><div class="f-col"><div class="f-title">AI 向け</div><a href="https://kasane.y-n0.de/v2/kasane.md">仕様書(kasane.md)</a><a href="https://kasane.y-n0.de/v2/kasane.en.md">英語版(kasane.en.md)</a><a href="https://kasane.y-n0.de/llms.txt">llms.txt</a><a href="https://kasane.y-n0.de/v2/tokens.json">tokens.json</a></div></div>
     <div class="f-bottom">
       <div class="f-brand">Kasane<small>面を重ねて区切り、色を選べるデザインシステム</small>
         <small class="f-meta"><a href="https://github.com/yamamotoxqx/design-system-kasane">GitHub</a><span aria-hidden="true">・</span><a href="https://github.com/yamamotoxqx/design-system-kasane/blob/main/LICENSE">MIT License</a></small>
@@ -700,7 +776,7 @@ html[data-first-visit] .modal,.modal.open{display:grid}
 
 <script>
 (function(){
-  var NAV=[{"id": "intro", "label": "はじめに", "pages": [["about", "Kasane とは"], ["start", "使い始める"], ["integrate", "組み込み方と使用例"], ["with-ai", "AI と使う"], ["updates", "更新情報"], ["migrate", "v1 から v2 へ"]]}, {"id": "principle", "label": "原則", "pages": [["principles", "デザイン原則"], ["accessibility", "アクセシビリティ"], ["performance", "パフォーマンス"], ["writing", "文章"], ["i18n", "多言語対応"]]}, {"id": "style", "label": "スタイル", "pages": [["color", "カラー"], ["typography", "タイポグラフィ"], ["shape", "角丸と余白"], ["layout", "レイアウト"], ["icons", "アイコン"], ["motion", "動き"]]}, {"id": "component", "label": "コンポーネント", "pages": [["button", "ボタン"], ["input", "入力欄"], ["card", "カードとリスト"], ["badge", "バッジ"], ["tabs", "タブ"], ["progress", "進捗バー"], ["dialog", "ダイアログとトースト"], ["navigation", "ヘッダーとメニュー"], ["table", "表"], ["empty", "空の状態と読み込み中"]]}];
+  var NAV=[{"id": "intro", "label": "はじめに", "pages": [["about", "Kasane とは"], ["start", "使い始める"], ["integrate", "組み込み方と使用例"], ["with-ai", "AI と使う"], ["frameworks", "React と Vue"], ["updates", "更新情報"], ["migrate", "v1 から v2 へ"]]}, {"id": "principle", "label": "原則", "pages": [["principles", "デザイン原則"], ["accessibility", "アクセシビリティ"], ["performance", "パフォーマンス"], ["writing", "文章"], ["i18n", "多言語対応"]]}, {"id": "style", "label": "スタイル", "pages": [["color", "カラー"], ["typography", "タイポグラフィ"], ["shape", "角丸と余白"], ["layout", "レイアウト"], ["icons", "アイコン"], ["motion", "動き"]]}, {"id": "component", "label": "コンポーネント", "pages": [["button", "ボタン"], ["input", "入力欄"], ["card", "カードとリスト"], ["badge", "バッジ"], ["tabs", "タブ"], ["progress", "進捗バー"], ["dialog", "ダイアログとトースト"], ["navigation", "ヘッダーとメニュー"], ["table", "表"], ["empty", "空の状態と読み込み中"]]}];
   var root=document.documentElement;
   var L=function(s){var t=window.KASANE_T;return t&&t[s]||s;};   /* UI strings on translated pages */
   var $=function(id){return document.getElementById(id);};
@@ -778,6 +854,144 @@ html[data-first-visit] .modal,.modal.open{display:grid}
 
   /* ---------- Accent palette ---------- */
   function currentAccent(){return root.dataset.accent||'hidamari';}
+  /* Toasts: the same code as kasane.js (tools/kasane-core.js) */
+  var KasaneCore=(function(){
+var PALETTES = [{"id": "hidamari", "name": "ひだまり", "en": "Hidamari"}, {"id": "tachibana", "name": "橘", "en": "Tachibana"}, {"id": "kobai", "name": "紅梅", "en": "Kobai"}, {"id": "fuji", "name": "藤", "en": "Fuji"}, {"id": "ai", "name": "藍", "en": "Ai"}, {"id": "sora", "name": "空", "en": "Sora"}, {"id": "seiji", "name": "青磁", "en": "Seiji"}, {"id": "moegi", "name": "萌黄", "en": "Moegi"}, {"id": "sumi", "name": "墨", "en": "Sumi"}];
+var ICONS = {"check": [["path", {"d": "M20 6 9 17l-5-5"}]], "circle-alert": [["circle", {"cx": "12", "cy": "12", "r": "10"}], ["line", {"x1": "12", "x2": "12", "y1": "8", "y2": "12"}], ["line", {"x1": "12", "x2": "12.01", "y1": "16", "y2": "16"}]], "info": [["circle", {"cx": "12", "cy": "12", "r": "10"}], ["path", {"d": "M12 16v-4"}], ["path", {"d": "M12 8h.01"}]], "x": [["path", {"d": "M18 6 6 18"}], ["path", {"d": "m6 6 12 12"}]], "menu": [["path", {"d": "M4 5h16"}], ["path", {"d": "M4 12h16"}], ["path", {"d": "M4 19h16"}]], "search": [["path", {"d": "m21 21-4.34-4.34"}], ["circle", {"cx": "11", "cy": "11", "r": "8"}]]};
+var hasDOM = typeof document !== 'undefined';
+var KEY_ACCENT = 'kasane-accent';
+var store = {
+get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+set: function (k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {} }
+};
+function isPalette(id) { for (var i = 0; i < PALETTES.length; i++) if (PALETTES[i].id === id) return true; return false; }
+function reduced() { return hasDOM && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+function lang() { return hasDOM && /^en/.test(document.documentElement.lang || '') ? 'en' : 'ja'; }
+function iconSvg(name) {
+var d = ICONS[name]; if (!d) return '';
+return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-' + name + '" aria-hidden="true">'
++ d.map(function (c) { return '<' + c[0] + Object.keys(c[1]).map(function (k) { return ' ' + k + '="' + c[1][k] + '"'; }).join('') + '/>'; }).join('') + '</svg>';
+}
+function getAccent() {
+if (!hasDOM) return 'hidamari';
+var a = document.documentElement.dataset.accent;
+return a && a !== 'yamabuki' ? a : 'hidamari';
+}
+var running = 0;
+function recolor(update) {
+if (!hasDOM || !document.startViewTransition || reduced() || document.visibilityState !== 'visible') { update(); return; }
+var root = document.documentElement;
+running++; root.classList.add('k-recolor');
+var done = function () { if (--running === 0) root.classList.remove('k-recolor'); };
+document.startViewTransition(update).finished.then(done, done);
+}
+function setAccent(id, opts) {
+if (id === 'yamabuki') id = 'hidamari';
+if (!hasDOM || !isPalette(id)) return;
+opts = opts || {};
+var root = document.documentElement;
+if (opts.save !== false) store.set(KEY_ACCENT, id);
+if (root.dataset.accent === id) return;
+var apply = function () {
+root.dataset.accent = id;
+root.dispatchEvent(new CustomEvent('kasane:accent', { detail: { accent: id } }));
+};
+if (opts.animate === false) apply(); else recolor(apply);
+}
+function onAccent(fn) {
+if (!hasDOM) return function () {};
+var h = function (e) { fn(e.detail.accent); };
+document.documentElement.addEventListener('kasane:accent', h);
+return function () { document.documentElement.removeEventListener('kasane:accent', h); };
+}
+function restoreAccent() {
+if (!hasDOM) return;
+var a = store.get(KEY_ACCENT);
+if (a === 'yamabuki') { a = 'hidamari'; store.set(KEY_ACCENT, a); }
+if (a && isPalette(a)) document.documentElement.dataset.accent = a;
+else if (document.documentElement.dataset.accent === 'yamabuki') document.documentElement.dataset.accent = 'hidamari';
+}
+var FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+function focusables(el) {
+return Array.prototype.slice.call(el.querySelectorAll(FOCUSABLE)).filter(function (e) { return e.offsetWidth || e.offsetHeight || e.getClientRects().length; });
+}
+function trapFocus(e, box) {
+if (e.key !== 'Tab' || !box) return;
+var f = focusables(box); if (!f.length) return;
+var first = f[0], last = f[f.length - 1];
+if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+}
+var locks = 0;
+function lockScroll(on) {
+if (!hasDOM) return;
+locks = Math.max(0, locks + (on ? 1 : -1));
+document.documentElement.classList.toggle('k-scroll-lock', locks > 0);
+}
+var TOAST_MAX = 3;
+function toastRegion() {
+if (!hasDOM || !document.body) return null;
+var r = document.querySelector('.k-toasts');
+if (!r) { r = document.createElement('div'); r.className = 'k-toasts'; r.setAttribute('aria-live', 'polite'); document.body.appendChild(r); }
+return r;
+}
+function toast(message, opts) {
+var region = toastRegion();
+if (!region) return { close: function () {} };
+opts = opts || {};
+var type = opts.type, en = lang() === 'en';
+var el = document.createElement('div');
+el.className = 'k-toast';
+if (type === 'danger') el.setAttribute('role', 'alert');
+var icon = { ok: 'check', danger: 'circle-alert', info: 'info' }[type];
+if (icon) el.insertAdjacentHTML('beforeend', iconSvg(icon));
+var text = document.createElement('span');
+text.className = 'k-toast-text'; text.textContent = message; el.appendChild(text);
+var closed = false, timer = null, left, started;
+function close() {
+if (closed) return; closed = true; clearTimeout(timer);
+document.removeEventListener('visibilitychange', vis);
+var hadFocus = el.contains(document.activeElement);
+if (el.parentNode) el.parentNode.removeChild(el);
+if (hadFocus && opts.returnFocus && opts.returnFocus.focus) opts.returnFocus.focus();
+if (opts.onClose) opts.onClose();
+}
+if (opts.action) {
+var b = document.createElement('button');
+b.type = 'button'; b.className = 'k-toast-action'; b.textContent = opts.action.label;
+b.addEventListener('click', function () { if (opts.action.onClick) opts.action.onClick(); close(); });
+el.appendChild(b);
+}
+var duration = opts.duration != null ? opts.duration : type === 'danger' ? 0 : opts.action ? 10000 : 5000;
+if (duration === 0 || opts.action || opts.closable) {
+var c = document.createElement('button');
+c.type = 'button'; c.className = 'k-toast-close';
+c.setAttribute('aria-label', opts.closeLabel || (en ? 'Close' : '閉じる'));
+c.innerHTML = iconSvg('x');
+c.addEventListener('click', close);
+el.appendChild(c);
+}
+function run() { if (closed || !duration || timer) return; started = Date.now(); timer = setTimeout(close, left); }
+function pause() { if (!timer) return; clearTimeout(timer); timer = null; left -= Date.now() - started; }
+function vis() { if (document.visibilityState === 'hidden') pause(); else if (!hovered && !focused) run(); }
+var hovered = false, focused = false;
+left = duration;
+el.addEventListener('mouseenter', function () { hovered = true; pause(); });
+el.addEventListener('mouseleave', function () { hovered = false; if (!focused) run(); });
+el.addEventListener('focusin', function () { focused = true; pause(); });
+el.addEventListener('focusout', function (e) { if (!el.contains(e.relatedTarget)) { focused = false; if (!hovered) run(); } });
+document.addEventListener('visibilitychange', vis);
+el.kasaneClose = close;
+region.appendChild(el);
+while (region.children.length > TOAST_MAX) {
+var f = region.firstChild;
+if (f.kasaneClose) f.kasaneClose(); else region.removeChild(f);
+}
+if (document.visibilityState !== 'hidden') run();
+return { close: close };
+}
+  return {toast:toast};})();
+  document.addEventListener('click',function(e){var b=e.target.closest('[data-k-toast]');if(!b)return;var a=b.getAttribute('data-k-toast-action');KasaneCore.toast(b.getAttribute('data-k-toast'),{type:b.getAttribute('data-k-toast-type')||undefined,action:a?{label:a}:undefined});});
   /* Colour changes flow down from the top (View Transitions; the same as kasane.js) */
   var recoloring=0,rmq=window.matchMedia('(prefers-reduced-motion: reduce)');
   function recolor(update){

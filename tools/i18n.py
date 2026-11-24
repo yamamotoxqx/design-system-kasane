@@ -19,7 +19,7 @@ from bs4 import BeautifulSoup, NavigableString, Tag, Comment
 JP = re.compile(r'[぀-ヿ㐀-鿿！-｠]')
 INLINE = {'a', 'code', 'b', 'strong', 'em', 'kbd', 'br', 'time', 'q', 'abbr', 'mark', 'sub', 'sup', 'u', 's'}
 SKIP = {'script', 'style', 'svg', 'noscript'}
-ATTRS = ('aria-label', 'alt', 'title', 'placeholder', 'content', 'data-label', 'aria-roledescription', 'value')
+ATTRS = ('aria-label', 'alt', 'title', 'placeholder', 'content', 'data-label', 'aria-roledescription', 'value', 'data-k-toast', 'data-k-toast-action')
 
 
 def norm(s):

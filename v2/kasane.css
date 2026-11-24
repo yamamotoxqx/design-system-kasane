@@ -685,6 +685,9 @@ body {
 /* Icons are Lucide (https://lucide.dev), drawn at stroke-width 2.5 */
 svg.lucide { flex: none; stroke-width: 2.5; }
 
+/* Every Kasane part measures its width with padding and border included */
+[class^="k-"], [class*=" k-"] { box-sizing: border-box; }
+
 /* Button */
 .k-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
@@ -708,9 +711,9 @@ svg.lucide { flex: none; stroke-width: 2.5; }
 @media (prefers-reduced-motion: reduce) { .k-btn { transition: none; } }
 
 /* Input, checkbox, switch */
-.k-field { display: flex; flex-direction: column; gap: 6px; font-weight: 700; font-size: var(--text-sm); }
+.k-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; font-weight: 700; font-size: var(--text-sm); }
 .k-input {
-  width: 100%; min-height: 46px; padding: 8px 14px;
+  width: 100%; min-width: 0; min-height: 46px; padding: 8px 14px;
   background: var(--surface); color: var(--ink);
   border: 2px solid var(--line); border-radius: var(--r-sm);
   font: inherit; font-weight: 400; font-size: var(--text-base);
@@ -721,6 +724,26 @@ svg.lucide { flex: none; stroke-width: 2.5; }
 .k-hint { font-weight: 400; font-size: 13px; color: var(--muted); }
 .k-error { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--danger); }
 .k-error svg { width: 16px; height: 16px; flex: none; }
+
+/* Dates and times use the browser's own picker (keyboard, screen readers and phone pickers come with it) */
+.k-input[type="date"], .k-input[type="time"], .k-input[type="datetime-local"], .k-input[type="month"], .k-input[type="week"], .k-input[type="number"] { font-variant-numeric: tabular-nums; }
+.k-input::-webkit-date-and-time-value { min-height: 1.8em; text-align: left; }
+.k-input::-webkit-calendar-picker-indicator { padding: 4px; border-radius: 8px; cursor: pointer; opacity: .75; }
+.k-input::-webkit-calendar-picker-indicator:hover { opacity: 1; background-color: var(--surface-2); }
+.k-range { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-2) var(--space-3); min-width: 0; margin: 0; padding: 0; border: 0; }
+.k-range legend { margin-bottom: var(--space-2); padding: 0; font-weight: 700; font-size: var(--text-sm); }
+.k-range > .k-field { flex: 1 1 170px; }
+.k-range-sep { padding-bottom: 12px; color: var(--muted); font-weight: 700; }
+@media (max-width: 479px) { .k-range > .k-field { flex-basis: 100%; } .k-range-sep { display: none; } }
+
+/* An icon at the start (search) or a unit at the end (number) */
+.k-affix { position: relative; display: flex; align-items: center; }
+.k-affix-start, .k-affix-end { position: absolute; display: flex; align-items: center; color: var(--muted); pointer-events: none; }
+.k-affix-start { left: 14px; }
+.k-affix-start svg { width: 20px; height: 20px; }
+.k-affix-end { right: 16px; font-weight: 700; font-size: var(--text-sm); }
+.k-affix-start ~ .k-input { padding-left: 44px; }
+.k-affix .k-input:has(~ .k-affix-end) { padding-right: 56px; }
 
 .k-select { position: relative; }
 .k-select select { appearance: none; -webkit-appearance: none; padding-right: 44px; cursor: pointer; }
@@ -857,11 +880,30 @@ svg.lucide { flex: none; stroke-width: 2.5; }
 .k-dialog-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
 .k-toast {
   position: fixed; left: 50%; bottom: 24px; z-index: 11; transform: translateX(-50%);
-  padding: 12px 22px; border-radius: var(--r-full);
+  display: flex; align-items: center; gap: var(--space-2);
+  min-height: 48px; padding: 6px 22px; border-radius: var(--r-full);
   background: var(--ink); color: var(--bg); font-weight: 700; font-size: 15px;
 }
+/* Toasts that close by themselves live in .k-toasts (kasane.js makes it when missing) */
+.k-toasts {
+  position: fixed; left: 50%; bottom: 24px; z-index: 60; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: var(--space-2);
+  width: max-content; max-width: calc(100vw - 32px); pointer-events: none;
+}
+.k-toasts .k-toast { position: static; transform: none; max-width: 100%; pointer-events: auto; animation: k-enter var(--motion-base) var(--ease-out); }
+.k-toast svg { width: 18px; height: 18px; flex: none; }
+.k-toast:has(.k-toast-close) { padding-right: 6px; }
+.k-toast-text { min-width: 0; }
+.k-toast-action, .k-toast-close {
+  display: grid; place-items: center; flex: none; min-height: 36px; padding: 0 var(--space-3); border: 0; border-radius: var(--r-full);
+  background: transparent; color: inherit; font: inherit; font-weight: 800; cursor: pointer;
+  text-decoration: underline; text-underline-offset: 3px;
+}
+.k-toast-close { width: 36px; padding: 0; }
+.k-toast-action:hover, .k-toast-close:hover { background: color-mix(in oklab, var(--bg) 18%, transparent); }
+.k-toast-action:focus-visible, .k-toast-close:focus-visible { outline: 3px solid var(--bg); outline-offset: -3px; }
 .k-scrim[hidden] { display: none; }
-@media (prefers-reduced-motion: reduce) { .k-scrim, .k-dialog { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .k-scrim, .k-dialog, .k-toasts .k-toast { animation: none; } }
 
 /* Layout: header, menu button, sidebar / drawer, footer */
 /* Header, sidebar, main panel and footer. Under 900px the sidebar becomes a drawer opened by the menu button. */

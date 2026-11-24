@@ -57,6 +57,7 @@ page('with-ai', 'Claude Code や Codex などの AI にUIを作ってもらう�
 
 page('updates', 'Kasane の変更の記録です。',
   sec('2026年11月', '<ul class="log">'
+      '<li><time class="k-num">11.25</time><div><b>React と Vue の部品、日付の入力欄、自動で消えるトースト</b><span>React と Vue から Kasane の部品を使える kasane-react と kasane-vue を出しました。日付と時刻、期間、単位付きの数字、検索の入力欄を加え、トーストは決まった時間で自動で消えるようになりました。<a href="#frameworks">React と Vue</a></span></div></li>'
       '<li><time class="k-num">11.24</time><div><b>v2 を公開</b><span>既定のパレットの名前を「ひだまり」に変え、ヘッダーとメニュー、表、空の状態と読み込み中の部品を加えました。メニューなどを動かす kasane.js も用意し、色を変えると上から塗り替わるようになりました。v1 はそのまま残しています。<a href="#migrate">v1 から v2 へ</a></span></div></li>'
       '<li><time class="k-num">11.13</time><div><b>多言語対応のページを追加</b><span>言語ごとのURL、言語の切り替えの置き方、文章の長さ、書体、数字と日付、翻訳の管理の決まりをまとめました。仕様書にも「多言語に対応するとき」を足しました。</span></div></li>'
       '<li><time class="k-num">11.13</time><div><b>ドキュメントサイトと README を英語にも対応</b><span>英語版は /en/ で開けます。右上の言語の切り替えで、同じページの日本語版と英語版を行き来できます。</span></div></li>'

@@ -174,3 +174,80 @@ page('migrate', 'v1 は今のURLのまま残しています。v2 に移るとき
       + code('HTML', '<script>\n  try {\n    var a = localStorage.getItem("kasane-accent");\n    if (a === "yamabuki") { a = "hidamari"; localStorage.setItem("kasane-accent", a); }\n    if (a) document.documentElement.dataset.accent = a;\n  } catch (e) {}\n</script>'))
   + sec('AI に頼むとき', '<p>AI に移行を頼むときは、次のように伝えます。</p>'
       + code('テキスト', 'Kasane を v1 から v2 に更新してください。\n仕様書: ' + BASE + '/kasane.md\n- 読み込むURLの v1 を v2 にする(書体の /v1/fonts/ はそのまま)\n- data-accent の yamabuki を hidamari にする\n- 自作のヘッダー、メニュー、表、空の状態があれば、v2 の部品に置き換える\n- 最後に kasane-lint 2.0 で確かめる')))
+
+REACT_SRC = '''import { AppShell, NavGroup, NavLink, DateField, Button, toast } from "kasane-react";
+import "kasane-react/kasane.css";
+
+export default function App() {
+  return (
+    <AppShell
+      brand="かさね帳"
+      sidebar={
+        <NavGroup>
+          <NavLink href="/" current>きょう</NavLink>
+          <NavLink href="/tasks/" badge={3}>やること</NavLink>
+        </NavGroup>
+      }
+    >
+      <h1 className="k-title">きょう</h1>
+      <DateField label="締め切り" min="2026-11-25" />
+      <Button variant="primary" onClick={() => toast("保存しました", { type: "ok" })}>
+        保存する
+      </Button>
+    </AppShell>
+  );
+}'''
+
+VUE_SRC = '''<script setup>
+import { ref } from "vue";
+import { KAppShell, KNavGroup, KNavLink, KDateField, KButton, toast } from "kasane-vue";
+import "kasane-vue/kasane.css";
+const due = ref("");
+</script>
+
+<template>
+  <KAppShell brand="かさね帳">
+    <template #sidebar>
+      <KNavGroup>
+        <KNavLink href="/" current>きょう</KNavLink>
+        <KNavLink href="/tasks/" :badge="3">やること</KNavLink>
+      </KNavGroup>
+    </template>
+    <h1 class="k-title">きょう</h1>
+    <KDateField v-model="due" label="締め切り" min="2026-11-25" />
+    <KButton variant="primary" @click="toast('保存しました', { type: 'ok' })">保存する</KButton>
+  </KAppShell>
+</template>'''
+
+FW_ROWS = [
+    ['<code>Button</code>', '<code>KButton</code>', '<code>.k-btn</code>'],
+    ['<code>TextField</code> <code>DateField</code> <code>SearchField</code> <code>TextArea</code> <code>Select</code>', '<code>KTextField</code> <code>KDateField</code> <code>KSearchField</code> <code>KTextArea</code> <code>KSelect</code>', '<code>.k-field</code> <code>.k-input</code> <code>.k-affix</code>'],
+    ['<code>DateRange</code>', '<code>KDateRange</code>', '<code>.k-range</code>'],
+    ['<code>Checkbox</code> <code>Radio</code> <code>Switch</code>', '<code>KCheckbox</code> <code>KRadio</code> <code>KSwitch</code>', '<code>.k-check</code> <code>.k-radio</code> <code>.k-switch</code>'],
+    ['<code>Card</code> <code>Nest</code> <code>Notice</code> <code>List</code> <code>ListItem</code>', '<code>KCard</code> <code>KNest</code> <code>KNotice</code> <code>KList</code> <code>KListItem</code>', '<code>.k-card</code> <code>.k-nest</code> <code>.k-notice</code> <code>.k-list</code>'],
+    ['<code>Badge</code>', '<code>KBadge</code>', '<code>.k-badge</code>'],
+    ['<code>Tabs</code> <code>Segmented</code>', '<code>KTabs</code> <code>KSegmented</code>', '<code>.k-seg</code>'],
+    ['<code>Progress</code>', '<code>KProgress</code>', '<code>.k-bar</code>'],
+    ['<code>Dialog</code>', '<code>KDialog</code>', '<code>.k-scrim</code> <code>.k-dialog</code>'],
+    ['<code>toast()</code> <code>useToast()</code>', '<code>toast()</code> <code>useToast()</code>', '<code>.k-toasts</code> <code>.k-toast</code>'],
+    ['<code>Palette</code> <code>useAccent()</code>', '<code>KPalette</code> <code>useAccent()</code>', '<code>.k-palette</code>'],
+    ['<code>AppShell</code> <code>NavGroup</code> <code>NavLink</code> <code>Breadcrumb</code> <code>Footer</code>', '<code>KAppShell</code> <code>KNavGroup</code> <code>KNavLink</code> <code>KBreadcrumb</code> <code>KFooter</code>', '<code>.k-app</code> <code>.k-header</code> <code>.k-sidebar</code> <code>.k-nav</code> <code>.k-breadcrumb</code> <code>.k-footer</code>'],
+    ['<code>Table</code>', '<code>KTable</code>', '<code>.k-table</code>'],
+    ['<code>Empty</code> <code>Skeleton</code>', '<code>KEmpty</code> <code>KSkeleton</code>', '<code>.k-empty</code> <code>.k-skeleton</code>'],
+]
+
+page('frameworks', 'React と Vue で、Kasane の部品をそのまま使えます。出てくる HTML は仕様書と同じなので、見た目も自動チェックも変わりません。',
+  sec('入れる', '<p>npm のパッケージとして、このサイトから配っています(GitHub のログインは要りません)。</p>'
+      + code('ターミナル', 'npm install ' + BASE + '/kasane-react-' + PKG_VERSION + '.tgz\n# Vue のとき\nnpm install ' + BASE + '/kasane-vue-' + PKG_VERSION + '.tgz')
+      + '<p>CSS はパッケージに入っています(<code>kasane-react/kasane.css</code>、<code>kasane-vue/kasane.css</code>)。書体と、選んだ色を表示の前に当てるスクリプトは、これまでどおり HTML の <code>&lt;head&gt;</code> に書きます(<a href="#start">使い始める</a>)。React は18以上、Vue は3.5以上で動きます。</p>')
+  + sec('React', code('JSX', REACT_SRC))
+  + sec('Vue', '<p><code>app.use(Kasane)</code>(<code>import Kasane from "kasane-vue"</code>)で、すべての部品を登録することもできます。</p>' + code('Vue', VUE_SRC))
+  + sec('部品の一覧', table(['React', 'Vue', 'HTML'], FW_ROWS))
+  + sec('使い方', '<ul class="links">'
+        '<li><b>アイコンは lucide-react と lucide-vue-next</b><span><code>icon</code> に部品を渡します。Kasane が使う6つ(<code>check</code> <code>circle-alert</code> <code>info</code> <code>x</code> <code>menu</code> <code>search</code>)だけは名前でも書けます。</span></li>'
+        '<li><b>ルーターのリンク</b><span><code>NavLink</code> の <code>as</code> に Next.js の <code>Link</code> や Vue Router の <code>RouterLink</code> を渡します。</span></li>'
+        '<li><b>入力は v-model と value</b><span>React は <code>value</code> と <code>onChange</code>、Vue は <code>v-model</code> で、ふつうの入力欄と同じように使えます。<code>label</code> <code>hint</code> <code>error</code> を渡すと、<code>aria-describedby</code> と <code>aria-invalid</code> まで付きます。</span></li>'
+        '<li><b>色を変える</b><span><code>useAccent()</code> で今の色と変える関数が得られます。変えると上から塗り替わり、選んだ色は保存されます。</span></li>'
+        '<li><b>サーバーで描いてもよい</b><span>Next.js や Nuxt でも動きます。ブラウザーでしか使えない処理は、表示のあとで動きます。</span></li>'
+        '<li><b>足りない部品を作るとき</b><span>仕様書の「8. Kasane にない部品を作るとき」に従い、クラスは <code>app-</code> で始めます。</span></li></ul>')
+  + sec('AI に頼むとき', code('テキスト', 'React(または Vue)の画面を Kasane で作ってください。\n仕様書: ' + BASE + '/kasane.md\n- 部品は kasane-react(Vue なら kasane-vue)のものを使い、同じ部品を自作しない\n- アイコンは lucide-react(Vue なら lucide-vue-next)\n- 最後に kasane-lint で確かめる')))

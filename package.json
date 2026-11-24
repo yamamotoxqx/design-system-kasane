@@ -6,17 +6,18 @@
   "private": true,
   "exports": {
     "./stylelint": "./lint/stylelint.js",
-    "./kasane.css": "./v1/kasane.css",
-    "./tokens.json": "./v1/tokens.json"
+    "./kasane.css": "./v2/kasane.css",
+    "./tokens.json": "./v2/tokens.json"
   },
   "files": [
     "v1",
+    "v2",
     "lint"
   ],
   "scripts": {
     "build": "node tools/gen.cjs && python3 tools/build_site.py",
     "test": "node test/run.js",
-    "dist": "rm -rf dist && mkdir dist && cp -r site/. dist/ && cp -r llms.txt _headers LICENSE v1 v2 dist/ && npm pack ./lint --pack-destination dist/v2 --silent",
+    "dist": "rm -rf dist && mkdir dist && cp -r site/. dist/ && cp -r llms.txt _headers LICENSE v1 v2 dist/ && npm pack ./lint ./packages/react ./packages/vue --pack-destination dist/v2 --silent",
     "lighthouse": "node tools/lighthouse-site.mjs",
     "fonts": "python3 tools/fonts.py",
     "icons": "python3 tools/icons.py"
@@ -31,9 +32,12 @@
     "lighthouse": "^13.6.0",
     "line-seed-jp": "^0.0.5",
     "lucide-static": "^1.71.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "sharp": "^0.35.5",
     "ssim.js": "^3.5.0",
     "stylelint": "^16.10.0",
+    "vue": "^3.5.46",
     "wrangler": "^4.160.1"
   },
   "license": "MIT"
