@@ -69,8 +69,8 @@ console.log('\nImage optimisation (kasane-image)');
 }
 
 // ---------------------------------------------------------------- 4. contrast
-console.log('\nPalette contrast (v1/tokens.json)');
-const tokens = JSON.parse(readFileSync(here('../v1/tokens.json'), 'utf8'));
+console.log('\nPalette contrast (v2/tokens.json)');
+const tokens = JSON.parse(readFileSync(here('../v2/tokens.json'), 'utf8'));
 const lin = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
 const lum = (hex) => { const n = [1, 3, 5].map((i) => lin(parseInt(hex.substr(i, 2), 16) / 255)); return 0.2126 * n[0] + 0.7152 * n[1] + 0.0722 * n[2]; };
 const ratio = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
@@ -98,9 +98,9 @@ for (const [id, pal] of Object.entries(tokens.palette)) {
 }
 
 // ---------------------------------------------------------------- 5. ja / en specs say the same thing
-console.log('\nSpecs (v1/kasane.md, v1/kasane.en.md)');
+console.log('\nSpecs (v2/kasane.md, v2/kasane.en.md)');
 const shape = (file) => {
-  const t = readFileSync(here('../v1/' + file), 'utf8');
+  const t = readFileSync(here('../v2/' + file), 'utf8');
   const fences = t.match(/^```\w*$/gm) || [];
   return {
     headings: (t.match(/^#{1,3} /gm) || []).join(''),

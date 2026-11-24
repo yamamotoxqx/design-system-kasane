@@ -15,7 +15,7 @@ ROOT = os.path.dirname(HERE)
 SITE = os.path.join(ROOT, 'site')
 NM = os.path.join(ROOT, 'node_modules')
 PAL = json.load(open(os.path.join(HERE, '.out', 'palettes.json'), encoding='utf-8'))
-P0 = PAL[0]                      # default palette (yamabuki)
+P0 = PAL[0]                      # default palette (hidamari)
 L, D = P0['light'], P0['dark']
 CHROME = os.environ.get('CHROME_PATH')
 

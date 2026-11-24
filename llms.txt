@@ -4,8 +4,8 @@
 
 Before building UI, read one of the specs below to the end. The English edition uses fewer tokens; both say the same thing.
 
-- [Kasane v1 spec (English)](https://kasane.y-n0.de/v1/kasane.en.md): rules, tokens, HTML for every component, end-of-work checklist
-- [Kasane v1 仕様書(日本語)](https://kasane.y-n0.de/v1/kasane.md): 同じ内容の日本語版
-- [kasane.css](https://kasane.y-n0.de/v1/kasane.css): all tokens and component CSS
-- [tokens.json](https://kasane.y-n0.de/v1/tokens.json): token values (W3C Design Tokens format)
+- [Kasane v2 spec (English)](https://kasane.y-n0.de/v2/kasane.en.md): rules, tokens, HTML for every component, end-of-work checklist
+- [Kasane v2 仕様書(日本語)](https://kasane.y-n0.de/v2/kasane.md): 同じ内容の日本語版
+- [kasane.css](https://kasane.y-n0.de/v2/kasane.css): all tokens and component CSS
+- [tokens.json](https://kasane.y-n0.de/v2/tokens.json): token values (W3C Design Tokens format)
 - [Source](https://github.com/yamamotoxqx/design-system-kasane): GitHub repository (MIT License)

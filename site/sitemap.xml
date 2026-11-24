@@ -6,6 +6,7 @@
   <url><loc>https://kasane.y-n0.de/integrate/</loc></url>
   <url><loc>https://kasane.y-n0.de/with-ai/</loc></url>
   <url><loc>https://kasane.y-n0.de/updates/</loc></url>
+  <url><loc>https://kasane.y-n0.de/migrate/</loc></url>
   <url><loc>https://kasane.y-n0.de/principles/</loc></url>
   <url><loc>https://kasane.y-n0.de/accessibility/</loc></url>
   <url><loc>https://kasane.y-n0.de/performance/</loc></url>
@@ -24,12 +25,16 @@
   <url><loc>https://kasane.y-n0.de/tabs/</loc></url>
   <url><loc>https://kasane.y-n0.de/progress/</loc></url>
   <url><loc>https://kasane.y-n0.de/dialog/</loc></url>
+  <url><loc>https://kasane.y-n0.de/navigation/</loc></url>
+  <url><loc>https://kasane.y-n0.de/table/</loc></url>
+  <url><loc>https://kasane.y-n0.de/empty/</loc></url>
   <url><loc>https://kasane.y-n0.de/en/</loc></url>
   <url><loc>https://kasane.y-n0.de/en/about/</loc></url>
   <url><loc>https://kasane.y-n0.de/en/start/</loc></url>
   <url><loc>https://kasane.y-n0.de/en/integrate/</loc></url>
   <url><loc>https://kasane.y-n0.de/en/with-ai/</loc></url>
   <url><loc>https://kasane.y-n0.de/en/updates/</loc></url>
+  <url><loc>https://kasane.y-n0.de/en/migrate/</loc></url>
   <url><loc>https://kasane.y-n0.de/en/principles/</loc></url>
   <url><loc>https://kasane.y-n0.de/en/accessibility/</loc></url>
   <url><loc>https://kasane.y-n0.de/en/performance/</loc></url>
@@ -48,4 +53,7 @@
   <url><loc>https://kasane.y-n0.de/en/tabs/</loc></url>
   <url><loc>https://kasane.y-n0.de/en/progress/</loc></url>
   <url><loc>https://kasane.y-n0.de/en/dialog/</loc></url>
+  <url><loc>https://kasane.y-n0.de/en/navigation/</loc></url>
+  <url><loc>https://kasane.y-n0.de/en/table/</loc></url>
+  <url><loc>https://kasane.y-n0.de/en/empty/</loc></url>
 </urlset>

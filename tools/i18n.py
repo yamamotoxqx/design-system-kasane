@@ -49,6 +49,9 @@ class Translator:
     def lookup(self, key):
         if key in self.table and self.table[key] is not None:
             return self.table[key]
+        m = re.fullmatch(r'(\d+)行', key)  # line counts on folded code
+        if m:
+            return m.group(1) + ' lines'
         self.missing[key] = None
         return None
 

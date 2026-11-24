@@ -57,6 +57,7 @@ page('with-ai', 'Claude Code や Codex などの AI にUIを作ってもらう�
 
 page('updates', 'Kasane の変更の記録です。',
   sec('2026年11月', '<ul class="log">'
+      '<li><time class="k-num">11.24</time><div><b>v2 を公開</b><span>既定のパレットの名前を「ひだまり」に変え、ヘッダーとメニュー、表、空の状態と読み込み中の部品を加えました。メニューなどを動かす kasane.js も用意し、色を変えると上から塗り替わるようになりました。v1 はそのまま残しています。<a href="#migrate">v1 から v2 へ</a></span></div></li>'
       '<li><time class="k-num">11.13</time><div><b>多言語対応のページを追加</b><span>言語ごとのURL、言語の切り替えの置き方、文章の長さ、書体、数字と日付、翻訳の管理の決まりをまとめました。仕様書にも「多言語に対応するとき」を足しました。</span></div></li>'
       '<li><time class="k-num">11.13</time><div><b>ドキュメントサイトと README を英語にも対応</b><span>英語版は /en/ で開けます。右上の言語の切り替えで、同じページの日本語版と英語版を行き来できます。</span></div></li>'
       '<li><time class="k-num">11.12</time><div><b>面の重なりを図で説明、長いコードをたためるように</b><span>カラーのページで、面と文字の色をいまの値つきで見られます。長いサンプルコードは最初たたんで表示し、「すべて表示」で全文を開けます。</span></div></li>'
@@ -68,7 +69,7 @@ page('updates', 'Kasane の変更の記録です。',
       '<li><time class="k-num">11.11</time><div><b>URLでの配信と自動チェックを用意</b><span>CSSを1本にまとめ、AI用の仕様書(kasane.md)と Stylelint のプラグインを加えました。</span></div></li>'
       '<li><time class="k-num">11.11</time><div><b>ドキュメントサイトを作成</b><span>はじめに、原則、スタイル、コンポーネントの4セクションで構成しました。初回に色を選ぶ画面と、ライト・ダークの切り替えがあります。</span></div></li>'
       '<li><time class="k-num">11.11</time><div><b>色以外は Hidamari を引き継ぐことに決定</b><span>書体(LINE Seed JP、Zen Maru Gothic、Inter)、角丸、部品を引き継ぎました。</span></div></li>'
-      '<li><time class="k-num">11.11</time><div><b>アクセントは9色のパレットから選ぶ方式に決定</b><span>山吹、橘、紅梅、藤、藍、空、青磁、萌黄、墨。全色でコントラストの基準を検査しました。</span></div></li>'
+      '<li><time class="k-num">11.11</time><div><b>アクセントは9色のパレットから選ぶ方式に決定</b><span>ひだまり、橘、紅梅、藤、藍、空、青磁、萌黄、墨。全色でコントラストの基準を検査しました。</span></div></li>'
       '<li><time class="k-num">11.10</time><div><b>名前を Kasane に決定</b><span>Hidamari とは切り離した、色を選べるデザインシステムとして始めました。</span></div></li></ul>'))
 
 # ---------------------------------------------------------------- 原則
@@ -106,7 +107,7 @@ new Intl.DateTimeFormat(lang, { month: "short", day: "numeric", weekday: "short"
 // ja → 11月5日(木)  en → Thu, Nov 5
 new Intl.NumberFormat(lang, { style: "currency", currency: "JPY" }).format(12480);
 // ja → ￥12,480  en → ¥12,480"""
-I18N_AI = """デザインは Kasane に従う(仕様書: https://kasane.y-n0.de/v1/kasane.en.md)。
+I18N_AI = """デザインは Kasane に従う(仕様書: """ + BASE + """/kasane.en.md)。
 対応する言語は日本語(既定、/)と英語(/en/)。仕様書の「多言語に対応するとき」に従う。
 画面の文章は直接書かず、翻訳ファイル(locales/ja.json、locales/en.json)から読む。"""
 
@@ -162,7 +163,7 @@ page('i18n', '1つの製品を複数の言語で出すときの決まりです�
       + code('CSS', I18N_FONT))
   + sec('数字と日付', '<p>日付、金額、数字の区切りは言語によって書き方が違います。自分で組み立てずに、ブラウザの <code>Intl</code> にページの言語を渡して作ります。縦に並べるときは、どの言語でも <code>.k-num</code> で桁をそろえます。</p>'
       + code('JavaScript', I18N_INTL))
-  + sec('右から左に書く言語', '<p>アラビア語やヘブライ語のように右から左に書く言語は、Kasane の v1 では確かめていません。対応が必要になったら、画面を左右反転して崩れないかを確かめ、足りないところを報告してください。</p>')
+  + sec('右から左に書く言語', '<p>アラビア語やヘブライ語のように右から左に書く言語は、Kasane ではまだ確かめていません。対応が必要になったら、画面を左右反転して崩れないかを確かめ、足りないところを報告してください。</p>')
   + sec('翻訳を管理する', '<p>元になる言語を1つ決め、画面の文章はコードに直接書かずに翻訳ファイルから読みます。訳がない文を自動で見つける仕組みを CI に入れると、訳し忘れのまま公開されるのを防げます。このドキュメントサイトも、日本語で書いたページを訳のファイルで英語に置き換えて作り、訳がない文があるとビルドが止まるようにしています。</p>')
   + sec('AI に伝えるとき', '<p>AI に作ってもらうときは、対応する言語と、言語ごとのURL、翻訳ファイルの場所を最初に伝えます。</p>'
       + code('Markdown', I18N_AI)))
@@ -214,7 +215,9 @@ page('motion', '動きは短く、控えめにします。画面が変わった�
         ['<code>--motion-fast</code>', '150ms', 'ボタンの色と押し込み、スイッチ'],
         ['<code>--motion-base</code>', '220ms', 'ダイアログ、メニューの開閉'],
         ['<code>--motion-slow</code>', '450ms', 'ページの切り替え、部品が現れるとき'],
-        ['<code>--ease-out</code>', 'cubic-bezier(.2, .7, .3, 1)', 'すばやく始まり、ゆっくり止まる']]))
+        ['<code>--motion-recolor</code>', '600ms', '色を変えたときの塗り替え'],
+        ['<code>--ease-out</code>', 'cubic-bezier(.2, .7, .3, 1)', 'すばやく始まり、ゆっくり止まる'],
+        ['<code>--ease-in-out</code>', 'cubic-bezier(.45, 0, .2, 1)', '色の塗り替え。ゆっくり始まり、ゆっくり止まる']]))
   + sec('現れる', '<p>ページや部品が現れるときは、16px下から浮かび上がらせます。<code>.k-enter</code> を付けるだけで使えます。</p>'
       '<div class="ex"><div class="ex-demo ex-stack"><div class="k-card k-enter" id="motion-demo"><h3 class="k-card-title">今週のおしらせ</h3><p class="k-card-text">金曜日は、図書館が17時に閉まります。</p></div><button class="k-btn" type="button" data-replay="motion-demo" style="align-self:center;width:auto">もう一度動かす</button></div>'
       + code('HTML', '<div class="k-card k-enter">...</div>') + '</div>')
@@ -228,12 +231,16 @@ page('motion', '動きは短く、控えめにします。画面が変わった�
   + sec('操作に反応する', '<p>ボタンは、押すと1pxだけ沈みます。スイッチは、つまみが150msで動きます。タブや2択の切り替えでは、選択中の背景が220msで横へ動きます。押した瞬間に反応が返ることを優先して、短くしています。</p>'
       + ex('<button class="k-btn k-btn-primary" type="button">押してみる</button>\n<label class="k-switch">\n  <input type="checkbox" checked>\n  <span class="k-switch-track" aria-hidden="true"></span>\n  切り替えてみる\n</label>\n<div class="k-seg" role="group" aria-label="表示">\n  <button type="button" aria-pressed="true" data-seg-demo>週</button>\n  <button type="button" aria-pressed="false" data-seg-demo>月</button>\n  <button type="button" aria-pressed="false" data-seg-demo>年</button>\n</div>')
       + code('CSS', '.k-btn { transition: background-color var(--motion-fast), transform var(--motion-fast); }\n.k-btn:active { transform: translateY(1px); }\n.k-switch-track::after { transition: transform var(--motion-fast); }'))
+  + sec('色を変えるとき', '<p>パレットを変えたときだけは、画面全体を上から下へ、600msかけて塗り替えます。色がぱっと変わるより、どこが変わったかを目で追えます。境目は少しぼかしてあります。下の色を押すと、このサイトで試せます。</p>'
+      + '<div class="ex"><div class="ex-demo">' + palette_html(name='accent-motion', compact=True) + '</div>'
+      + code('JavaScript', '// kasane.js を読み込んでいれば、.k-palette を置くだけで動きます。\n// JavaScript から変えるときは、data-accent を直接書き換えずにこれを使います。\nKasane.setAccent("ai");') + '</div>'
+      + '<p>しくみには View Transitions を使っています。対応していないブラウザーや、動きを減らす設定のときは、すぐに切り替わります。</p>')
   + sec('動きを減らす設定', '<p>端末で「視差効果を減らす」が有効なときは、すべての動きを止めます。動きがなくても、内容と状態はすべて分かるようにします。</p>'
       + code('CSS', '@media (prefers-reduced-motion: reduce) {\n  .k-enter, .k-scrim, .k-dialog { animation: none; }\n  .k-btn, .k-switch-track, .k-switch-track::after { transition: none; }\n}'))
   + sec('使い方', dd('<div class="k-card mini k-enter" id="dd-motion"><b>保存しました</b><span style="color:var(--muted)">一度だけ、静かに現れます。</span></div>', '動かすのは透明度と位置だけにして、一度で止めます。',
                     '<div class="k-card mini bad-motion"><b>保存しました</b><span style="color:var(--muted)">ずっと揺れ続けます。</span></div>', '点滅や、揺れ続ける動きは使いません。読むじゃまになります。')
       + '<ul class="links">'
-      '<li><b>450msより長くしない</b><span>長い動きは、操作のたびに待たされる感じになります。</span></li>'
+      '<li><b>450msより長くしない</b><span>長い動きは、操作のたびに待たされる感じになります。画面全体が変わる色の塗り替えだけは例外です。</span></li>'
       '<li><b>消えるときは動かさない</b><span>閉じる操作は、すぐに終わらせます。</span></li></ul>')
   + sec('CSS', code('CSS', CSS['motion'])))
 
@@ -261,7 +268,7 @@ page('accessibility', '誰でも、どんな状況でも、迷わず読めて、
           ['状態の文字', '<code>--ok</code>、<code>--danger</code>、<code>--info</code>', '対応する <code>-soft</code> の面に対して 4.5:1 以上'],
           ['入力欄の枠、スイッチのオフ', '<code>--line</code>', '<code>--surface</code> に対して 3:1 以上'],
           ['フォーカスのリング', '<code>--focus</code>', '面に対して 3:1 以上']]))
-  + sec('色だけで伝えない', '<p>山吹や青磁など明るいパレットでは、ライトのときに <code>--accent</code> の塗りと面の差が 3:1 に届きません。「選ばれている」「オンになっている」を塗りの色だけで伝えず、チェックの印、スイッチのつまみの位置、文字などを組み合わせます。</p>'
+  + sec('色だけで伝えない', '<p>ひだまりや青磁など明るいパレットでは、ライトのときに <code>--accent</code> の塗りと面の差が 3:1 に届きません。「選ばれている」「オンになっている」を塗りの色だけで伝えず、チェックの印、スイッチのつまみの位置、文字などを組み合わせます。</p>'
       + dd('<label class="k-switch"><input type="checkbox" checked id="a11y-sw1"><span class="k-switch-track" aria-hidden="true"></span>通知 オン</label>', 'つまみの位置と文字でも、オンだと分かります。',
            '<div class="inline"><span style="width:44px;height:24px;border-radius:999px;background:var(--accent);display:block"></span><span style="width:44px;height:24px;border-radius:999px;background:var(--surface-3);display:block"></span></div>', '色の違いだけでオンとオフを表しません。'))
   + sec('キーボードとフォーカス', '<p>操作できる部品はすべて、Tab キーで移動でき、Enter やスペースで操作できるようにします。フォーカスが当たったときは <code>--focus</code> の3pxのリングを表示し、消しません。マウスを乗せたときだけ見える情報は、フォーカスしたときにも見せます。</p>'
@@ -273,6 +280,10 @@ page('accessibility', '誰でも、どんな状況でも、迷わず読めて、
       '<li><b>あとから出る知らせは読み上げる</b><span>トーストには <code>role="status"</code> を付けます。</span></li>'
       '<li><b>見出しは順番どおりに</b><span>h1、h2、h3 の順に使い、段を飛ばしません。</span></li></ul>')
   + sec('押せる場所の大きさ', '<p>ボタンや選択肢は、高さ44px以上を基本にします。小さいボタン(<code>.k-btn-sm</code>)でも36pxです。押せる場所どうしは、間を8px以上あけます。</p>')
+  + sec('色を変えるとき', '<p>パレットを変えたときだけは、画面全体を上から下へ、600msかけて塗り替えます。色がぱっと変わるより、どこが変わったかを目で追えます。境目は少しぼかしてあります。下の色を押すと、このサイトで試せます。</p>'
+      + '<div class="ex"><div class="ex-demo">' + palette_html(name='accent-motion', compact=True) + '</div>'
+      + code('JavaScript', '// kasane.js を読み込んでいれば、.k-palette を置くだけで動きます。\n// JavaScript から変えるときは、data-accent を直接書き換えずにこれを使います。\nKasane.setAccent("ai");') + '</div>'
+      + '<p>しくみには View Transitions を使っています。対応していないブラウザーや、動きを減らす設定のときは、すぐに切り替わります。</p>')
   + sec('動きを減らす設定', '<p>端末で「視差効果を減らす」が有効なときは、Kasane の動きはすべて止まります。動きがなくても、内容と状態はすべて分かるようにします。</p>'
       + code('CSS', '@media (prefers-reduced-motion: reduce) {\n  .k-enter, .k-dialog { animation: none; }\n}'))
   + sec('確かめ方', '<p>自動の検査と、人の目と手による確認を組み合わせます。</p>'
@@ -320,7 +331,7 @@ page('performance', '表示が速く、動きが安定していて、思わぬ�
       + dd('<div class="stack" style="font-size:14px"><span class="k-num">photo-1280.avif</span><span class="k-badge k-badge-ok">' + I_OK + '79 KB ・ SSIM 0.990</span></div>', '軽くしたうえで、画質を数字で確かめます。',
            '<div class="stack" style="font-size:14px"><span class="k-num">IMG_2041.PNG</span><span class="k-badge k-badge-danger">' + I_WARN + '4.8 MB ・ 未処理</span></div>', '撮った写真をそのまま置きません。'))
   + sec('フォント', '<p>LINE Seed JP は、文字の範囲ごとに細かく分けて配信しているので、ページで使う文字の分だけが読み込まれます。フォントの CSS は表示を止めないように読み込み、読み込みが終わるまではいつもの書体で表示します。</p>'
-      + code('HTML', '<link rel="stylesheet" href="' + BASE + '/fonts/line-seed-jp.css" media="print" onload="this.media=\'all\'">\n<noscript><link rel="stylesheet" href="' + BASE + '/fonts/line-seed-jp.css"></noscript>'))
+      + code('HTML', '<link rel="stylesheet" href="' + FONTS + '/line-seed-jp.css" media="print" onload="this.media=\'all\'">\n<noscript><link rel="stylesheet" href="' + FONTS + '/line-seed-jp.css"></noscript>'))
   + sec('画面のずれを防ぐ', '<ul class="links">'
       '<li><b>大きさを先に決める</b><span>画像や埋め込みには <code>width</code> と <code>height</code> を書き、読み込む前から場所を空けておきます。</span></li>'
       '<li><b>読み込み中も同じ大きさ</b><span>読み込み中、0件、失敗したときも、同じ大きさの場所を使います。</span></li>'
@@ -355,7 +366,7 @@ PALETTE_SRC = palette_src()
 
 PICKER_JS = '''// 設定ページやページ下部の色の選択(.k-palette)を、<html data-accent> と保存につなぐ
 const root = document.documentElement;
-const current = root.dataset.accent || "yamabuki";
+const current = root.dataset.accent || "hidamari";
 document.querySelectorAll('.k-palette input[name="accent"]').forEach((radio) => {
   radio.checked = radio.value === current;
   radio.addEventListener("change", () => {
@@ -378,7 +389,7 @@ page('integrate', 'Kasane は、色をデザイナーが決めることも、利
       + table(['こんなとき', '選ぶパレット'], [
           ['ブランドの色がある', 'その色相に一番近いパレット'],
           ['信頼感、落ち着き', '藍、空'],
-          ['明るさ、親しみやすさ', '山吹、橘、萌黄'],
+          ['明るさ、親しみやすさ', 'ひだまり、橘、萌黄'],
           ['やさしさ、交流', '紅梅、藤'],
           ['情報に集中してほしい、業務の画面', '墨']]))
   + sec('設定ページに置く', '<p>設定ページがあるなら、そこに色の選択を置きます。色の名前も見えるので、選びやすくなります。下の例を押すと、このサイトの色も変わります。</p>'

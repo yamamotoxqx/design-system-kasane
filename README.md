@@ -5,7 +5,7 @@
 面を重ねて区切り、アクセントの色を9色から選べる、Webサイトと Webアプリのためのデザインシステムです。
 
 - 枠も影も使わず、面の色の差で区切ります(枠を持つのは入力の部品だけ)。
-- アクセントは 山吹・橘・紅梅・藤・藍・空・青磁・萌黄・墨 の9色。全色のライトとダークで、文字のコントラスト 4.5:1 以上を検査しています。
+- アクセントは ひだまり・橘・紅梅・藤・藍・空・青磁・萌黄・墨 の9色。全色のライトとダークで、文字のコントラスト 4.5:1 以上を検査しています。
 - 書体は LINE Seed JP。タイトルだけ Zen Maru Gothic 900、並べる数字は Inter の等幅数字。
 - 自動チェック(CSS・HTML のルール、画像の画質、Lighthouse の最低点)を充実させているので、AI だけでコーディングしても十分な品質を保てます。
 
@@ -16,7 +16,9 @@
 <head>
   <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://kasane.y-n0.de/v1/fonts/line-seed-jp.css">
-  <link rel="stylesheet" href="https://kasane.y-n0.de/v1/kasane.min.css">
+  <link rel="stylesheet" href="https://kasane.y-n0.de/v2/kasane.min.css">
+  <!-- メニュー、ダイアログ、タブ、色の保存(なくても表示はできる) -->
+  <script src="https://kasane.y-n0.de/v2/kasane.js" defer></script>
 </head>
 <body>
   <button class="k-btn k-btn-primary" type="button">保存する</button>
@@ -24,10 +26,10 @@
 </html>
 ```
 
-- `data-accent`: パレットの名前(省略すると `yamabuki`)
+- `data-accent`: パレットの名前(省略すると `hidamari`)
 - `data-theme`: `light` か `dark`(省略すると端末の設定。製品では指定せず、切り替えボタンも置かない)
 
-くわしくは、[ドキュメントサイト](https://kasane.y-n0.de/)([英語版](https://kasane.y-n0.de/en/))と[仕様書](https://kasane.y-n0.de/v1/kasane.md)([英語版](https://kasane.y-n0.de/v1/kasane.en.md))を見てください。製品への組み込み方(既定の色、利用者が色を変える場所)は、ドキュメントサイトの「[組み込み方と使用例](https://kasane.y-n0.de/integrate/)」にあります。
+くわしくは、[ドキュメントサイト](https://kasane.y-n0.de/)([英語版](https://kasane.y-n0.de/en/))と[仕様書](https://kasane.y-n0.de/v2/kasane.md)([英語版](https://kasane.y-n0.de/v2/kasane.en.md))を見てください。製品への組み込み方(既定の色、利用者が色を変える場所)は、ドキュメントサイトの「[組み込み方と使用例](https://kasane.y-n0.de/integrate/)」にあります。
 
 ## AI に使ってもらう
 
@@ -37,10 +39,10 @@
 ## UI
 
 UIを作る・変更するときは、作業の前に次の仕様書を最後まで読み、そのルールに従うこと。
-https://kasane.y-n0.de/v1/kasane.en.md
+https://kasane.y-n0.de/v2/kasane.en.md
 
 CSSは次を読み込む。
-https://kasane.y-n0.de/v1/kasane.min.css
+https://kasane.y-n0.de/v2/kasane.min.css
 
 作業の最後に、仕様書の「作業の最後に確かめること」をすべて確かめること。
 ```
@@ -50,7 +52,7 @@ https://kasane.y-n0.de/v1/kasane.min.css
 CSS は Stylelint、HTML は `kasane-check` で、ルールを機械的に確かめます。
 
 ```bash
-npm install --save-dev stylelint https://kasane.y-n0.de/v1/kasane-lint-1.2.0.tgz
+npm install --save-dev stylelint https://kasane.y-n0.de/v2/kasane-lint-2.0.0.tgz
 ```
 
 ```json
@@ -85,21 +87,23 @@ Lighthouse の最低点は、パフォーマンス 90、アクセシビリティ
 
 | パス | 内容 |
 |---|---|
-| `v1/kasane.css` / `kasane.min.css` | すべてのトークンと部品 |
-| `v1/kasane.md` | 仕様書(AI と人が読む) |
-| `v1/kasane.en.md` | 仕様書の英語版(同じ内容。AI が読むときのトークンが少なく済む) |
-| `v1/tokens.json` | トークンの値(W3C Design Tokens 形式) |
-| `v1/fonts/` | LINE Seed JP(文字の範囲ごとに分割) |
+| `v2/kasane.css` / `kasane.min.css` | すべてのトークンと部品 |
+| `v2/kasane.js` | メニュー、ダイアログ、タブ、色の保存と塗り替えの動き(任意) |
+| `v2/kasane.md` | 仕様書(AI と人が読む) |
+| `v2/kasane.en.md` | 仕様書の英語版(同じ内容。AI が読むときのトークンが少なく済む) |
+| `v2/tokens.json` | トークンの値(W3C Design Tokens 形式) |
+| `v1/fonts/` | LINE Seed JP(文字の範囲ごとに分割。v1 と v2 で共通) |
+| `v1/` のほかのファイル | v1 として出したときのまま残している(新しく生成しない) |
 | `site/` | ドキュメントサイト(ページごとの HTML、`en/` に英語版、sitemap.xml、robots.txt、アイコン、共有用の画像) |
 | `llms.txt` | AI に仕様書の場所を知らせる案内 |
-| `lint/` | `kasane-lint`(Stylelint のルール、`kasane-check`、`kasane-image`、`kasane-lighthouse`)。`npm run dist` で `v1/kasane-lint-<版>.tgz` として配信 |
+| `lint/` | `kasane-lint`(Stylelint のルール、`kasane-check`、`kasane-image`、`kasane-lighthouse`)。`npm run dist` で `v2/kasane-lint-<版>.tgz` として配信 |
 | `tools/` | 上のファイルを生成するソース。英語版のドキュメントサイトは `tools/i18n/en.json` の訳で作る |
 
 ## 開発
 
 ```bash
 npm install
-npm run build   # tools/ から v1/ と site/ を生成
+npm run build   # tools/ から v2/ と site/ を生成
 npm run icons   # アイコンと共有用の画像を作り直す(ロゴや既定の色を変えたときだけ)
 npm test        # Stylelint・kasane-check のルール、kasane-image、全パレットのコントラストを検査
 npm run dist && npm run lighthouse   # ドキュメントサイトが Lighthouse の最低点を満たすか

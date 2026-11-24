@@ -16,7 +16,9 @@ A design system for websites and web apps. It separates content by layering surf
 <head>
   <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://kasane.y-n0.de/v1/fonts/line-seed-jp.css">
-  <link rel="stylesheet" href="https://kasane.y-n0.de/v1/kasane.min.css">
+  <link rel="stylesheet" href="https://kasane.y-n0.de/v2/kasane.min.css">
+  <!-- menu, dialogs, tabs, saving the colour (pages still show without it) -->
+  <script src="https://kasane.y-n0.de/v2/kasane.js" defer></script>
 </head>
 <body>
   <button class="k-btn k-btn-primary" type="button">Save</button>
@@ -24,10 +26,10 @@ A design system for websites and web apps. It separates content by layering surf
 </html>
 ```
 
-- `data-accent`: the palette name (defaults to `yamabuki`)
+- `data-accent`: the palette name (defaults to `hidamari`)
 - `data-theme`: `light` or `dark` (defaults to the device setting; in products, leave it out and add no toggle)
 
-See the [documentation site](https://kasane.y-n0.de/en/) and the [spec](https://kasane.y-n0.de/v1/kasane.en.md) ([Japanese](https://kasane.y-n0.de/v1/kasane.md)) for details. How to build Kasane into a product (the default color, where users change it) is on the documentation site’s “[Integration and examples](https://kasane.y-n0.de/en/integrate/)” page.
+See the [documentation site](https://kasane.y-n0.de/en/) and the [spec](https://kasane.y-n0.de/v2/kasane.en.md) ([Japanese](https://kasane.y-n0.de/v2/kasane.md)) for details. How to build Kasane into a product (the default color, where users change it) is on the documentation site’s “[Integration and examples](https://kasane.y-n0.de/en/integrate/)” page.
 
 ## Using it with AI
 
@@ -37,10 +39,10 @@ Add this to your project’s `CLAUDE.md` (Claude Code) or `AGENTS.md` (Codex):
 ## UI
 
 Before building or changing UI, read this spec to the end and follow its rules.
-https://kasane.y-n0.de/v1/kasane.en.md
+https://kasane.y-n0.de/v2/kasane.en.md
 
 Load this CSS:
-https://kasane.y-n0.de/v1/kasane.min.css
+https://kasane.y-n0.de/v2/kasane.min.css
 
 At the end of the work, go through every item in the spec’s end-of-work checklist.
 ```
@@ -50,7 +52,7 @@ At the end of the work, go through every item in the spec’s end-of-work checkl
 Stylelint checks the CSS and `kasane-check` checks the HTML against the rules.
 
 ```bash
-npm install --save-dev stylelint https://kasane.y-n0.de/v1/kasane-lint-1.2.0.tgz
+npm install --save-dev stylelint https://kasane.y-n0.de/v2/kasane-lint-2.0.0.tgz
 ```
 
 ```json
@@ -85,21 +87,23 @@ Icons are [Lucide](https://lucide.dev/icons/) (ISC License) only, with a stroke 
 
 | Path | Contents |
 |---|---|
-| `v1/kasane.css` / `kasane.min.css` | All tokens and components |
-| `v1/kasane.md` | The spec, in Japanese (for AI and people) |
-| `v1/kasane.en.md` | The spec in English (same content; fewer tokens for AI) |
-| `v1/tokens.json` | Token values (W3C Design Tokens format) |
-| `v1/fonts/` | LINE Seed JP, split by character range |
+| `v2/kasane.css` / `kasane.min.css` | All tokens and components |
+| `v2/kasane.js` | Menu, dialogs, tabs, saving the colour and the recolour motion (optional) |
+| `v2/kasane.md` | The spec, in Japanese (for AI and people) |
+| `v2/kasane.en.md` | The spec in English (same content; fewer tokens for AI) |
+| `v2/tokens.json` | Token values (W3C Design Tokens format) |
+| `v1/fonts/` | LINE Seed JP, split by character range (shared by v1 and v2) |
+| Other files in `v1/` | Kept exactly as released as v1 (no longer generated) |
 | `site/` | The documentation site (one HTML file per page, English under `en/`, sitemap.xml, robots.txt, icons, share image) |
 | `llms.txt` | Tells AI tools where the spec is |
-| `lint/` | `kasane-lint` (Stylelint rules, `kasane-check`, `kasane-image`, `kasane-lighthouse`), served as `v1/kasane-lint-<version>.tgz` by `npm run dist` |
+| `lint/` | `kasane-lint` (Stylelint rules, `kasane-check`, `kasane-image`, `kasane-lighthouse`), served as `v2/kasane-lint-<version>.tgz` by `npm run dist` |
 | `tools/` | The sources that generate the files above. The English site is built from the translations in `tools/i18n/en.json` |
 
 ## Development
 
 ```bash
 npm install
-npm run build   # generate v1/ and site/ from tools/
+npm run build   # generate v2/ and site/ from tools/
 npm run icons   # remake the icons and share image (only when the logo or default palette changes)
 npm test        # Stylelint and kasane-check rules, kasane-image, contrast of every palette, ja/en specs in sync
 npm run dist && npm run lighthouse   # does the documentation site meet the Lighthouse minimums?

@@ -2,7 +2,7 @@ var path=require('path'),fs=require('fs');
 var K=require('./core.cjs');
 var OUT=path.join(__dirname,'.out');fs.mkdirSync(OUT,{recursive:true});
 var PAL=[
- {id:'yamabuki',name:'山吹',en:'Yamabuki',h:88,cf:.8,tint:.5},
+ {id:'hidamari',name:'ひだまり',en:'Hidamari',h:88,cf:.8,tint:.5},
  {id:'tachibana',name:'橘',en:'Tachibana',h:58,cf:.8,tint:.5},
  {id:'kobai',name:'紅梅',en:'Kobai',h:352,cf:.8,tint:.5},
  {id:'fuji',name:'藤',en:'Fuji',h:298,cf:.8,tint:.5},
@@ -22,7 +22,8 @@ PAL.forEach(function(p){
   var req=0,ok=0,ratios={};
   ['light','dark'].forEach(function(t){ev[t].forEach(function(e){if(e.kind==='req'){req++;if(e.pass)ok++;}ratios[t+':'+e.id]=+e.ratio.toFixed(2);});});
   out.pal.push({id:p.id,name:p.name,en:p.en,h:p.h,light:b.light,dark:b.dark,req:req,ok:ok,ratios:ratios,near:[150,25].some(function(s){return K.hd(p.h,s)<30&&p.cf>0;})});
-  var first=p.id==='yamabuki',s1=':root[data-accent="'+p.id+'"]'+(first?', :root:not([data-accent])':''),s2=':root[data-accent="'+p.id+'"]:not([data-theme="light"])'+(first?', :root:not([data-accent]):not([data-theme="light"])':''),s3=':root[data-accent="'+p.id+'"][data-theme="dark"]'+(first?', :root:not([data-accent])[data-theme="dark"]':'');
+  /* the default palette; v1's name for it (yamabuki) still works */
+  var first=p.id==='hidamari',s1=':root[data-accent="'+p.id+'"]'+(first?', :root[data-accent="yamabuki"], :root:not([data-accent])':''),s2=':root[data-accent="'+p.id+'"]:not([data-theme="light"])'+(first?', :root[data-accent="yamabuki"]:not([data-theme="light"]), :root:not([data-accent]):not([data-theme="light"])':''),s3=':root[data-accent="'+p.id+'"][data-theme="dark"]'+(first?', :root[data-accent="yamabuki"][data-theme="dark"], :root:not([data-accent])[data-theme="dark"]':'');
   css+='\n/* '+p.name+' ('+p.en+')'+(first?' — default':'')+' */\n'+s1+' {\n'+decl(b.light,'  ')+'\n  color-scheme: light;\n}\n'
      +'@media (prefers-color-scheme: dark) {\n  '+s2+' {\n'+decl(b.dark,'    ')+'\n    color-scheme: dark;\n  }\n}\n'
      +s3+' {\n'+decl(b.dark,'  ')+'\n  color-scheme: dark;\n}\n';

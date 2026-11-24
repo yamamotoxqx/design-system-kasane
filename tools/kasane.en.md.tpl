@@ -28,7 +28,7 @@ If the user's instructions conflict with a Kasane rule, follow the instructions 
 
 ```html
 <!doctype html>
-<html lang="ja" data-accent="yamabuki">
+<html lang="ja" data-accent="hidamari">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -40,8 +40,10 @@ If the user's instructions conflict with a Kasane rule, follow the instructions 
     } catch (e) {}
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{BASE}}/fonts/line-seed-jp.css">
+  <link rel="stylesheet" href="{{FONTS}}/line-seed-jp.css">
   <link rel="stylesheet" href="{{BASE}}/kasane.min.css">
+  <!-- menu, dialogs, tabs, saving the colour (pages still show without it) -->
+  <script src="{{BASE}}/kasane.js" defer></script>
 </head>
 ```
 
@@ -49,14 +51,28 @@ If the user's instructions conflict with a Kasane rule, follow the instructions 
 |---|---|
 | `{{BASE}}/kasane.css` | All tokens and components (readable) |
 | `{{BASE}}/kasane.min.css` | Same, minified. Use this in production |
-| `{{BASE}}/fonts/line-seed-jp.css` | LINE Seed JP (400 / 700 / 800) |
+| `{{FONTS}}/line-seed-jp.css` | LINE Seed JP (400 / 700 / 800) |
 | `{{BASE}}/tokens.json` | Token values (W3C Design Tokens format) |
+| `{{BASE}}/kasane.js` | Opening the menu, dialogs, tabs, choosing and saving the colour, the recolour motion (pages still show without it) |
+
+### kasane.js
+
+`kasane.js` is a small script that makes the components work (no other library needed). Add these markers to the HTML and it does the rest.
+
+| Marker | Behaviour |
+|---|---|
+| `.k-menu-btn[aria-controls]` | Opens the sidebar as a menu. Esc, the dark backdrop and `data-k-close` close it |
+| `[data-k-dialog="id"]` | Opens the `.k-scrim` with that `id`. `data-k-close` and Esc close it |
+| `.k-seg[role="tablist"]` | Switches panels on click and with the arrow keys |
+| `.k-palette` | Applies and saves the chosen colour. The new colour flows down from the top |
+
+To change the colour from JavaScript, call `Kasane.setAccent("ai")`. Writing `data-accent` yourself skips the recolour motion.
 
 ### Colour and theme
 
 | Attribute | Values | When omitted |
 |---|---|---|
-| `<html data-accent="…">` | `yamabuki` `tachibana` `kobai` `fuji` `ai` `sora` `seiji` `moegi` `sumi` | `yamabuki` |
+| `<html data-accent="…">` | `hidamari` `tachibana` `kobai` `fuji` `ai` `sora` `seiji` `moegi` `sumi` | `hidamari` |
 | `<html data-theme="…">` | `light` `dark` | Follows the device (`prefers-color-scheme`) |
 
 - Put the default colour the designer chose in `data-accent`. How to let users change it is in "14. Embedding in a product".
@@ -127,7 +143,7 @@ Pairings are fixed. Do not use any pairing not in this table.
 
 | Name (Japanese) | `data-accent` | Feel |
 |---|---|---|
-| 山吹 Yamabuki | `yamabuki` | Default. Bright yellow |
+| ひだまり Hidamari | `hidamari` | Default. Bright yellow |
 | 橘 Tachibana | `tachibana` | Orange |
 | 紅梅 Kobai | `kobai` | Rose |
 | 藤 Fuji | `fuji` | Purple |
@@ -139,7 +155,7 @@ Pairings are fixed. Do not use any pairing not in this table.
 
 Every palette, in light and dark, meets 4.5:1 for text and 3:1 for input borders and the focus ring.
 
-**Note:** with bright palettes (yamabuki, seiji, moegi…) in light mode, the `--accent` fill is close to the surface colour. Do not show "selected" or "on" by fill colour alone; combine it with a check mark, knob position, font weight, an `--accent-soft` surface, etc.
+**Note:** with bright palettes (hidamari, seiji, moegi…) in light mode, the `--accent` fill is close to the surface colour. Do not show "selected" or "on" by fill colour alone; combine it with a check mark, knob position, font weight, an `--accent-soft` surface, etc.
 
 ---
 
@@ -210,9 +226,12 @@ Circles (icon backgrounds etc.) may use `50%`.
 | `--motion-fast` | 150ms | Button colour and press, switches |
 | `--motion-base` | 220ms | Opening dialogs and menus |
 | `--motion-slow` | 450ms | Page transitions, components appearing (`.k-enter`) |
-| `--ease-out` | `cubic-bezier(.2, .7, .3, 1)` | All motion |
+| `--motion-recolor` | 600ms | Recolouring when the colour changes (`kasane.js`) |
+| `--ease-out` | `cubic-bezier(.2, .7, .3, 1)` | All motion except recolouring |
+| `--ease-in-out` | `cubic-bezier(.45, 0, .2, 1)` | Recolouring |
 
 - Animate only opacity and position. No blinking or looping. Closing disappears without animation.
+- The one exception: when the colour (palette) changes, the whole screen is repainted from top to bottom. `Kasane.setAccent()` in `kasane.js` does this; do not write the motion yourself.
 - Stop motion under `@media (prefers-reduced-motion: reduce)`.
 
 ---
@@ -340,9 +359,9 @@ Lets users choose the accent colour. Where to put it and how to save the choice:
   <legend>Theme colour</legend>
   <div class="k-palette-items">
     <label class="k-palette-item">
-      <input type="radio" name="accent" value="yamabuki" checked>
-      <span class="k-palette-swatch" data-swatch="yamabuki"></span>
-      <span class="k-palette-name">Yamabuki</span>
+      <input type="radio" name="accent" value="hidamari" checked>
+      <span class="k-palette-swatch" data-swatch="hidamari"></span>
+      <span class="k-palette-name">Hidamari</span>
     </label>
     <!-- List all 9 the same way (value and data-swatch are palette ids; names are in "3. Colour") -->
   </div>
@@ -379,7 +398,138 @@ Show progress as a number too. `style="width:…"` here is the only inline style
 ```
 
 - When a dialog opens, move focus to its first button; Esc closes it.
+- With `kasane.js`, give the `.k-scrim` an `id` and `hidden`, the opening button `data-k-dialog="that id"`, and closing buttons `data-k-close`.
 - Toasts disappear after a few seconds. Do not use them for important content.
+
+### Page frame (header, menu, sidebar)
+
+**Every screen with navigation uses this frame.** Do not build your own header, menu or sidebar.
+
+```html
+<div class="k-app">
+  <header class="k-header">
+    <button class="k-menu-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="sidebar">
+      <svg aria-hidden="true" class="lucide lucide-menu" …></svg>
+    </button>
+    <a class="k-header-brand" href="/">Kasane Notes</a>
+    <span class="k-header-space"></span>
+    <button class="k-btn k-btn-quiet k-btn-icon" type="button" aria-label="Notifications"><svg aria-hidden="true" class="lucide lucide-bell" …></svg></button>
+  </header>
+  <div class="k-drawer-scrim" hidden></div>
+  <div class="k-layout">
+    <nav class="k-sidebar" id="sidebar" aria-label="Main">
+      <div class="k-sidebar-head">
+        <span class="k-header-brand">Kasane Notes</span>
+        <button class="k-btn k-btn-quiet k-btn-icon" type="button" aria-label="Close menu" data-k-close><svg aria-hidden="true" class="lucide lucide-x" …></svg></button>
+      </div>
+      <div class="k-nav">
+        <a class="k-nav-link" href="/" aria-current="page"><svg aria-hidden="true" class="lucide lucide-house" …></svg>Today</a>
+        <a class="k-nav-link" href="/tasks/"><svg aria-hidden="true" class="lucide lucide-list-checks" …></svg>To do<span class="k-badge k-badge-accent">3</span></a>
+      </div>
+      <div class="k-nav">
+        <p class="k-nav-title">More</p>
+        <a class="k-nav-link" href="/settings/"><svg aria-hidden="true" class="lucide lucide-settings" …></svg>Settings</a>
+      </div>
+    </nav>
+    <main class="k-main">
+      <h1 class="k-title">Today</h1>
+      …
+    </main>
+  </div>
+  <footer class="k-footer">…</footer>
+</div>
+```
+
+- 900px and wider: the sidebar is always visible on the left. The menu button (`.k-menu-btn`) is hidden.
+- Under 900px: the sidebar becomes a menu (drawer) that slides in from the left, and the menu button appears at the left of the header.
+- One menu button, top left. Its icon is Lucide `menu`. `aria-controls` points to the sidebar's `id`; `aria-expanded` says whether it is open.
+- The menu slides in over 220ms when opening and disappears at once when closing. Esc, the dark backdrop (`.k-drawer-scrim`) and a `data-k-close` button close it. On open, focus moves to the current link; on close, back to the menu button (`kasane.js` does this).
+- **Do not build dropdown menus (menus floating under a button).** Use the drawer for menus and a dialog for confirmations.
+- Never put a screen's main action (save, send) only inside the menu.
+- The main panel `.k-main` is `--surface`. Put one-step-inner parts in it: lists, `.k-nest`, tables. For pages made of cards, use `.k-main k-main-plain` and place `.k-card` on the background.
+- Small sites with five pages or fewer put links in the header instead of a sidebar (`<a>` inside `<nav class="k-header-nav">`) and use `.k-layout k-layout-single` for one column. Repeat the same links in a `.k-sidebar` outside `.k-layout`; a sidebar outside `.k-layout` shows only when the menu is open.
+
+### Breadcrumb
+
+```html
+<nav aria-label="Breadcrumb">
+  <ol class="k-breadcrumb">
+    <li><a href="/">Home</a></li>
+    <li><a href="/settings/">Settings</a></li>
+    <li aria-current="page">Display</li>
+  </ol>
+</nav>
+```
+
+Use it when there are three or more levels, at the top of the main content. The last item is the current page and is not a link.
+
+### Footer
+
+```html
+<footer class="k-footer">
+  <div class="k-footer-in">
+    <nav class="k-footer-links" aria-label="About this site">
+      <a href="/about/">About Kasane Notes</a>
+      <a href="/privacy/">Privacy</a>
+    </nav>
+    <fieldset class="k-palette k-palette-compact">…</fieldset>
+    <p class="k-footer-note">© 2026 Kasane Notes</p>
+  </div>
+</footer>
+```
+
+Products without a settings page put the colour picker (`.k-palette-compact`) in the footer.
+
+### Table
+
+```html
+<div class="k-table-wrap" role="region" aria-label="Spending this month" tabindex="0">
+  <table class="k-table">
+    <caption>Spending this month</caption>
+    <thead>
+      <tr><th scope="col">Date</th><th scope="col">Item</th><th scope="col" class="k-num">Amount</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Mon, Nov 3</td><td>Textbook</td><td class="k-num">¥3,280</td></tr>
+    </tbody>
+  </table>
+</div>
+```
+
+- Rows are `--surface-2` surfaces separated by gaps. No rules or stripes. Place it on `--surface` (inside a card or `.k-main`).
+- Amount and count columns get `.k-num` (right-aligned). Header cells get `scope`.
+- On narrow screens only `.k-table-wrap` scrolls sideways. With two or three columns, use `.k-list` instead of a table.
+
+### Empty state
+
+```html
+<div class="k-empty">
+  <div class="k-empty-icon"><svg aria-hidden="true" class="lucide lucide-inbox" …></svg></div>
+  <h3 class="k-empty-title">No notes yet</h3>
+  <p class="k-empty-text">Jot down what you notice in class or practice, and look back at it later.</p>
+  <div class="k-empty-actions">
+    <button class="k-btn k-btn-primary" type="button">Write a note</button>
+  </div>
+</div>
+```
+
+Never leave an empty list or search result as a blank screen. Say why it is empty and what to do next. At most one button.
+
+### Loading
+
+```html
+<div class="k-card" aria-busy="true">
+  <span class="k-visually-hidden">Loading</span>
+  <div class="k-skeleton" aria-hidden="true">
+    <span class="k-skeleton-title"></span>
+    <span class="k-skeleton-line"></span>
+    <span class="k-skeleton-line k-skeleton-short"></span>
+  </div>
+</div>
+```
+
+- Show it only when loading takes a second or more. Match the shape and size of the content (`.k-skeleton-block` for images, `.k-skeleton-circle` for icons).
+- No shimmer and no spinning icons. When loading ends, swap in all the content at once.
 
 ### Entrance motion
 
@@ -418,7 +568,7 @@ Size depends on placement (14px in badges, 16px in error text, 18px in buttons, 
 
 ## 8. Building a component Kasane does not have
 
-When you need something not listed here (tables, tags, navigation, calendars…), decide in this order.
+When you need something not listed here (tags, calendars, charts…), decide in this order.
 
 1. **Check whether existing components can do it.** For example, selectable tags can be built from `.k-badge` and `.k-seg`.
 2. **Pick the surface.** Decide which surface it sits on and use the next one inward ("4. Surface layering").
@@ -426,24 +576,23 @@ When you need something not listed here (tables, tags, navigation, calendars…)
 4. **Separate with surfaces and gaps.** No borders, shadows or divider lines.
 5. **Do not use the `k-` prefix.** `k-` is reserved for Kasane itself. Use your project's name or similar.
 
-Example: table
+Example: selectable tags
 
 ```css
-.app-table { width: 100%; border-collapse: separate; border-spacing: 0 var(--space-1); }
-.app-table th { text-align: left; font-size: var(--text-xs); color: var(--muted); padding: 0 var(--space-3); }
-.app-table td { background: var(--surface-2); padding: var(--space-2) var(--space-3); }
-.app-table td:first-child { border-radius: var(--r-md) 0 0 var(--r-md); }
-.app-table td:last-child  { border-radius: 0 var(--r-md) var(--r-md) 0; }
-.app-table .amount { font-family: var(--font-num); font-variant-numeric: tabular-nums; text-align: right; }
+.app-tag { display: inline-flex; align-items: center; min-height: 36px; padding: 0 var(--space-4);
+           border: 0; border-radius: var(--r-full); background: var(--surface-2); color: var(--ink);
+           font: inherit; font-size: var(--text-sm); font-weight: 700; cursor: pointer; }
+.app-tag:hover { background: var(--surface-3); }
+.app-tag[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent-ink); }
 ```
 
-Example: side navigation
+Example: calendar days
 
 ```css
-.app-nav a { display: flex; align-items: center; min-height: 40px; padding: 0 var(--space-3);
-             border-radius: var(--r-sm); color: var(--ink); text-decoration: none; font-weight: 700; }
-.app-nav a:hover { background: var(--surface-2); }
-.app-nav a[aria-current="page"] { background: var(--accent-soft); color: var(--accent-ink); }
+.app-day { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%;
+           font-family: var(--font-num); font-variant-numeric: tabular-nums; font-weight: 700; }
+.app-day:hover { background: var(--surface-2); }
+.app-day[aria-current="date"] { background: var(--accent); color: var(--on-accent); }
 ```
 
 ---
@@ -478,6 +627,10 @@ Example: side navigation
 | `button:focus { outline: none; }` | Do not write it |
 | Two primary buttons side by side | Make one `.k-btn` or `.k-btn-quiet` |
 | White text on a yellow button | `color: var(--on-accent);` |
+| A home-made menu, or a dropdown under a button | `.k-menu-btn` and `.k-sidebar` (a menu that slides in from the left) |
+| Rules or stripes on a `<table>` | `.k-table` |
+| Spinners or shimmering skeletons while loading | `.k-skeleton` (still) |
+| Changing colour with `root.dataset.accent = "ai"` | `Kasane.setAccent("ai")` (adds the recolour motion) |
 
 ---
 
@@ -497,6 +650,7 @@ Before you hand over UI, confirm every item.
 - [ ] Readable with `data-theme="dark"` and with other `data-accent` values
 - [ ] No light/dark toggle. No screen that asks users to pick a colour first
 - [ ] No horizontal scroll at 375px wide
+- [ ] Navigation uses `.k-header` `.k-sidebar` `.k-nav`; under 900px it opens from the menu button and Esc closes it
 - [ ] Images processed with `kasane-image` (AVIF / WebP, SSIM ≥ 0.99, `width` `height` `alt`)
 - [ ] `kasane-lighthouse` minimums met (performance 90, accessibility 100, best practices 95, SEO 90)
 
@@ -508,8 +662,8 @@ Combinations:
 
 | Width | Theme | Palette |
 |---|---|---|
-| 1280px | Light | Yamabuki (`yamabuki`) |
-| 1280px | Dark | Yamabuki (`yamabuki`) |
+| 1280px | Light | Hidamari (`hidamari`) |
+| 1280px | Dark | Hidamari (`hidamari`) |
 | 375px | Light | Ai (`ai`) |
 | 375px | Dark | Sumi (`sumi`) |
 
@@ -531,7 +685,7 @@ Playwright example:
 // npx playwright install chromium, then node shot.mjs
 import { chromium } from "playwright";
 const url = "http://localhost:3000/users";   // the screen you built
-const cases = [[1280, "light", "yamabuki"], [1280, "dark", "yamabuki"], [375, "light", "ai"], [375, "dark", "sumi"]];
+const cases = [[1280, "light", "hidamari"], [1280, "dark", "hidamari"], [375, "light", "ai"], [375, "dark", "sumi"]];
 const browser = await chromium.launch();
 for (const [width, theme, accent] of cases) {
   const page = await browser.newPage({ viewport: { width, height: 900 } });
@@ -590,6 +744,7 @@ npx kasane-check "src/**/*.html"
 | `kasane/lucide-icon` | Lucide names that do not exist, non-Lucide icons inside components |
 | `kasane/dialog-label` | `role="dialog"` without a name |
 | `kasane/tab-aria` | `role="tab"` without `aria-selected` or `aria-controls` |
+| `kasane/menu-button` | `k-menu-btn` without `aria-controls` or `aria-expanded` |
 | `kasane/img-alt` | `<img>` without `alt` (decorative images use `alt=""`) |
 | `kasane/img-size` | `<img>` without `width` and `height` |
 | `kasane/img-format` | JPEG, PNG or GIF used directly (no AVIF / WebP via `<picture>`) |
@@ -642,7 +797,7 @@ For each width and format, `kasane-image` picks the lowest quality with SSIM ≥
 
 ### Other
 
-- Load the font CSS without blocking: `<link rel="stylesheet" href="{{BASE}}/fonts/line-seed-jp.css" media="print" onload="this.media='all'">` (plus a normal `<link>` in `<noscript>`)
+- Load the font CSS without blocking: `<link rel="stylesheet" href="{{FONTS}}/line-seed-jp.css" media="print" onload="this.media='all'">` (plus a normal `<link>` in `<noscript>`)
 - Loading, empty and error states use the same space; never insert components above content later
 - Use `kasane.min.css` in production. Add `defer` to JavaScript
 
@@ -650,7 +805,7 @@ For each width and format, `kasane-image` picks the lowest quality with SSIM ≥
 
 ## 14. Embedding in a product
 
-With Kasane, the designer can set the colour and users can change it. Decide these two things first. If the request does not say, build with yamabuki as the default and no user choice, and say so in your report.
+With Kasane, the designer can set the colour and users can change it. Decide these two things first. If the request does not say, build with hidamari as the default and no user choice, and say so in your report.
 
 | Decision | How |
 |---|---|
@@ -663,7 +818,7 @@ With Kasane, the designer can set the colour and users can change it. Decide the
 |---|---|
 | The brand has a colour | The palette closest to its hue |
 | Trust, calm (booking, finance, health…) | `ai` `sora` |
-| Bright, friendly (learning, everyday life…) | `yamabuki` `tachibana` `moegi` |
+| Bright, friendly (learning, everyday life…) | `hidamari` `tachibana` `moegi` |
 | Gentle, social (communities…) | `kobai` `fuji` |
 | Focus on information (business tools, admin) | `sumi` |
 
@@ -680,11 +835,11 @@ With Kasane, the designer can set the colour and users can change it. Decide the
 
 ### Saving the choice
 
-Put the script from "1. Loading" in `<head>`. Connect the picker with this JavaScript.
+Put the script from "1. Loading" in `<head>`. With `kasane.js` loaded, placing a `.k-palette` is enough: it applies and saves the choice and runs the recolour motion. Without `kasane.js`, connect the picker with this JavaScript.
 
 ```js
 const root = document.documentElement;
-const current = root.dataset.accent || "yamabuki";
+const current = root.dataset.accent || "hidamari";
 document.querySelectorAll('.k-palette input[name="accent"]').forEach((radio) => {
   radio.checked = radio.value === current;
   radio.addEventListener("change", () => {
@@ -712,7 +867,7 @@ When one product ships in several languages, do the following. If the request do
 | Width | No fixed widths on buttons or labels. Also screenshot the language with the longest text |
 | Fonts | LINE Seed JP covers Japanese and Latin. For other scripts, add a font for that language only, as in `:root:lang(ko) { --font-body: … }` |
 | Numbers and dates | Pass the page language to `Intl.DateTimeFormat` / `Intl.NumberFormat`. Use `.k-num` in columns |
-| Right-to-left languages | Not checked in v1. If needed, check that mirrored screens hold up, and report |
+| Right-to-left languages | Not checked yet. If needed, check that mirrored screens hold up, and report |
 
 ```html
 <html lang="ja">

@@ -16,7 +16,7 @@
   "scripts": {
     "build": "node tools/gen.cjs && python3 tools/build_site.py",
     "test": "node test/run.js",
-    "dist": "rm -rf dist && mkdir dist && cp -r site/. dist/ && cp -r llms.txt _headers LICENSE v1 dist/ && npm pack ./lint --pack-destination dist/v1 --silent",
+    "dist": "rm -rf dist && mkdir dist && cp -r site/. dist/ && cp -r llms.txt _headers LICENSE v1 v2 dist/ && npm pack ./lint --pack-destination dist/v2 --silent",
     "lighthouse": "node tools/lighthouse-site.mjs",
     "fonts": "python3 tools/fonts.py",
     "icons": "python3 tools/icons.py"

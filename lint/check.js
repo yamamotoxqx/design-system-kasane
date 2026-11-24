@@ -21,6 +21,7 @@ export const RULES = {
   'lucide-icon': 'アイコンは Lucide から取ってきて貼ってください(class="lucide lucide-名前" を残す)。',
   'dialog-label': 'role="dialog" には aria-labelledby(見出しの id)か aria-label が必要です。',
   'tab-aria': 'role="tab" には aria-selected と aria-controls が必要です。',
+  'menu-button': 'k-menu-btn には aria-controls(開くサイドバーの id)と aria-expanded が必要です。',
   'img-alt': '<img> には alt を付けてください(飾りの画像なら alt="")。',
   'img-size': '<img> には width と height を付けてください(読み込み中に画面がずれるのを防ぎます)。',
   'img-format': 'JPEG・PNG・GIF をそのまま使わず、kasane-image で AVIF / WebP に軽量化して <picture> で出してください(GIF のアニメーションは動画にします)。',
@@ -128,6 +129,8 @@ export function checkHtml(src) {
         && find(el.parent.children, (e) => e.name === 'source' && /image\/(?:avif|webp)/.test(attr(e, 'type') || '')).length;
       if (legacy && !pic) report('img-format', el);
     }
+    // menu-button
+    if (c.includes('k-menu-btn') && (attr(el, 'aria-controls') === undefined || attr(el, 'aria-expanded') === undefined)) report('menu-button', el);
     // tab-aria
     if (attr(el, 'role') === 'tab' && (attr(el, 'aria-selected') === undefined || attr(el, 'aria-controls') === undefined)) report('tab-aria', el);
   }

@@ -37,3 +37,19 @@
   Cache-Control: public, max-age=86400
 /og.png
   Cache-Control: public, max-age=86400
+# v2 (v1 above stays as released)
+/v2/*
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=3600
+/v2/kasane.css
+  Content-Type: text/css; charset=utf-8
+/v2/kasane.min.css
+  Content-Type: text/css; charset=utf-8
+/v2/kasane.js
+  Content-Type: text/javascript; charset=utf-8
+/v2/tokens.json
+  Content-Type: application/json; charset=utf-8
+/v2/kasane.md
+  Content-Type: text/markdown; charset=utf-8
+/v2/kasane.en.md
+  Content-Type: text/markdown; charset=utf-8
