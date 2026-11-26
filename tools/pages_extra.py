@@ -401,7 +401,8 @@ page('integrate', 'Kasane は、色をデザイナーが決めることも、利
       + '<div class="ex"><div class="ex-demo ex-stack"><div class="demo-footer wide"><span>© 2026 サンプル</span>' + palette_html(name='accent-footer', compact=True, legend='テーマカラー') + '</div></div>'
       + code('HTML', palette_src(compact=True)) + '</div>')
   + sec('選んだ色を保存する', '<p>選択を <code>&lt;html data-accent&gt;</code> と保存につなぐ JavaScript です。設定ページでもページ下部でも同じです。</p>'
-      + code('JavaScript', PICKER_JS))
+      + code('JavaScript', PICKER_JS)
+      + '<p>色を変えたことや保存したことは、トースト(「色を変更しました」「保存しました」など)で知らせません。画面が上から塗り替わるだけで、変わったことは伝わります。</p>')
   + sec('使い方', dd('<div class="stack" style="font-size:14px"><span>開いたらすぐ既定の色</span><span class="k-badge k-badge-accent">設定 › 表示 › テーマカラー</span></div>', '既定の色ですぐに始め、変えたい人は設定から変えられます。',
                     '<div class="stack" style="font-size:14px"><span>開くたびに「色を選んでください」</span><span class="k-badge">どの画面にも色の切り替え</span></div>', '最初に色を選ばせたり、色の切り替えをあちこちに置いたりしません。'))
   + sec('AI に伝えるとき', '<p>AI に作ってもらうときは、既定の色と、色を変えられるかどうかを最初に伝えます。</p>'

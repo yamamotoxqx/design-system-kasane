@@ -1267,5 +1267,8 @@
  "同じもので重要性の低いものはまとめる": "Merge repeats of low-importance toasts",
  "失敗でも操作付きでもない同じ内容のトーストが続くときは、新しく並べずに画面に出ているものへまとめます。「×2」のように回数を添え、時間を数え直します。「保存の結果」を続けて押すと試せます。": "When the same toast comes again and it is neither a failure nor has an action, it is merged into the one on screen instead of stacking. It shows the count, such as “×2”, and its timer starts over. Press “Saved result” a few times to try it.",
  "同じトーストをまとめる": "Merging repeated toasts",
- "同じ内容で重要性の低いトーストが続くときは、1つにまとめて「×2」のように回数を出すようにしました。<a href=\"/en/dialog/\">ダイアログとトースト</a>": "Repeats of the same low-importance toast are now merged into one with a count such as “×2”. <a href=\"/en/dialog/\">Dialogs and toasts</a>"
+ "同じ内容で重要性の低いトーストが続くときは、1つにまとめて「×2」のように回数を出すようにしました。<a href=\"/en/dialog/\">ダイアログとトースト</a>": "Repeats of the same low-importance toast are now merged into one with a count such as “×2”. <a href=\"/en/dialog/\">Dialogs and toasts</a>",
+ "色を変えたことや保存したことは、トースト(「色を変更しました」「保存しました」など)で知らせません。画面が上から塗り替わるだけで、変わったことは伝わります。": "Do not announce that the colour changed or was saved with a toast (“Colour changed”, “Saved” and the like). The screen repainting from the top already shows the change.",
+ "色の変更は知らせない": "Do not announce colour changes",
+ "色を変えたことや保存したことは、トーストにしません。画面が塗り替わるだけで伝わります。": "Changing or saving the colour gets no toast. The repainted screen already says so."
 }

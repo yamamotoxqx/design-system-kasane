@@ -893,6 +893,8 @@ document.querySelectorAll('.k-palette input[name="accent"]').forEach((radio) => 
 
 In products with sign-in, also save the choice as a user setting on the server and write it into `data-accent` when serving HTML, so it follows the user across devices.
 
+Do not announce that the colour changed or was saved with a toast ("Colour changed", "Saved" and the like). The repainted screen already says so.
+
 ---
 
 ## 15. Supporting multiple languages
