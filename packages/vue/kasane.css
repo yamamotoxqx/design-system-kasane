@@ -1007,6 +1007,49 @@ svg.lucide { flex: none; stroke-width: 2.5; }
 .k-breadcrumb a:hover { color: var(--ink); text-decoration: underline; }
 .k-breadcrumb [aria-current="page"] { color: var(--ink); font-weight: 700; }
 
+/* Avatar and account */
+/* Avatar: a photo, or the first letter of the name */
+.k-avatar {
+  display: inline-grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 50%;
+  overflow: hidden; object-fit: cover; background: var(--accent-soft); color: var(--accent-ink);
+  font-weight: 800; font-size: 15px; line-height: 1; user-select: none;
+}
+.k-avatar-sm { width: 28px; height: 28px; font-size: 13px; }
+.k-avatar-lg { width: 64px; height: 64px; font-size: 26px; }
+
+/* Account: one button at the right end of the header; it opens a panel from the right */
+.k-account-btn {
+  display: grid; place-items: center; flex: none; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%;
+  background: transparent; cursor: pointer; transition: background-color var(--motion-fast);
+}
+.k-account-btn:hover { background: var(--surface-2); }
+.k-account {
+  position: fixed; z-index: 40; top: 0; right: 0; bottom: 0;
+  display: flex; flex-direction: column; gap: var(--space-4);
+  width: min(92vw, 360px); overflow-y: auto; padding: var(--space-4) var(--space-4) var(--space-6);
+  border-radius: var(--r-lg) 0 0 var(--r-lg); background: var(--surface);
+  transform: translateX(100%); visibility: hidden;
+}
+/* opens with a slide, closes at once */
+.k-account[data-open] { transform: none; visibility: visible; transition: transform var(--motion-base) var(--ease-out); }
+.k-account-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--space-3); }
+.k-account-name { margin: 0; font-weight: 800; line-height: 1.5; overflow-wrap: anywhere; }
+.k-account-email { margin: 0; font-size: var(--text-sm); color: var(--muted); line-height: 1.5; overflow-wrap: anywhere; }
+.k-account-title { margin: 0; font-size: var(--text-xs); font-weight: 700; color: var(--muted); }
+.k-account-list { display: flex; flex-direction: column; gap: var(--space-1); margin: 0; padding: 0; list-style: none; }
+.k-account-item {
+  display: flex; align-items: center; gap: var(--space-3); width: 100%; min-height: 60px; padding: var(--space-2) var(--space-3);
+  border: 0; border-radius: var(--r-md); background: var(--surface-2); color: var(--ink); font: inherit; text-align: left; cursor: pointer;
+  transition: background-color var(--motion-fast);
+}
+.k-account-item:hover { background: var(--surface-3); }
+.k-account-item > span:last-child { display: flex; flex-direction: column; min-width: 0; }
+.k-account-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.k-account-links { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-4); margin-top: auto; }
+.k-account-links a { color: var(--muted); font-size: var(--text-xs); font-weight: 700; text-decoration: none; }
+.k-account-links a:hover { color: var(--ink); text-decoration: underline; }
+@media (prefers-reduced-motion: reduce) { .k-account[data-open], .k-account-btn, .k-account-item { transition: none; } }
+
 /* Table */
 .k-table-wrap { overflow-x: auto; }
 .k-table { width: 100%; border-collapse: separate; border-spacing: 0 var(--space-1); font-size: 15px; }

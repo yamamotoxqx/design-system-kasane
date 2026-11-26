@@ -33,6 +33,8 @@ export declare const KFooter: C;
 export declare const KTable: C;
 export declare const KEmpty: C;
 export declare const KSkeleton: C;
+export declare const KAvatar: C;
+export declare const KAccount: C;
 export declare function useAccent(): { accent: Ref<string>; setAccent: (id: string, options?: { save?: boolean; animate?: boolean }) => void };
 export declare function useToast(): (message: string, options?: ToastOptions) => { close(): void };
 declare const Kasane: { install(app: App): void };

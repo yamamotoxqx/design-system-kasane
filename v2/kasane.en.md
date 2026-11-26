@@ -66,6 +66,7 @@ If the user's instructions conflict with a Kasane rule, follow the instructions 
 | `.k-seg[role="tablist"]` | Switches panels on click and with the arrow keys |
 | `.k-palette` | Applies and saves the chosen colour. The new colour flows down from the top |
 | `[data-k-toast="text"]` | Shows a toast when pressed (`data-k-toast-type="ok"` etc. for the kind) |
+| `.k-account-btn[aria-controls]` | Opens the account panel (`.k-account`) from the right |
 
 To change the colour from JavaScript, call `Kasane.setAccent("ai")`; for a toast, `Kasane.toast("Saved", { type: "ok" })`. Writing `data-accent` yourself skips the recolour motion.
 
@@ -519,6 +520,49 @@ Use it when there are three or more levels, at the top of the main content. The 
 
 Products without a settings page put the colour picker (`.k-palette-compact`) in the footer.
 
+### Account
+
+Products with sign-in put one avatar button at the right end of the header; it opens the account panel from the right.
+
+```html
+<!-- At the right end of the header -->
+<button class="k-account-btn" type="button" aria-label="Account: Yui Aoki" aria-expanded="false" aria-controls="account">
+  <span class="k-avatar" aria-hidden="true">Y</span>
+</button>
+
+<div class="k-drawer-scrim" hidden></div>
+<div class="k-account" id="account" role="dialog" aria-modal="true" aria-label="Account">
+  <div class="k-account-head">
+    <span class="k-avatar k-avatar-lg" aria-hidden="true">Y</span>
+    <div>
+      <p class="k-account-name">Yui Aoki</p>
+      <p class="k-account-email">yui.aoki@example.com</p>
+    </div>
+    <button class="k-btn k-btn-quiet k-btn-icon" type="button" aria-label="Close" data-k-close><svg …(x)></svg></button>
+  </div>
+  <a class="k-btn" href="/account/">Manage account</a>
+  <p class="k-account-title">Other accounts</p>
+  <ul class="k-account-list">
+    <li><button class="k-account-item" type="button"><span class="k-avatar" aria-hidden="true">C</span><span><span class="k-account-name">Circle (shared)</span><span class="k-account-email">circle@example.com</span></span></button></li>
+  </ul>
+  <div class="k-account-actions">
+    <button class="k-btn k-btn-quiet" type="button"><svg …(user-plus)></svg>Add account</button>
+    <button class="k-btn k-btn-quiet" type="button"><svg …(log-out)></svg>Sign out</button>
+  </div>
+  <nav class="k-account-links" aria-label="Legal"><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></nav>
+</div>
+
+<!-- Signed out: instead of the avatar -->
+<a class="k-btn" href="/login/">Sign in</a>
+```
+
+- **Do not build a menu that floats under the avatar.** The panel comes in from the right at every width (it slides in over 220ms when opening and disappears at once when closing). Esc, the dark backdrop and `data-k-close` close it (`kasane.js` does this).
+- The order is fixed: the current account (large avatar, name, email) → "Manage account" → other accounts (only with two or more; pressing one switches and reloads) → "Add account" and "Sign out" → legal links.
+- The avatar is a photo or the first letter of the name. Name the button with `aria-label`; the avatar itself is not read aloud (`alt=""` or `aria-hidden`).
+- Never shorten the email address; let it wrap.
+- Sign out is not red and asks for no confirmation (confirm only when unsaved work would be lost). Switching and signing out get no toast.
+- When signed out, "Sign in" is an ordinary button (not the primary one).
+
 ### Table
 
 ```html
@@ -671,6 +715,7 @@ Example: calendar days
 | Spinners or shimmering skeletons while loading | `.k-skeleton` (still) |
 | Changing colour with `root.dataset.accent = "ai"` | `Kasane.setAccent("ai")` (adds the recolour motion) |
 | A home-made date-picking calendar | `<input class="k-input" type="date">` |
+| An account menu floating under the avatar | `.k-account-btn` and `.k-account` (a panel from the right) |
 | A home-made toast with `setTimeout` | `Kasane.toast()` (pausing, closing and announcing are built in) |
 | Hand-writing `.k-` HTML in React or Vue | The `kasane-react` / `kasane-vue` components |
 
@@ -746,7 +791,7 @@ await browser.close();
 `kasane-lint` checks many rules mechanically: Stylelint for CSS, `kasane-check` for HTML.
 
 ```bash
-npm install --save-dev stylelint https://kasane.y-n0.de/v2/kasane-lint-2.1.0.tgz
+npm install --save-dev stylelint https://kasane.y-n0.de/v2/kasane-lint-2.2.0.tgz
 ```
 
 ```json
@@ -786,7 +831,7 @@ npx kasane-check "src/**/*.html"
 | `kasane/lucide-icon` | Lucide names that do not exist, non-Lucide icons inside components |
 | `kasane/dialog-label` | `role="dialog"` without a name |
 | `kasane/tab-aria` | `role="tab"` without `aria-selected` or `aria-controls` |
-| `kasane/menu-button` | `k-menu-btn` without `aria-controls` or `aria-expanded` |
+| `kasane/menu-button` | `k-menu-btn` or `k-account-btn` without `aria-controls` or `aria-expanded` |
 | `kasane/img-alt` | `<img>` without `alt` (decorative images use `alt=""`) |
 | `kasane/img-size` | `<img>` without `width` and `height` |
 | `kasane/img-format` | JPEG, PNG or GIF used directly (no AVIF / WebP via `<picture>`) |
@@ -932,8 +977,8 @@ When one product ships in several languages, do the following. If the request do
 In React and Vue, do not hand-write `.k-` HTML: use the component packages. They render the same HTML as this spec.
 
 ```bash
-npm install https://kasane.y-n0.de/v2/kasane-react-2.0.1.tgz   # React 18 or later
-npm install https://kasane.y-n0.de/v2/kasane-vue-2.0.1.tgz     # Vue 3.5 or later
+npm install https://kasane.y-n0.de/v2/kasane-react-2.1.0.tgz   # React 18 or later
+npm install https://kasane.y-n0.de/v2/kasane-vue-2.1.0.tgz     # Vue 3.5 or later
 ```
 
 ```jsx
@@ -970,9 +1015,10 @@ import "kasane-react/kasane.css";
 | `AppShell` `NavGroup` `NavLink` `Breadcrumb` `Footer` | `KAppShell` `KNavGroup` `KNavLink` `KBreadcrumb` `KFooter` | `.k-app` `.k-sidebar` `.k-nav` `.k-breadcrumb` `.k-footer` |
 | `Table` | `KTable` | `.k-table` |
 | `Empty` `Skeleton` | `KEmpty` `KSkeleton` | `.k-empty` `.k-skeleton` |
+| `Avatar` `Account` | `KAvatar` `KAccount` | `.k-avatar` `.k-account` |
 
 - Fields given `label`, `hint` and `error` get `aria-describedby` and `aria-invalid`. Use `value` and `onChange` in React, `v-model` in Vue.
-- Icons: pass a `lucide-react` / `lucide-vue-next` component as `icon`. `check` `circle-alert` `info` `x` `menu` `search` also work by name.
+- Icons: pass a `lucide-react` / `lucide-vue-next` component as `icon`. `check` `circle-alert` `info` `x` `menu` `search` `user-plus` `log-out` also work by name.
 - Router links: pass `Link` (Next.js) or `RouterLink` (Vue Router) as `as` on `NavLink` / `KNavLink`.
 - Load the fonts and put the `<head>` script that applies the saved colour before paint as in "1. Loading". Pass `lang="en"` to get English labels for the menu, breadcrumb and loading text.
 - For anything missing, follow "8. Building a component Kasane does not have".

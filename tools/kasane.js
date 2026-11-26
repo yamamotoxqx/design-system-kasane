@@ -17,7 +17,7 @@
     if (opts.animate === false) apply(); else recolor(apply);
   }
 
-  /* ---------- Menu drawer: .k-menu-btn[aria-controls] opens .k-sidebar (under 900px) ---------- */
+  /* ---------- Drawers: .k-menu-btn opens .k-sidebar (under 900px), .k-account-btn opens .k-account ---------- */
   var openDrawer = null;
   function scrimFor() {
     var s = document.querySelector('.k-drawer-scrim');
@@ -41,7 +41,8 @@
   }
   function closeDrawer() { if (openDrawer) drawer(openDrawer.btn, false); }
   var wide = window.matchMedia ? window.matchMedia('(min-width: 900px)') : null;
-  if (wide) (wide.addEventListener ? wide.addEventListener('change', function (e) { if (e.matches) closeDrawer(); }) : wide.addListener(function (e) { if (e.matches) closeDrawer(); }));
+  function onWide(e) { if (e.matches && openDrawer && openDrawer.btn.classList.contains('k-menu-btn')) closeDrawer(); }
+  if (wide) (wide.addEventListener ? wide.addEventListener('change', onWide) : wide.addListener(onWide));
 
   /* ---------- Dialog: [data-k-dialog="id"] opens the .k-scrim with that id ---------- */
   var dialogs = [];
@@ -72,8 +73,8 @@
   /* ---------- Events ---------- */
   document.addEventListener('click', function (e) {
     var t = e.target;
-    var menu = t.closest('.k-menu-btn[aria-controls]');
-    if (menu) { drawer(menu, menu.getAttribute('aria-expanded') !== 'true'); return; }
+    var menu = t.closest('.k-menu-btn[aria-controls], .k-account-btn[aria-controls]');
+    if (menu) { if (openDrawer && openDrawer.btn !== menu) closeDrawer(); drawer(menu, menu.getAttribute('aria-expanded') !== 'true'); return; }
     if (openDrawer && (t.closest('.k-drawer-scrim') || t.closest('[data-k-close]') && openDrawer.side.contains(t))) { closeDrawer(); return; }
     if (openDrawer && t.closest('a[href]') && openDrawer.side.contains(t)) { closeDrawer(); return; }
     var opener = t.closest('[data-k-dialog]');

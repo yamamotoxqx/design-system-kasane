@@ -9,5 +9,5 @@ Before building UI, read one of the specs below to the end. The English edition 
 - [kasane.css](https://kasane.y-n0.de/v2/kasane.css): all tokens and component CSS
 - [tokens.json](https://kasane.y-n0.de/v2/tokens.json): token values (W3C Design Tokens format)
 - [kasane.js](https://kasane.y-n0.de/v2/kasane.js): optional script for the menu, dialogs, tabs, toasts and the palette
-- [kasane-react](https://kasane.y-n0.de/v2/kasane-react-2.0.1.tgz) / [kasane-vue](https://kasane.y-n0.de/v2/kasane-vue-2.0.1.tgz): the components for React and Vue (npm install the URL); see section 16 of the spec
+- [kasane-react](https://kasane.y-n0.de/v2/kasane-react-2.1.0.tgz) / [kasane-vue](https://kasane.y-n0.de/v2/kasane-vue-2.1.0.tgz): the components for React and Vue (npm install the URL); see section 16 of the spec
 - [Source](https://github.com/yamamotoxqx/design-system-kasane): GitHub repository (MIT License)

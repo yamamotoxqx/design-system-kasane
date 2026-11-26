@@ -368,6 +368,48 @@ CSS['layout'] = '''/* Header, sidebar, main panel and footer. Under 900px the si
 
 .k-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }'''
 
+CSS['account'] = '''/* Avatar: a photo, or the first letter of the name */
+.k-avatar {
+  display: inline-grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 50%;
+  overflow: hidden; object-fit: cover; background: var(--accent-soft); color: var(--accent-ink);
+  font-weight: 800; font-size: 15px; line-height: 1; user-select: none;
+}
+.k-avatar-sm { width: 28px; height: 28px; font-size: 13px; }
+.k-avatar-lg { width: 64px; height: 64px; font-size: 26px; }
+
+/* Account: one button at the right end of the header; it opens a panel from the right */
+.k-account-btn {
+  display: grid; place-items: center; flex: none; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%;
+  background: transparent; cursor: pointer; transition: background-color var(--motion-fast);
+}
+.k-account-btn:hover { background: var(--surface-2); }
+.k-account {
+  position: fixed; z-index: 40; top: 0; right: 0; bottom: 0;
+  display: flex; flex-direction: column; gap: var(--space-4);
+  width: min(92vw, 360px); overflow-y: auto; padding: var(--space-4) var(--space-4) var(--space-6);
+  border-radius: var(--r-lg) 0 0 var(--r-lg); background: var(--surface);
+  transform: translateX(100%); visibility: hidden;
+}
+/* opens with a slide, closes at once */
+.k-account[data-open] { transform: none; visibility: visible; transition: transform var(--motion-base) var(--ease-out); }
+.k-account-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--space-3); }
+.k-account-name { margin: 0; font-weight: 800; line-height: 1.5; overflow-wrap: anywhere; }
+.k-account-email { margin: 0; font-size: var(--text-sm); color: var(--muted); line-height: 1.5; overflow-wrap: anywhere; }
+.k-account-title { margin: 0; font-size: var(--text-xs); font-weight: 700; color: var(--muted); }
+.k-account-list { display: flex; flex-direction: column; gap: var(--space-1); margin: 0; padding: 0; list-style: none; }
+.k-account-item {
+  display: flex; align-items: center; gap: var(--space-3); width: 100%; min-height: 60px; padding: var(--space-2) var(--space-3);
+  border: 0; border-radius: var(--r-md); background: var(--surface-2); color: var(--ink); font: inherit; text-align: left; cursor: pointer;
+  transition: background-color var(--motion-fast);
+}
+.k-account-item:hover { background: var(--surface-3); }
+.k-account-item > span:last-child { display: flex; flex-direction: column; min-width: 0; }
+.k-account-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.k-account-links { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-4); margin-top: auto; }
+.k-account-links a { color: var(--muted); font-size: var(--text-xs); font-weight: 700; text-decoration: none; }
+.k-account-links a:hover { color: var(--ink); text-decoration: underline; }
+@media (prefers-reduced-motion: reduce) { .k-account[data-open], .k-account-btn, .k-account-item { transition: none; } }'''
+
 CSS['nav'] = '''.k-nav { display: flex; flex-direction: column; gap: 2px; }
 .k-nav-title { margin: 0; padding: 0 var(--space-3) var(--space-1); font-size: var(--text-xs); font-weight: 700; color: var(--muted); }
 .k-nav-link {
@@ -449,7 +491,7 @@ def _palette_css():
     return '\n'.join(rules)
 CSS['palette'] = _palette_css()
 
-COMPONENTS_CSS = BASE_CSS + '\n\n/* Every Kasane part measures its width with padding and border included */\n[class^="k-"], [class*=" k-"] { box-sizing: border-box; }\n\n/* Button */\n' + CSS['button'] + '\n\n/* Input, checkbox, switch */\n' + CSS['input'] + '\n\n/* Card and list */\n' + CSS['card'] + '\n\n/* Badge */\n' + CSS['badge'] + '\n\n/* Segmented control, tabs */\n' + CSS['tabs'] + '\n\n/* Progress bar */\n' + CSS['progress'] + '\n\n/* Dialog and toast */\n' + CSS['dialog'] + '\n\n/* Layout: header, menu button, sidebar / drawer, footer */\n' + CSS['layout'] + '\n\n/* Navigation and breadcrumb */\n' + CSS['nav'] + '\n\n/* Table */\n' + CSS['table'] + '\n\n/* Empty state and skeleton */\n' + CSS['empty'] + '\n\n/* Palette picker */\n' + CSS['palette'] + '\n\n' + CSS['motion'] + '\n'
+COMPONENTS_CSS = BASE_CSS + '\n\n/* Every Kasane part measures its width with padding and border included */\n[class^="k-"], [class*=" k-"] { box-sizing: border-box; }\n\n/* Button */\n' + CSS['button'] + '\n\n/* Input, checkbox, switch */\n' + CSS['input'] + '\n\n/* Card and list */\n' + CSS['card'] + '\n\n/* Badge */\n' + CSS['badge'] + '\n\n/* Segmented control, tabs */\n' + CSS['tabs'] + '\n\n/* Progress bar */\n' + CSS['progress'] + '\n\n/* Dialog and toast */\n' + CSS['dialog'] + '\n\n/* Layout: header, menu button, sidebar / drawer, footer */\n' + CSS['layout'] + '\n\n/* Navigation and breadcrumb */\n' + CSS['nav'] + '\n\n/* Avatar and account */\n' + CSS['account'] + '\n\n/* Table */\n' + CSS['table'] + '\n\n/* Empty state and skeleton */\n' + CSS['empty'] + '\n\n/* Palette picker */\n' + CSS['palette'] + '\n\n' + CSS['motion'] + '\n'
 
 # ---------------------------------------------------------------- distributable files
 HEADER = '/*! Kasane %s — design tokens and components. Docs: index.html / kasane.md */\n' % VERSION
@@ -467,7 +509,7 @@ CHARSET = '@charset "UTF-8";\n'
 open(os.path.join(ROOT, VERSION, 'kasane.css'), 'w', encoding='utf-8').write(CHARSET + FULL_CSS)
 open(os.path.join(ROOT, VERSION, 'kasane.min.css'), 'w', encoding='utf-8').write(CHARSET + minify(FULL_CSS))
 PKG_VERSION = json.load(open(os.path.join(ROOT, 'packages', 'react', 'package.json'), encoding='utf-8'))['version']
-CORE_ICONS = ['check', 'circle-alert', 'info', 'x', 'menu', 'search']
+CORE_ICONS = ['check', 'circle-alert', 'info', 'x', 'menu', 'search', 'user-plus', 'log-out']
 def lucide_children(name):
     """A Lucide icon's shapes as [[tag, {attr: value}], ...] for the core and the React / Vue packages."""
     svg = re.sub(r'<!--.*?-->', '', open(os.path.join(LUCIDE_DIR, name + '.svg'), encoding='utf-8').read(), flags=re.S)
@@ -579,7 +621,7 @@ NAV = [
     ('intro', 'はじめに', [('about', 'Kasane とは'), ('start', '使い始める'), ('integrate', '組み込み方と使用例'), ('with-ai', 'AI と使う'), ('frameworks', 'React と Vue'), ('updates', '更新情報'), ('migrate', 'v1 から v2 へ')]),
     ('principle', '原則', [('principles', 'デザイン原則'), ('accessibility', 'アクセシビリティ'), ('performance', 'パフォーマンス'), ('writing', '文章'), ('i18n', '多言語対応')]),
     ('style', 'スタイル', [('color', 'カラー'), ('typography', 'タイポグラフィ'), ('shape', '角丸と余白'), ('layout', 'レイアウト'), ('icons', 'アイコン'), ('motion', '動き')]),
-    ('component', 'コンポーネント', [('button', 'ボタン'), ('input', '入力欄'), ('card', 'カードとリスト'), ('badge', 'バッジ'), ('tabs', 'タブ'), ('progress', '進捗バー'), ('dialog', 'ダイアログとトースト'), ('navigation', 'ヘッダーとメニュー'), ('table', '表'), ('empty', '空の状態と読み込み中')]),
+    ('component', 'コンポーネント', [('button', 'ボタン'), ('input', '入力欄'), ('card', 'カードとリスト'), ('badge', 'バッジ'), ('tabs', 'タブ'), ('progress', '進捗バー'), ('dialog', 'ダイアログとトースト'), ('navigation', 'ヘッダーとメニュー'), ('account', 'アカウント'), ('table', '表'), ('empty', '空の状態と読み込み中')]),
 ]
 SEC_OF = {pid: label for _, label, pages in NAV for pid, _ in pages}
 TITLE_OF = {pid: t for _, _, pages in NAV for pid, t in pages}
@@ -633,6 +675,7 @@ SITEMAP_DESC = {
     'updates': 'Kasane の変更の記録',
     'migrate': 'v1 から v2 に移るときに変えるところ',
     'frameworks': 'React と Vue で Kasane の部品を使う',
+    'account': 'アカウントの表示、切り替え、ログアウト',
     'principle': '設計の考え方、アクセシビリティ、パフォーマンス、文章の書き方',
     'style': 'カラー、タイポグラフィ、角丸と余白、レイアウト、アイコン、動き',
     'component': '部品の見本とサンプルコード',

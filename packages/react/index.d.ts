@@ -5,7 +5,7 @@ import type { ToastOptions } from './core.js';
 type Icon = string | React.ReactNode;
 type Div = React.HTMLAttributes<HTMLDivElement>;
 
-export declare function Icon(props: { name: 'check' | 'circle-alert' | 'info' | 'x' | 'menu' | 'search'; className?: string }): React.ReactElement | null;
+export declare function Icon(props: { name: 'check' | 'circle-alert' | 'info' | 'x' | 'menu' | 'search' | 'user-plus' | 'log-out'; className?: string }): React.ReactElement | null;
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'quiet' | 'danger';
@@ -80,6 +80,21 @@ export declare function NavGroup(props: { title?: React.ReactNode; className?: s
 export declare function NavLink(props: React.AnchorHTMLAttributes<HTMLAnchorElement> & { as?: React.ElementType; current?: boolean; icon?: Icon; badge?: React.ReactNode; [key: string]: unknown }): React.ReactElement;
 export declare function Breadcrumb(props: { items: { label: React.ReactNode; href?: string }[]; label?: string; lang?: 'ja' | 'en'; linkAs?: React.ElementType }): React.ReactElement;
 export declare function Footer(props: { links?: { label: React.ReactNode; href: string }[]; linksLabel?: string; palette?: boolean; note?: React.ReactNode; lang?: 'ja' | 'en'; linkAs?: React.ElementType; className?: string; children?: React.ReactNode }): React.ReactElement;
+
+export interface AccountUser { name: string; email?: string; image?: string }
+export declare function Avatar(props: { name?: string; src?: string; size?: 'sm' | 'lg'; className?: string }): React.ReactElement;
+export declare function Account(props: {
+  user?: AccountUser | null;
+  accounts?: AccountUser[];
+  manageHref?: string;
+  onSwitch?: (account: AccountUser) => void;
+  onAdd?: () => void;
+  onLogout?: () => void;
+  links?: { label: React.ReactNode; href: string }[];
+  loginHref?: string;
+  onLogin?: () => void;
+  lang?: 'ja' | 'en';
+}): React.ReactElement;
 
 export interface Column<R> { key: string; label: React.ReactNode; numeric?: boolean; render?: (row: R) => React.ReactNode }
 export declare function Table<R extends Record<string, unknown>>(props: { caption?: React.ReactNode; label?: string; columns: Column<R>[]; rows: R[]; rowKey?: keyof R & string; className?: string }): React.ReactElement;

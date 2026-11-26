@@ -316,6 +316,61 @@ export function Footer(p) {
       p.note != null ? h('p', { className: 'k-footer-note' }, p.note) : null));
 }
 
+/* ---------- Avatar and account ---------- */
+var AVATAR_PX = { sm: 28, lg: 64 };
+function initial(name) { var t = (name || '').trim(); return t ? Array.from(t)[0].toUpperCase() : '?'; }
+/* <Avatar name="青木 ゆい" src? size="sm | lg" />. It is not read aloud: name the button that holds it. */
+export function Avatar(p) {
+  var cls = cx('k-avatar', p.size && 'k-avatar-' + p.size, p.className), px = AVATAR_PX[p.size] || 36;
+  return p.src ? h('img', { className: cls, src: p.src, alt: '', width: px, height: px })
+    : h('span', { className: cls, 'aria-hidden': 'true' }, initial(p.name));
+}
+/* <Account user={{ name, email, image }} accounts={[…]} manageHref="/account/" onSwitch onAdd onLogout links={[…]} />
+   Put it at the right end of the header (AppShell's actions). Without user it shows the sign-in button. */
+export function Account(p) {
+  var id = React.useId();
+  var st = React.useState(false), open = st[0], setOpen = st[1];
+  var btn = React.useRef(null), panel = React.useRef(null), wasOpen = React.useRef(false);
+  var en = p.lang === 'en';
+  React.useEffect(function () {
+    if (!open) { if (wasOpen.current && btn.current) btn.current.focus(); wasOpen.current = false; return; }
+    wasOpen.current = true;
+    var f = panel.current && focusables(panel.current)[0]; if (f) f.focus();
+    lockScroll(true);
+    function key(e) { if (e.key === 'Escape') setOpen(false); else trapFocus(e, panel.current); }
+    document.addEventListener('keydown', key);
+    return function () { document.removeEventListener('keydown', key); lockScroll(false); };
+  }, [open]);
+  if (!p.user) {
+    return p.loginHref ? h(Button, { href: p.loginHref }, en ? 'Sign in' : 'ログイン')
+      : h(Button, { onClick: p.onLogin }, en ? 'Sign in' : 'ログイン');
+  }
+  var u = p.user, others = p.accounts || [];
+  function close() { setOpen(false); }
+  return h(Fragment, null,
+    h('button', {
+      ref: btn, className: 'k-account-btn', type: 'button', 'aria-label': (en ? 'Account: ' : 'アカウント: ') + u.name,
+      'aria-expanded': String(open), 'aria-controls': id, onClick: function () { setOpen(!open); }
+    }, h(Avatar, { name: u.name, src: u.image })),
+    h('div', { className: 'k-drawer-scrim', hidden: !open, onClick: close }),
+    h('div', { ref: panel, className: 'k-account', id: id, role: 'dialog', 'aria-modal': 'true', 'aria-label': en ? 'Account' : 'アカウント', 'data-open': open ? '' : undefined },
+      h('div', { className: 'k-account-head' },
+        h(Avatar, { name: u.name, src: u.image, size: 'lg' }),
+        h('div', null, h('p', { className: 'k-account-name' }, u.name), u.email ? h('p', { className: 'k-account-email' }, u.email) : null),
+        h(Button, { variant: 'quiet', icon: 'x', 'aria-label': en ? 'Close' : '閉じる', 'data-k-close': '', onClick: close })),
+      p.manageHref ? h(Button, { href: p.manageHref }, en ? 'Manage account' : 'アカウントを管理') : null,
+      others.length ? h('p', { className: 'k-account-title' }, en ? 'Other accounts' : 'ほかのアカウント') : null,
+      others.length ? h('ul', { className: 'k-account-list' }, others.map(function (a, i) {
+        return h('li', { key: a.email || i }, h('button', { className: 'k-account-item', type: 'button', onClick: function () { close(); if (p.onSwitch) p.onSwitch(a); } },
+          h(Avatar, { name: a.name, src: a.image }),
+          h('span', null, h('span', { className: 'k-account-name' }, a.name), a.email ? h('span', { className: 'k-account-email' }, a.email) : null)));
+      })) : null,
+      p.onAdd || p.onLogout ? h('div', { className: 'k-account-actions' },
+        p.onAdd ? h(Button, { variant: 'quiet', icon: 'user-plus', onClick: function () { close(); p.onAdd(); } }, en ? 'Add account' : 'アカウントを追加') : null,
+        p.onLogout ? h(Button, { variant: 'quiet', icon: 'log-out', onClick: function () { close(); p.onLogout(); } }, en ? 'Sign out' : 'ログアウト') : null) : null,
+      p.links ? h('nav', { className: 'k-account-links', 'aria-label': en ? 'Legal' : '規約' }, p.links.map(function (l, i) { return h('a', { key: i, href: l.href }, l.label); })) : null));
+}
+
 /* ---------- Table, empty state, loading ---------- */
 /* columns: [{ key, label, numeric }]; rows: objects (render(row) for custom cells) */
 export function Table(p) {

@@ -234,6 +234,7 @@ FW_ROWS = [
     ['<code>AppShell</code> <code>NavGroup</code> <code>NavLink</code> <code>Breadcrumb</code> <code>Footer</code>', '<code>KAppShell</code> <code>KNavGroup</code> <code>KNavLink</code> <code>KBreadcrumb</code> <code>KFooter</code>', '<code>.k-app</code> <code>.k-header</code> <code>.k-sidebar</code> <code>.k-nav</code> <code>.k-breadcrumb</code> <code>.k-footer</code>'],
     ['<code>Table</code>', '<code>KTable</code>', '<code>.k-table</code>'],
     ['<code>Empty</code> <code>Skeleton</code>', '<code>KEmpty</code> <code>KSkeleton</code>', '<code>.k-empty</code> <code>.k-skeleton</code>'],
+    ['<code>Avatar</code> <code>Account</code>', '<code>KAvatar</code> <code>KAccount</code>', '<code>.k-avatar</code> <code>.k-account</code>'],
 ]
 
 page('frameworks', 'React と Vue で、Kasane の部品をそのまま使えます。出てくる HTML は仕様書と同じなので、見た目も自動チェックも変わりません。',
@@ -244,10 +245,89 @@ page('frameworks', 'React と Vue で、Kasane の部品をそのまま使えま
   + sec('Vue', '<p><code>app.use(Kasane)</code>(<code>import Kasane from "kasane-vue"</code>)で、すべての部品を登録することもできます。</p>' + code('Vue', VUE_SRC))
   + sec('部品の一覧', table(['React', 'Vue', 'HTML'], FW_ROWS))
   + sec('使い方', '<ul class="links">'
-        '<li><b>アイコンは lucide-react と lucide-vue-next</b><span><code>icon</code> に部品を渡します。Kasane が使う6つ(<code>check</code> <code>circle-alert</code> <code>info</code> <code>x</code> <code>menu</code> <code>search</code>)だけは名前でも書けます。</span></li>'
+        '<li><b>アイコンは lucide-react と lucide-vue-next</b><span><code>icon</code> に部品を渡します。Kasane が使う8つ(<code>check</code> <code>circle-alert</code> <code>info</code> <code>x</code> <code>menu</code> <code>search</code> <code>user-plus</code> <code>log-out</code>)だけは名前でも書けます。</span></li>'
         '<li><b>ルーターのリンク</b><span><code>NavLink</code> の <code>as</code> に Next.js の <code>Link</code> や Vue Router の <code>RouterLink</code> を渡します。</span></li>'
         '<li><b>入力は v-model と value</b><span>React は <code>value</code> と <code>onChange</code>、Vue は <code>v-model</code> で、ふつうの入力欄と同じように使えます。<code>label</code> <code>hint</code> <code>error</code> を渡すと、<code>aria-describedby</code> と <code>aria-invalid</code> まで付きます。</span></li>'
         '<li><b>色を変える</b><span><code>useAccent()</code> で今の色と変える関数が得られます。変えると上から塗り替わり、選んだ色は保存されます。</span></li>'
         '<li><b>サーバーで描いてもよい</b><span>Next.js や Nuxt でも動きます。ブラウザーでしか使えない処理は、表示のあとで動きます。</span></li>'
         '<li><b>足りない部品を作るとき</b><span>仕様書の「8. Kasane にない部品を作るとき」に従い、クラスは <code>app-</code> で始めます。</span></li></ul>')
   + sec('AI に頼むとき', code('テキスト', 'React(または Vue)の画面を Kasane で作ってください。\n仕様書: ' + BASE + '/kasane.md\n- 部品は kasane-react(Vue なら kasane-vue)のものを使い、同じ部品を自作しない\n- アイコンは lucide-react(Vue なら lucide-vue-next)\n- 最後に kasane-lint で確かめる')))
+
+ACCOUNT_SRC = '''<header class="k-header">
+  <a class="k-header-brand" href="/">かさね帳</a>
+  <span class="k-header-space"></span>
+  <button class="k-account-btn" type="button" aria-label="アカウント: 青木 ゆい" aria-expanded="false" aria-controls="account">
+    <span class="k-avatar" aria-hidden="true">青</span>
+  </button>
+</header>
+<div class="k-drawer-scrim" hidden></div>
+<div class="k-account" id="account" role="dialog" aria-modal="true" aria-label="アカウント">
+  <div class="k-account-head">
+    <span class="k-avatar k-avatar-lg" aria-hidden="true">青</span>
+    <div>
+      <p class="k-account-name">青木 ゆい</p>
+      <p class="k-account-email">yui.aoki@example.com</p>
+    </div>
+    <button class="k-btn k-btn-quiet k-btn-icon" type="button" aria-label="閉じる" data-k-close>%(x)s</button>
+  </div>
+  <a class="k-btn" href="/account/">アカウントを管理</a>
+  <p class="k-account-title">ほかのアカウント</p>
+  <ul class="k-account-list">
+    <li>
+      <button class="k-account-item" type="button">
+        <span class="k-avatar" aria-hidden="true">サ</span>
+        <span><span class="k-account-name">サークルの共用</span><span class="k-account-email">circle@example.com</span></span>
+      </button>
+    </li>
+  </ul>
+  <div class="k-account-actions">
+    <button class="k-btn k-btn-quiet" type="button">%(plus)sアカウントを追加</button>
+    <button class="k-btn k-btn-quiet" type="button">%(out)sログアウト</button>
+  </div>
+  <nav class="k-account-links" aria-label="規約">
+    <a href="/privacy/">プライバシー</a>
+    <a href="/terms/">利用規約</a>
+  </nav>
+</div>''' % {'x': icon('x'), 'plus': icon('user-plus'), 'out': icon('log-out')}
+
+def _demo_account(uid):
+    h = ACCOUNT_SRC.replace('id="account"', 'id="%s"' % uid).replace('aria-controls="account"', 'aria-controls="%s"' % uid)
+    h = h.replace('<header class=', '<div class=').replace('</header>', '</div>')
+    h = re.sub(r'href="/[^"]*"', 'href="#account"', h)
+    body = '<div class="k-layout k-layout-single"><div class="k-main"><p class="k-title ex-app-h">きょう</p><ul class="k-list"><li class="k-list-item"><span class="k-list-item-main">実習の記録を出す</span><span class="k-list-item-sub">15:00</span></li></ul></div></div>'
+    h = h.replace('<div class="k-drawer-scrim" hidden></div>', '<div class="k-drawer-scrim" hidden></div>' + body)
+    return '<div class="ex-app ex-app-account"><div class="k-app">%s</div></div>' % re.sub(r'\n\s*', '', h)
+
+AVATAR_SRC = '''<span class="k-avatar k-avatar-sm" aria-hidden="true">青</span>
+<span class="k-avatar" aria-hidden="true">青</span>
+<span class="k-avatar k-avatar-lg" aria-hidden="true">青</span>
+<img class="k-avatar" src="/avatars/yui.webp" alt="" width="36" height="36">'''
+
+SIGNIN_SRC = '''<header class="k-header">
+  <a class="k-header-brand" href="/">かさね帳</a>
+  <span class="k-header-space"></span>
+  <a class="k-btn" href="/login/">ログイン</a>
+</header>'''
+
+page('account', 'ログインのある製品で、今のアカウントを見せ、切り替えやログアウトをする場所です。どの製品でも、右上のアバターから同じ形のパネルを開きます。',
+  sec('アカウント', '<p>ヘッダーの右端にアバターのボタン(<code>.k-account-btn</code>)を1つ置きます。押すと、右からアカウントのパネル(<code>.k-account</code>)が出てきます。画面の幅にかかわらず同じ形です。下の見本で、右上のアバターを押してみてください。</p>'
+      + '<div class="ex"><div class="ex-demo ex-frame">' + _demo_account('demo-account') + '</div>' + code('HTML', ACCOUNT_SRC) + '</div>')
+  + sec('パネルの中身', '<p>中身はこの順に並べます。製品によって足したり順番を変えたりしません。</p><ul class="links">'
+        '<li><b>1. 今のアカウント</b><span>大きいアバター、名前、メールアドレス。メールアドレスは省略せず、長ければ折り返します。</span></li>'
+        '<li><b>2. アカウントを管理</b><span>名前や写真、パスワードを変えるページへのリンク。ふつうのボタンにします。</span></li>'
+        '<li><b>3. ほかのアカウント</b><span>2つ以上のアカウントでログインできる製品だけ。押すと切り替えて、ページを読み込み直します。</span></li>'
+        '<li><b>4. アカウントを追加、ログアウト</b><span>どちらも控えめなボタン(<code>.k-btn-quiet</code>)。ログアウトは赤くせず、確認もしません。書きかけの内容が消えるときだけ確認します。</span></li>'
+        '<li><b>5. 規約へのリンク</b><span>プライバシーと利用規約。小さく一番下に置きます。</span></li></ul>')
+  + sec('アバター', '<p>利用者が写真を登録していれば写真、なければ名前の最初の1文字を、<code>--accent-soft</code> の丸に入れます。ボタンの <code>aria-label</code> に名前を書くので、アバターそのものは読み上げません(<code>alt=""</code> か <code>aria-hidden</code>)。</p>'
+      + '<div class="ex"><div class="ex-demo">' + AVATAR_SRC.split('\n<img')[0].replace('\n', '') + '</div>' + code('HTML', AVATAR_SRC) + '</div>')
+  + sec('ログインしていないとき', '<p>アバターの代わりに「ログイン」のボタンを置きます。主ボタンにはせず、ふつうのボタンにします。</p>' + '<div class="ex"><div class="ex-demo ex-frame"><div class="ex-app ex-app-foot">' + re.sub(r'\n\s*', '', SIGNIN_SRC.replace('<header class=', '<div class=').replace('</header>', '</div>').replace('href="/login/"', 'href="#account"').replace('href="/"', 'href="#account"')) + '</div></div>' + code('HTML', SIGNIN_SRC) + '</div>')
+  + sec('使い方', dd('<div class="mini-nav"><span class="mini-brand">かさね帳</span><span class="mini-avatar"></span><span class="mini-panel"><i></i><i></i><i></i></span></div>',
+                    'アバターを押すと、右からパネルが出ます。後ろは暗くなり、Esc キーや後ろを押すと閉じます。',
+                    '<div class="mini-nav"><span class="mini-brand">かさね帳</span><span class="mini-avatar"></span><span class="mini-drop mini-drop-right"><span>アカウントを管理</span><span>ログアウト</span></span></div>',
+                    'アバターの下に浮かぶメニューは使いません。影が要るうえ、小さな画面では押しにくくなります。')
+      + '<ul class="links">'
+        '<li><b>アカウントは右上に1つ</b><span>ヘッダーの一番右。メニューのボタン(3本線)とは反対側です。</span></li>'
+        '<li><b>切り替えやログアウトをトーストで知らせない</b><span>画面が変わることで伝わります。</span></li>'
+        '<li><b>名前に敬称を付けない</b><span>「青木 ゆい さん」ではなく「青木 ゆい」と表示します。</span></li></ul>')
+  + sec('JavaScript', '<p><code>kasane.js</code> を読み込むと、パネルの開け閉め、Esc キー、フォーカスの移動が動きます。React と Vue では <code>Account</code> / <code>KAccount</code> を使います。</p>')
+  + sec('CSS', code('CSS', CSS['account'])))

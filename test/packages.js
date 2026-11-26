@@ -49,7 +49,11 @@ export async function testPackages(fail, pass) {
       e(R.Breadcrumb, { items: [{ href: '/', label: 'ホーム' }, { label: 'きょう' }] })), ['k-menu-btn', 'aria-controls=', 'aria-expanded="false"', 'k-drawer-scrim', 'aria-current="page"', 'k-breadcrumb', 'k-footer-in']],
     Table: [e(R.Card, null, e(R.Table, { caption: '今月の支出', columns: cols, rows })), ['k-table-wrap', 'scope="col"', 'k-num']],
     Empty: [e(R.Empty, { icon: 'info', title: 'まだありません', text: 'x' }, e(R.Button, { variant: 'primary' }, '書く')), ['k-empty-actions']],
-    Skeleton: [e(R.Skeleton, { lines: 3 }), ['aria-busy="true"', 'k-skeleton-short', 'k-visually-hidden']]
+    Skeleton: [e(R.Skeleton, { lines: 3 }), ['aria-busy="true"', 'k-skeleton-short', 'k-visually-hidden']],
+    Avatar: [e(React.Fragment, null, e(R.Avatar, { name: '青木 ゆい' }), e(R.Avatar, { name: 'a', size: 'lg', src: '/a.webp' })), ['>青<', 'k-avatar-lg', 'alt=""']],
+    Account: [e(R.Account, { user: { name: '青木 ゆい', email: 'yui@example.com' }, accounts: [{ name: 'サークル', email: 'c@example.com' }], manageHref: '/account/', onAdd() {}, onLogout() {}, links: [{ href: '/privacy/', label: 'プライバシー' }] }),
+      ['k-account-btn', 'aria-controls=', 'aria-expanded="false"', 'role="dialog"', 'k-account-item', 'lucide-log-out', 'k-account-links']],
+    SignIn: [e(R.Account, { user: null, loginHref: '/login/' }), ['href="/login/"', 'ログイン']]
   };
   for (const [name, [el, expect]] of Object.entries(react)) verify('react ' + name, renderToStaticMarkup(el), fail, pass, expect);
 
@@ -79,7 +83,11 @@ export async function testPackages(fail, pass) {
     }), ['k-menu-btn', 'aria-expanded="false"', 'k-drawer-scrim', 'aria-current="page"', 'k-breadcrumb', 'k-footer-in']],
     KTable: [() => h(V.KCard, null, () => h(V.KTable, { caption: '今月の支出', columns: cols, rows })), ['k-table-wrap', 'scope="col"', 'k-num']],
     KEmpty: [() => h(V.KEmpty, { title: 'まだありません', text: 'x' }, () => h(V.KButton, { variant: 'primary' }, () => '書く')), ['k-empty-actions']],
-    KSkeleton: [() => h(V.KSkeleton, { lines: 2 }), ['aria-busy="true"', 'k-skeleton-short']]
+    KSkeleton: [() => h(V.KSkeleton, { lines: 2 }), ['aria-busy="true"', 'k-skeleton-short']],
+    KAvatar: [() => h(V.KAvatar, { name: 'yui', size: 'sm' }), ['>Y<', 'k-avatar-sm']],
+    KAccount: [() => h(V.KAccount, { user: { name: '青木 ゆい', email: 'yui@example.com' }, accounts: [{ name: 'サークル' }], manageHref: '/account/', links: [{ href: '/terms/', label: '利用規約' }] }),
+      ['k-account-btn', 'aria-expanded="false"', 'role="dialog"', 'k-account-item', 'lucide-user-plus']],
+    KSignIn: [() => h(V.KAccount, { loginHref: '/login/' }), ['href="/login/"']]
   };
   for (const [name, [render, expect]] of Object.entries(vue)) {
     const html = (await renderToString(createSSRApp({ render }))).replace(/<!--\[-->|<!--\]-->|<!---->/g, '');

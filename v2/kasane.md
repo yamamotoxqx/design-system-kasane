@@ -66,6 +66,7 @@ Kasane(かさね)は、Webサイトと Webアプリのためのデザインシ�
 | `.k-seg[role="tablist"]` | タブを押す・矢印キーで、パネルを切り替える |
 | `.k-palette` | 選んだ色を適用して保存する。色は上から下へ塗り替わる |
 | `[data-k-toast="文"]` | 押すとトーストを出す(`data-k-toast-type="ok"` などで種類) |
+| `.k-account-btn[aria-controls]` | 押すとアカウントのパネル(`.k-account`)を右から開く |
 
 JavaScript から色を変えるときは `Kasane.setAccent("ai")`、トーストは `Kasane.toast("保存しました", { type: "ok" })` を使います。自分で `data-accent` を書き換えると、塗り替えの動きが付きません。
 
@@ -519,6 +520,49 @@ JavaScript から色を変えるときは `Kasane.setAccent("ai")`、トース�
 
 設定ページのない製品では、色の選択(`.k-palette-compact`)をフッターに置きます。
 
+### アカウント
+
+ログインのある製品は、ヘッダーの右端にアバターのボタンを1つ置き、押すと右からアカウントのパネルを出します。
+
+```html
+<!-- ヘッダーの右端 -->
+<button class="k-account-btn" type="button" aria-label="アカウント: 青木 ゆい" aria-expanded="false" aria-controls="account">
+  <span class="k-avatar" aria-hidden="true">青</span>
+</button>
+
+<div class="k-drawer-scrim" hidden></div>
+<div class="k-account" id="account" role="dialog" aria-modal="true" aria-label="アカウント">
+  <div class="k-account-head">
+    <span class="k-avatar k-avatar-lg" aria-hidden="true">青</span>
+    <div>
+      <p class="k-account-name">青木 ゆい</p>
+      <p class="k-account-email">yui.aoki@example.com</p>
+    </div>
+    <button class="k-btn k-btn-quiet k-btn-icon" type="button" aria-label="閉じる" data-k-close><svg …(x)></svg></button>
+  </div>
+  <a class="k-btn" href="/account/">アカウントを管理</a>
+  <p class="k-account-title">ほかのアカウント</p>
+  <ul class="k-account-list">
+    <li><button class="k-account-item" type="button"><span class="k-avatar" aria-hidden="true">サ</span><span><span class="k-account-name">サークルの共用</span><span class="k-account-email">circle@example.com</span></span></button></li>
+  </ul>
+  <div class="k-account-actions">
+    <button class="k-btn k-btn-quiet" type="button"><svg …(user-plus)></svg>アカウントを追加</button>
+    <button class="k-btn k-btn-quiet" type="button"><svg …(log-out)></svg>ログアウト</button>
+  </div>
+  <nav class="k-account-links" aria-label="規約"><a href="/privacy/">プライバシー</a><a href="/terms/">利用規約</a></nav>
+</div>
+
+<!-- ログインしていないとき: アバターの代わりに -->
+<a class="k-btn" href="/login/">ログイン</a>
+```
+
+- **アバターの下に浮かぶメニューは作りません。** パネルは画面の幅にかかわらず右から出ます(開くときだけ220msで滑り込み、閉じるときはすぐ消える)。Esc キー、後ろの暗い所、`data-k-close` で閉じます(`kasane.js` が行う)。
+- 中身の順番は固定: 今のアカウント(大きいアバター、名前、メールアドレス)→「アカウントを管理」→ ほかのアカウント(2つ以上のときだけ。押すと切り替えて読み込み直す)→「アカウントを追加」「ログアウト」→ 規約のリンク。
+- アバターは写真か、名前の最初の1文字。ボタンの `aria-label` に名前を書き、アバターは読み上げない(`alt=""` か `aria-hidden`)。
+- メールアドレスは省略せず、長ければ折り返します。名前に敬称を付けません。
+- ログアウトは赤くせず、確認もしません(書きかけの内容が消えるときだけ確認する)。切り替えやログアウトをトーストで知らせません。
+- ログインしていないときの「ログイン」はふつうのボタン(主ボタンにしない)。
+
 ### 表
 
 ```html
@@ -670,6 +714,7 @@ JavaScript から色を変えるときは `Kasane.setAccent("ai")`、トース�
 | 読み込み中に回るアイコン、光るスケルトン | `.k-skeleton`(動かない) |
 | `root.dataset.accent = "ai"` で色を変える | `Kasane.setAccent("ai")`(塗り替えの動きが付く) |
 | 日付を選ぶカレンダーを自作する | `<input class="k-input" type="date">` |
+| アバターの下にアカウントのメニューを浮かせる | `.k-account-btn` と `.k-account`(右から出るパネル) |
 | トーストを `setTimeout` で自作する | `Kasane.toast()`(止める・閉じる・読み上げまで入っている) |
 | React や Vue で `.k-` の HTML を手で組む | `kasane-react` / `kasane-vue` の部品 |
 
@@ -745,7 +790,7 @@ await browser.close();
 `kasane-lint` で、ルールの多くを機械的に確かめられます。CSS は Stylelint、HTML は `kasane-check` が見ます。
 
 ```bash
-npm install --save-dev stylelint https://kasane.y-n0.de/v2/kasane-lint-2.1.0.tgz
+npm install --save-dev stylelint https://kasane.y-n0.de/v2/kasane-lint-2.2.0.tgz
 ```
 
 ```json
@@ -785,7 +830,7 @@ npx kasane-check "src/**/*.html"
 | `kasane/lucide-icon` | Lucide に実在しないアイコン名、部品の中の Lucide 以外のアイコン |
 | `kasane/dialog-label` | `role="dialog"` に名前がない |
 | `kasane/tab-aria` | `role="tab"` に `aria-selected` か `aria-controls` がない |
-| `kasane/menu-button` | `k-menu-btn` に `aria-controls` か `aria-expanded` がない |
+| `kasane/menu-button` | `k-menu-btn` か `k-account-btn` に `aria-controls` か `aria-expanded` がない |
 | `kasane/img-alt` | `<img>` に `alt` がない(飾りの画像は `alt=""`) |
 | `kasane/img-size` | `<img>` に `width` と `height` がない |
 | `kasane/img-format` | JPEG・PNG・GIF をそのまま使っている(`<picture>` で AVIF / WebP を出していない) |
@@ -931,8 +976,8 @@ document.querySelectorAll('.k-palette input[name="accent"]').forEach((radio) => 
 React と Vue では、`.k-` の HTML を手で組まず、部品のパッケージを使います。出てくる HTML はこの仕様書と同じです。
 
 ```bash
-npm install https://kasane.y-n0.de/v2/kasane-react-2.0.1.tgz   # React 18 以上
-npm install https://kasane.y-n0.de/v2/kasane-vue-2.0.1.tgz     # Vue 3.5 以上
+npm install https://kasane.y-n0.de/v2/kasane-react-2.1.0.tgz   # React 18 以上
+npm install https://kasane.y-n0.de/v2/kasane-vue-2.1.0.tgz     # Vue 3.5 以上
 ```
 
 ```jsx
@@ -969,9 +1014,10 @@ import "kasane-react/kasane.css";
 | `AppShell` `NavGroup` `NavLink` `Breadcrumb` `Footer` | `KAppShell` `KNavGroup` `KNavLink` `KBreadcrumb` `KFooter` | `.k-app` `.k-sidebar` `.k-nav` `.k-breadcrumb` `.k-footer` |
 | `Table` | `KTable` | `.k-table` |
 | `Empty` `Skeleton` | `KEmpty` `KSkeleton` | `.k-empty` `.k-skeleton` |
+| `Avatar` `Account` | `KAvatar` `KAccount` | `.k-avatar` `.k-account` |
 
 - 入力欄に `label` `hint` `error` を渡すと、`aria-describedby` と `aria-invalid` が付きます。React は `value` と `onChange`、Vue は `v-model` で使います。
-- アイコンは `lucide-react` / `lucide-vue-next` の部品を `icon` に渡します。`check` `circle-alert` `info` `x` `menu` `search` は名前でも書けます。
+- アイコンは `lucide-react` / `lucide-vue-next` の部品を `icon` に渡します。`check` `circle-alert` `info` `x` `menu` `search` `user-plus` `log-out` は名前でも書けます。
 - ルーターのリンクは、`NavLink` / `KNavLink` の `as` に `Link`(Next.js)や `RouterLink`(Vue Router)を渡します。
 - 書体の読み込みと、選んだ色を表示の前に当てる `<head>` のスクリプトは「1. 読み込み方」のとおりに書きます。
 - ないものを作るときは「8. Kasane にない部品を作るとき」に従います。

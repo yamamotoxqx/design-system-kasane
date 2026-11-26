@@ -174,6 +174,14 @@ html.navigated .page{animation:k-enter var(--motion-slow) var(--ease-out)}
 .ex-app-phone .k-sidebar-head{display:flex}
 @media (prefers-reduced-motion:reduce){.ex-app-phone .k-sidebar[data-open]{transition:none}}
 .ex-app-foot{border-radius:var(--r-md)}
+.ex-app-account{height:560px}
+.ex-app-account .k-main{padding:24px}
+.ex-app-account .k-account{width:min(92%,360px)}
+.mini-avatar{position:absolute;right:12px;top:12px;width:36px;height:36px;border-radius:50%;background:var(--accent-soft)}
+.mini-panel{position:absolute;right:0;top:0;bottom:0;width:46%;display:flex;flex-direction:column;gap:8px;padding:56px 12px 12px;border-radius:20px 0 0 20px;background:var(--surface-2)}
+.mini-panel i{display:block;height:10px;border-radius:999px;background:var(--surface-3)}
+.mini-panel i:first-child{width:70%}
+.mini-drop-right{left:auto;right:12px}
 .mini-nav{position:relative;display:flex;align-items:center;align-self:start;gap:10px;width:100%;max-width:250px;height:150px;align-items:flex-start;padding:12px;border-radius:20px;background:var(--surface)}
 .mini-btn{display:grid;place-items:center;width:36px;height:36px;border-radius:999px;background:var(--surface-2);flex:none}
 .mini-btn svg{width:18px;height:18px}
@@ -500,19 +508,20 @@ html[data-first-visit] .modal,.modal.open{display:grid}
   dscrim.addEventListener('click',function(){setDrawer(false);});
 
   /* App-shell demos on the navigation page: the same open / close as kasane.js */
-  function demoDrawer(app,open){
-    var side=app.querySelector('.k-sidebar'),btn=app.querySelector('.k-menu-btn'),sc=app.querySelector('.k-drawer-scrim');if(!side||!btn)return;
+  function demoPanel(app,btn,open){
+    var side=document.getElementById(btn.getAttribute('aria-controls')),sc=app.querySelector('.k-drawer-scrim');if(!side)return;
     side.toggleAttribute('data-open',open);btn.setAttribute('aria-expanded',String(open));if(sc)sc.hidden=!open;
-    if(open){var f=side.querySelector('[aria-current="page"]');if(f)f.focus();}else btn.focus();
+    if(open){var f=side.querySelector('[aria-current="page"]')||side.querySelector('a[href],button');if(f)f.focus();}else btn.focus();
   }
+  function demoClose(app){var b=app.querySelector('[aria-controls][aria-expanded="true"]');if(b)demoPanel(app,b,false);}
   document.addEventListener('click',function(e){
     var app=e.target.closest('.ex-app');if(!app)return;
-    var m=e.target.closest('.k-menu-btn');if(m){e.preventDefault();demoDrawer(app,m.getAttribute('aria-expanded')!=='true');return;}
-    if(e.target.closest('.k-drawer-scrim,[data-k-close]')){demoDrawer(app,false);return;}
-    var a=e.target.closest('a'),side=app.querySelector('.k-sidebar');if(a&&side){e.preventDefault();if(side.contains(a))demoDrawer(app,false);}
+    var m=e.target.closest('.k-menu-btn,.k-account-btn');if(m){e.preventDefault();var o=m.getAttribute('aria-expanded')!=='true';demoClose(app);if(o)demoPanel(app,m,true);return;}
+    if(e.target.closest('.k-drawer-scrim,[data-k-close],.k-account-item')){demoClose(app);return;}
+    var a=e.target.closest('a');if(a&&app.querySelector('.k-sidebar,.k-account')){e.preventDefault();if(a.closest('.k-sidebar,.k-account'))demoClose(app);}
   });
   document.addEventListener('keydown',function(e){
-    if(e.key!=='Escape')return;var o=document.querySelector('.ex-app .k-sidebar[data-open]');if(o)demoDrawer(o.closest('.ex-app'),false);
+    if(e.key!=='Escape')return;var o=document.querySelector('.ex-app [aria-controls][aria-expanded="true"]');if(o)demoPanel(o.closest('.ex-app'),o,false);
   });
 
   /* ---------- Accent palette ---------- */

@@ -5,7 +5,7 @@
   /* Kasane v2 core: palettes, the colour (with the top-down recolour), toasts and focus helpers.
      Shared by kasane.js, kasane-react and kasane-vue. Safe to import on the server (no DOM work until called). */
   var PALETTES = [{"id": "hidamari", "name": "ひだまり", "en": "Hidamari"}, {"id": "tachibana", "name": "橘", "en": "Tachibana"}, {"id": "kobai", "name": "紅梅", "en": "Kobai"}, {"id": "fuji", "name": "藤", "en": "Fuji"}, {"id": "ai", "name": "藍", "en": "Ai"}, {"id": "sora", "name": "空", "en": "Sora"}, {"id": "seiji", "name": "青磁", "en": "Seiji"}, {"id": "moegi", "name": "萌黄", "en": "Moegi"}, {"id": "sumi", "name": "墨", "en": "Sumi"}];
-  var ICONS = {"check": [["path", {"d": "M20 6 9 17l-5-5"}]], "circle-alert": [["circle", {"cx": "12", "cy": "12", "r": "10"}], ["line", {"x1": "12", "x2": "12", "y1": "8", "y2": "12"}], ["line", {"x1": "12", "x2": "12.01", "y1": "16", "y2": "16"}]], "info": [["circle", {"cx": "12", "cy": "12", "r": "10"}], ["path", {"d": "M12 16v-4"}], ["path", {"d": "M12 8h.01"}]], "x": [["path", {"d": "M18 6 6 18"}], ["path", {"d": "m6 6 12 12"}]], "menu": [["path", {"d": "M4 5h16"}], ["path", {"d": "M4 12h16"}], ["path", {"d": "M4 19h16"}]], "search": [["path", {"d": "m21 21-4.34-4.34"}], ["circle", {"cx": "11", "cy": "11", "r": "8"}]]};
+  var ICONS = {"check": [["path", {"d": "M20 6 9 17l-5-5"}]], "circle-alert": [["circle", {"cx": "12", "cy": "12", "r": "10"}], ["line", {"x1": "12", "x2": "12", "y1": "8", "y2": "12"}], ["line", {"x1": "12", "x2": "12.01", "y1": "16", "y2": "16"}]], "info": [["circle", {"cx": "12", "cy": "12", "r": "10"}], ["path", {"d": "M12 16v-4"}], ["path", {"d": "M12 8h.01"}]], "x": [["path", {"d": "M18 6 6 18"}], ["path", {"d": "m6 6 12 12"}]], "menu": [["path", {"d": "M4 5h16"}], ["path", {"d": "M4 12h16"}], ["path", {"d": "M4 19h16"}]], "search": [["path", {"d": "m21 21-4.34-4.34"}], ["circle", {"cx": "11", "cy": "11", "r": "8"}]], "user-plus": [["path", {"d": "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"}], ["circle", {"cx": "9", "cy": "7", "r": "4"}], ["line", {"x1": "19", "x2": "19", "y1": "8", "y2": "14"}], ["line", {"x1": "22", "x2": "16", "y1": "11", "y2": "11"}]], "log-out": [["path", {"d": "m16 17 5-5-5-5"}], ["path", {"d": "M21 12H9"}], ["path", {"d": "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"}]]};
 
   var hasDOM = typeof document !== 'undefined';
   var KEY_ACCENT = 'kasane-accent';
@@ -189,7 +189,7 @@
     if (opts.animate === false) apply(); else recolor(apply);
   }
 
-  /* ---------- Menu drawer: .k-menu-btn[aria-controls] opens .k-sidebar (under 900px) ---------- */
+  /* ---------- Drawers: .k-menu-btn opens .k-sidebar (under 900px), .k-account-btn opens .k-account ---------- */
   var openDrawer = null;
   function scrimFor() {
     var s = document.querySelector('.k-drawer-scrim');
@@ -213,7 +213,8 @@
   }
   function closeDrawer() { if (openDrawer) drawer(openDrawer.btn, false); }
   var wide = window.matchMedia ? window.matchMedia('(min-width: 900px)') : null;
-  if (wide) (wide.addEventListener ? wide.addEventListener('change', function (e) { if (e.matches) closeDrawer(); }) : wide.addListener(function (e) { if (e.matches) closeDrawer(); }));
+  function onWide(e) { if (e.matches && openDrawer && openDrawer.btn.classList.contains('k-menu-btn')) closeDrawer(); }
+  if (wide) (wide.addEventListener ? wide.addEventListener('change', onWide) : wide.addListener(onWide));
 
   /* ---------- Dialog: [data-k-dialog="id"] opens the .k-scrim with that id ---------- */
   var dialogs = [];
@@ -244,8 +245,8 @@
   /* ---------- Events ---------- */
   document.addEventListener('click', function (e) {
     var t = e.target;
-    var menu = t.closest('.k-menu-btn[aria-controls]');
-    if (menu) { drawer(menu, menu.getAttribute('aria-expanded') !== 'true'); return; }
+    var menu = t.closest('.k-menu-btn[aria-controls], .k-account-btn[aria-controls]');
+    if (menu) { if (openDrawer && openDrawer.btn !== menu) closeDrawer(); drawer(menu, menu.getAttribute('aria-expanded') !== 'true'); return; }
     if (openDrawer && (t.closest('.k-drawer-scrim') || t.closest('[data-k-close]') && openDrawer.side.contains(t))) { closeDrawer(); return; }
     if (openDrawer && t.closest('a[href]') && openDrawer.side.contains(t)) { closeDrawer(); return; }
     var opener = t.closest('[data-k-dialog]');

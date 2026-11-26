@@ -34,8 +34,8 @@ See the [documentation site](https://kasane.y-n0.de/en/) and the [spec](https://
 ### React and Vue
 
 ```bash
-npm install https://kasane.y-n0.de/v2/kasane-react-2.0.1.tgz   # React 18 or later
-npm install https://kasane.y-n0.de/v2/kasane-vue-2.0.1.tgz     # Vue 3.5 or later
+npm install https://kasane.y-n0.de/v2/kasane-react-2.1.0.tgz   # React 18 or later
+npm install https://kasane.y-n0.de/v2/kasane-vue-2.1.0.tgz     # Vue 3.5 or later
 ```
 
 See “[React and Vue](https://kasane.y-n0.de/en/frameworks/)” for the components and how to use them.
@@ -61,7 +61,7 @@ At the end of the work, go through every item in the spec’s end-of-work checkl
 Stylelint checks the CSS and `kasane-check` checks the HTML against the rules.
 
 ```bash
-npm install --save-dev stylelint https://kasane.y-n0.de/v2/kasane-lint-2.1.0.tgz
+npm install --save-dev stylelint https://kasane.y-n0.de/v2/kasane-lint-2.2.0.tgz
 ```
 
 ```json

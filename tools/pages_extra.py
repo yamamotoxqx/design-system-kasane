@@ -57,6 +57,7 @@ page('with-ai', 'Claude Code や Codex などの AI にUIを作ってもらう�
 
 page('updates', 'Kasane の変更の記録です。',
   sec('2026年11月', '<ul class="log">'
+      '<li><time class="k-num">11.26</time><div><b>アカウントの表示を追加</b><span>右上のアバターから、右に出るパネルで今のアカウント、切り替え、ログアウトを扱う形を決めました。<a href="#account">アカウント</a></span></div></li>'
       '<li><time class="k-num">11.26</time><div><b>同じトーストをまとめる</b><span>同じ内容で重要性の低いトーストが続くときは、1つにまとめて「×2」のように回数を出すようにしました。<a href="#dialog">ダイアログとトースト</a></span></div></li>'
       '<li><time class="k-num">11.25</time><div><b>React と Vue の部品、日付の入力欄、自動で消えるトースト</b><span>React と Vue から Kasane の部品を使える kasane-react と kasane-vue を出しました。日付と時刻、期間、単位付きの数字、検索の入力欄を加え、トーストは決まった時間で自動で消えるようになりました。<a href="#frameworks">React と Vue</a></span></div></li>'
       '<li><time class="k-num">11.24</time><div><b>v2 を公開</b><span>既定のパレットの名前を「ひだまり」に変え、ヘッダーとメニュー、表、空の状態と読み込み中の部品を加えました。メニューなどを動かす kasane.js も用意し、色を変えると上から塗り替わるようになりました。v1 はそのまま残しています。<a href="#migrate">v1 から v2 へ</a></span></div></li>'

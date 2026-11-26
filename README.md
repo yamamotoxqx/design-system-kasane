@@ -34,8 +34,8 @@
 ### React と Vue
 
 ```bash
-npm install https://kasane.y-n0.de/v2/kasane-react-2.0.1.tgz   # React 18 以上
-npm install https://kasane.y-n0.de/v2/kasane-vue-2.0.1.tgz     # Vue 3.5 以上
+npm install https://kasane.y-n0.de/v2/kasane-react-2.1.0.tgz   # React 18 以上
+npm install https://kasane.y-n0.de/v2/kasane-vue-2.1.0.tgz     # Vue 3.5 以上
 ```
 
 部品の一覧と使い方は「[React と Vue](https://kasane.y-n0.de/frameworks/)」にあります。
@@ -61,7 +61,7 @@ https://kasane.y-n0.de/v2/kasane.min.css
 CSS は Stylelint、HTML は `kasane-check` で、ルールを機械的に確かめます。
 
 ```bash
-npm install --save-dev stylelint https://kasane.y-n0.de/v2/kasane-lint-2.1.0.tgz
+npm install --save-dev stylelint https://kasane.y-n0.de/v2/kasane-lint-2.2.0.tgz
 ```
 
 ```json

@@ -424,6 +424,71 @@ export var KFooter = defineComponent({
   }
 });
 
+/* ---------- Avatar and account ---------- */
+var AVATAR_PX = { sm: 28, lg: 64 };
+function initial(name) { var t = (name || '').trim(); return t ? Array.from(t)[0].toUpperCase() : '?'; }
+/* <KAvatar name="青木 ゆい" src? size="sm | lg" />. It is not read aloud: name the button that holds it. */
+export var KAvatar = defineComponent({
+  name: 'KAvatar', props: { name: String, src: String, size: String },
+  setup: function (props) {
+    return function () {
+      var cls = cx('k-avatar', props.size && 'k-avatar-' + props.size), px = AVATAR_PX[props.size] || 36;
+      return props.src ? h('img', { class: cls, src: props.src, alt: '', width: px, height: px }) : h('span', { class: cls, 'aria-hidden': 'true' }, initial(props.name));
+    };
+  }
+});
+/* <KAccount :user="{ name, email, image }" :accounts="[…]" manage-href="/account/" @switch @add @logout :links="[…]" />
+   Put it in KAppShell's actions slot. Without user it shows the sign-in button (login-href, or @login). */
+export var KAccount = defineComponent({
+  name: 'KAccount',
+  props: { user: Object, accounts: { type: Array, default: function () { return []; } }, manageHref: String, links: Array, loginHref: String, lang: String },
+  emits: ['switch', 'add', 'logout', 'login'],
+  setup: function (props, ctx) {
+    var id = useId(), open = ref(false), btn = ref(null), panel = ref(null);
+    function key(e) { if (e.key === 'Escape') open.value = false; else trapFocus(e, panel.value); }
+    watch(open, function (v) {
+      if (v) {
+        setTimeout(function () { var f = panel.value && focusables(panel.value)[0]; if (f) f.focus(); });
+        lockScroll(true); document.addEventListener('keydown', key);
+      } else {
+        lockScroll(false); document.removeEventListener('keydown', key);
+        if (btn.value) btn.value.focus();
+      }
+    });
+    onBeforeUnmount(function () { if (open.value) { lockScroll(false); document.removeEventListener('keydown', key); } });
+    function close() { open.value = false; }
+    return function () {
+      var en = props.lang === 'en', u = props.user;
+      if (!u) {
+        return h(KButton, props.loginHref ? { href: props.loginHref } : { onClick: function () { ctx.emit('login'); } }, function () { return en ? 'Sign in' : 'ログイン'; });
+      }
+      var others = props.accounts || [];
+      return h(Fragment, null, [
+        h('button', {
+          ref: btn, class: 'k-account-btn', type: 'button', 'aria-label': (en ? 'Account: ' : 'アカウント: ') + u.name,
+          'aria-expanded': String(open.value), 'aria-controls': id, onClick: function () { open.value = !open.value; }
+        }, [h(KAvatar, { name: u.name, src: u.image })]),
+        h('div', { class: 'k-drawer-scrim', hidden: !open.value, onClick: close }),
+        h('div', { ref: panel, class: 'k-account', id: id, role: 'dialog', 'aria-modal': 'true', 'aria-label': en ? 'Account' : 'アカウント', 'data-open': open.value ? '' : undefined }, [
+          h('div', { class: 'k-account-head' }, [
+            h(KAvatar, { name: u.name, src: u.image, size: 'lg' }),
+            h('div', null, [h('p', { class: 'k-account-name' }, u.name), u.email ? h('p', { class: 'k-account-email' }, u.email) : null]),
+            h('button', { class: 'k-btn k-btn-quiet k-btn-icon', type: 'button', 'aria-label': en ? 'Close' : '閉じる', 'data-k-close': '', onClick: close }, [h(KIcon, { name: 'x' })])]),
+          props.manageHref ? h('a', { class: 'k-btn', href: props.manageHref }, en ? 'Manage account' : 'アカウントを管理') : null,
+          others.length ? h('p', { class: 'k-account-title' }, en ? 'Other accounts' : 'ほかのアカウント') : null,
+          others.length ? h('ul', { class: 'k-account-list' }, others.map(function (a, i) {
+            return h('li', { key: a.email || i }, [h('button', { class: 'k-account-item', type: 'button', onClick: function () { close(); ctx.emit('switch', a); } }, [
+              h(KAvatar, { name: a.name, src: a.image }),
+              h('span', null, [h('span', { class: 'k-account-name' }, a.name), a.email ? h('span', { class: 'k-account-email' }, a.email) : null])])]);
+          })) : null,
+          h('div', { class: 'k-account-actions' }, [
+            h('button', { class: 'k-btn k-btn-quiet', type: 'button', onClick: function () { close(); ctx.emit('add'); } }, [h(KIcon, { name: 'user-plus' }), en ? 'Add account' : 'アカウントを追加']),
+            h('button', { class: 'k-btn k-btn-quiet', type: 'button', onClick: function () { close(); ctx.emit('logout'); } }, [h(KIcon, { name: 'log-out' }), en ? 'Sign out' : 'ログアウト'])]),
+          props.links ? h('nav', { class: 'k-account-links', 'aria-label': en ? 'Legal' : '規約' }, props.links.map(function (l, i) { return h('a', { key: i, href: l.href }, l.label); })) : null])]);
+    };
+  }
+});
+
 /* ---------- Table, empty state, loading ---------- */
 /* columns: [{ key, label, numeric }]; rows: objects. A slot named after a column key renders its cells ({ row }). */
 export var KTable = defineComponent({
@@ -477,7 +542,7 @@ var ALL = {
   KSelect: KSelect, KDateRange: KDateRange, KCheckbox: KCheckbox, KRadio: KRadio, KSwitch: KSwitch, KCard: KCard, KNest: KNest,
   KNotice: KNotice, KList: KList, KListItem: KListItem, KBadge: KBadge, KTabs: KTabs, KSegmented: KSegmented, KProgress: KProgress,
   KDialog: KDialog, KPalette: KPalette, KAppShell: KAppShell, KNavGroup: KNavGroup, KNavLink: KNavLink, KBreadcrumb: KBreadcrumb,
-  KFooter: KFooter, KTable: KTable, KEmpty: KEmpty, KSkeleton: KSkeleton
+  KFooter: KFooter, KTable: KTable, KEmpty: KEmpty, KSkeleton: KSkeleton, KAvatar: KAvatar, KAccount: KAccount
 };
 /* app.use(Kasane) */
 export default {
