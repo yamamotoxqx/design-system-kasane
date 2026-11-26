@@ -1,6 +1,6 @@
 {
   "name": "kasane-vue",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Kasane design system components for Vue 3 (the same HTML as kasane.md).",
   "license": "MIT",
   "type": "module",

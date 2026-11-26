@@ -437,6 +437,7 @@ JavaScript から色を変えるときは `Kasane.setAccent("ai")`、トース�
 - トーストは `Kasane.toast("保存しました", { type: "ok" })` で出します(`type` は `ok` / `info` / `danger`)。操作を付けるときは `{ action: { label: "元に戻す", onClick } }`。
 - トーストは自動で消えます。ふつうは5秒、操作が付くときは10秒。ポインターを重ねている間、フォーカスがある間、ページが裏にある間は止まります。失敗(`danger`)は自動で消さず、閉じるボタンを付けます。
 - 並ぶのは3つまで(古いものから閉じる)。出るときだけ下から浮かび、閉じるときは動かしません。
+- 同じ内容で重要性の低いトースト(`danger` でも操作付きでもないもの)は、新しく並べずに画面に出ているものへまとめます。「×2」のように回数を添え、時間を数え直します(`Kasane.toast()` が行う。`{ merge: false }` で止められる)。
 - 大事な内容には使いません。入力の間違いはトーストではなく、入力欄の下(`.k-error`)に書きます。
 
 ### 画面の骨組み(ヘッダー、メニュー、サイドバー)
@@ -928,8 +929,8 @@ document.querySelectorAll('.k-palette input[name="accent"]').forEach((radio) => 
 React と Vue では、`.k-` の HTML を手で組まず、部品のパッケージを使います。出てくる HTML はこの仕様書と同じです。
 
 ```bash
-npm install https://kasane.y-n0.de/v2/kasane-react-2.0.0.tgz   # React 18 以上
-npm install https://kasane.y-n0.de/v2/kasane-vue-2.0.0.tgz     # Vue 3.5 以上
+npm install https://kasane.y-n0.de/v2/kasane-react-2.0.1.tgz   # React 18 以上
+npm install https://kasane.y-n0.de/v2/kasane-vue-2.0.1.tgz     # Vue 3.5 以上
 ```
 
 ```jsx

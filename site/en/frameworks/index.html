@@ -474,9 +474,9 @@ html[data-first-visit] .modal,.modal.open{display:grid}
 <div class="shell" id="shell">
 <nav aria-label="Pages" class="sidebar" id="sidebar"><div class="nav-group" data-sec="intro"><div class="nav-title">Introduction</div><a class="nav-link" href="/en/about/">About Kasane</a><a class="nav-link" href="/en/start/">Getting started</a><a class="nav-link" href="/en/integrate/">Integration and examples</a><a class="nav-link" href="/en/with-ai/">Using with AI</a><a class="nav-link" href="/en/frameworks/">React and Vue</a><a class="nav-link" href="/en/updates/">Updates</a><a class="nav-link" href="/en/migrate/">From v1 to v2</a></div><div class="nav-group" data-sec="principle"><div class="nav-title">Principles</div><a class="nav-link" href="/en/principles/">Design principles</a><a class="nav-link" href="/en/accessibility/">Accessibility</a><a class="nav-link" href="/en/performance/">Performance</a><a class="nav-link" href="/en/writing/">Writing</a><a class="nav-link" href="/en/i18n/">Multiple languages</a></div><div class="nav-group" data-sec="style"><div class="nav-title">Styles</div><a class="nav-link" href="/en/color/">Color</a><a class="nav-link" href="/en/typography/">Typography</a><a class="nav-link" href="/en/shape/">Radius and spacing</a><a class="nav-link" href="/en/layout/">Layout</a><a class="nav-link" href="/en/icons/">Icons</a><a class="nav-link" href="/en/motion/">Motion</a></div><div class="nav-group" data-sec="component"><div class="nav-title">Components</div><a class="nav-link" href="/en/button/">Buttons</a><a class="nav-link" href="/en/input/">Inputs</a><a class="nav-link" href="/en/card/">Cards and lists</a><a class="nav-link" href="/en/badge/">Badges</a><a class="nav-link" href="/en/tabs/">Tabs</a><a class="nav-link" href="/en/progress/">Progress bar</a><a class="nav-link" href="/en/dialog/">Dialogs and toasts</a><a class="nav-link" href="/en/navigation/">Header and menu</a><a class="nav-link" href="/en/table/">Table</a><a class="nav-link" href="/en/empty/">Empty and loading states</a></div></nav>
 <main class="main" id="main">
-<article class="page" data-page="frameworks"><div class="page-head"><div class="crumbs">Introduction / React and Vue</div><h1>React and Vue</h1><p class="lead">Use the Kasane components directly in React and Vue. They render the same HTML as the spec, so the look and the automatic checks stay the same.</p></div><section class="sec" id="frameworks-s1"><h2>Install</h2><p>The npm packages are served from this site (no GitHub sign-in needed).</p><div class="code"><div class="code-head"><span>Terminal</span><button class="copy" type="button">Copy</button></div><pre><code>npm install https://kasane.y-n0.de/v2/kasane-react-2.0.0.tgz
+<article class="page" data-page="frameworks"><div class="page-head"><div class="crumbs">Introduction / React and Vue</div><h1>React and Vue</h1><p class="lead">Use the Kasane components directly in React and Vue. They render the same HTML as the spec, so the look and the automatic checks stay the same.</p></div><section class="sec" id="frameworks-s1"><h2>Install</h2><p>The npm packages are served from this site (no GitHub sign-in needed).</p><div class="code"><div class="code-head"><span>Terminal</span><button class="copy" type="button">Copy</button></div><pre><code>npm install https://kasane.y-n0.de/v2/kasane-react-2.0.1.tgz
 # for Vue
-npm install https://kasane.y-n0.de/v2/kasane-vue-2.0.0.tgz</code></pre></div><p>The CSS is in the package (<code>kasane-react/kasane.css</code>, <code>kasane-vue/kasane.css</code>). Put the fonts and the script that applies the saved colour before paint in the HTML <code>&lt;head&gt;</code> as before (<a href="/en/start/">Get started</a>). Works with React 18+ and Vue 3.5+.</p></section><section class="sec" id="frameworks-s2"><h2>React</h2><div class="code long"><div class="code-head"><span>JSX <small>22 lines</small></span><button class="copy" type="button">Copy</button></div><pre><code>import { AppShell, NavGroup, NavLink, DateField, Button, toast } from "kasane-react";
+npm install https://kasane.y-n0.de/v2/kasane-vue-2.0.1.tgz</code></pre></div><p>The CSS is in the package (<code>kasane-react/kasane.css</code>, <code>kasane-vue/kasane.css</code>). Put the fonts and the script that applies the saved colour before paint in the HTML <code>&lt;head&gt;</code> as before (<a href="/en/start/">Get started</a>). Works with React 18+ and Vue 3.5+.</p></section><section class="sec" id="frameworks-s2"><h2>React</h2><div class="code long"><div class="code-head"><span>JSX <small>22 lines</small></span><button class="copy" type="button">Copy</button></div><pre><code>import { AppShell, NavGroup, NavLink, DateField, Button, toast } from "kasane-react";
 import "kasane-react/kasane.css";
 
 export default function App() {
@@ -714,6 +714,11 @@ var region = toastRegion();
 if (!region) return { close: function () {} };
 opts = opts || {};
 var type = opts.type, en = lang() === 'en';
+var key = (type || '') + '|' + message, mergeable = type !== 'danger' && !opts.action && opts.merge !== false;
+if (mergeable) {
+for (var n = region.firstChild; n; n = n.nextSibling) if (n.kasaneKey === key && n.kasaneRepeat) return n.kasaneRepeat();
+}
+var count = 1;
 var el = document.createElement('div');
 el.className = 'k-toast';
 if (type === 'danger') el.setAttribute('role', 'alert');
@@ -756,6 +761,17 @@ el.addEventListener('focusin', function () { focused = true; pause(); });
 el.addEventListener('focusout', function (e) { if (!el.contains(e.relatedTarget)) { focused = false; if (!hovered) run(); } });
 document.addEventListener('visibilitychange', vis);
 el.kasaneClose = close;
+if (mergeable) {
+el.kasaneKey = key;
+el.kasaneRepeat = function () {
+count++;
+text.textContent = message + ' ×' + count;
+left = duration;
+if (timer) { clearTimeout(timer); timer = null; }
+if (!hovered && !focused && document.visibilityState !== 'hidden') run();
+return { close: close };
+};
+}
 region.appendChild(el);
 while (region.children.length > TOAST_MAX) {
 var f = region.firstChild;

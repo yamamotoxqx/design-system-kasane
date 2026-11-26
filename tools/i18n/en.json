@@ -1263,5 +1263,9 @@
  "閉じるボタンを押すまで残します。入力の間違いはトーストではなく、入力欄の下に書きます。": "They stay until the close button is pressed. Input mistakes go under the field, not in a toast.",
  "開始と終了の2つを <code>&lt;fieldset class=\"k-range\"&gt;</code> でまとめ、間に「〜」を置きます。幅が480px未満では、2つの欄を縦に並べます。開始日を選んだら、終了日の <code>min</code> をその日にしておくと、逆の順に選べません。": "Group the start and end in <code>&lt;fieldset class=\"k-range\"&gt;</code> with a separator between them. Under 480px the two fields stack. When the start date is chosen, set the end date's <code>min</code> to it so they cannot be picked in reverse.",
  "開始日": "Start date",
- "集合時刻": "Meeting time"
+ "集合時刻": "Meeting time",
+ "同じもので重要性の低いものはまとめる": "Merge repeats of low-importance toasts",
+ "失敗でも操作付きでもない同じ内容のトーストが続くときは、新しく並べずに画面に出ているものへまとめます。「×2」のように回数を添え、時間を数え直します。「保存の結果」を続けて押すと試せます。": "When the same toast comes again and it is neither a failure nor has an action, it is merged into the one on screen instead of stacking. It shows the count, such as “×2”, and its timer starts over. Press “Saved result” a few times to try it.",
+ "同じトーストをまとめる": "Merging repeated toasts",
+ "同じ内容で重要性の低いトーストが続くときは、1つにまとめて「×2」のように回数を出すようにしました。<a href=\"/en/dialog/\">ダイアログとトースト</a>": "Repeats of the same low-importance toast are now merged into one with a count such as “×2”. <a href=\"/en/dialog/\">Dialogs and toasts</a>"
 }

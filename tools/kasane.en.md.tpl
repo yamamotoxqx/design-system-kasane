@@ -437,6 +437,7 @@ Show progress as a number too. `style="width:…"` here is the only inline style
 - Show a toast with `Kasane.toast("Saved", { type: "ok" })` (`type` is `ok` / `info` / `danger`). Add an action with `{ action: { label: "Undo", onClick } }`.
 - Toasts close by themselves: after 5 seconds, or 10 with an action. They pause while hovered, while focused and while the page is hidden. Failures (`danger`) never close by themselves and get a close button.
 - At most three at a time (the oldest closes first). They rise in when shown and close without motion.
+- A repeat of the same low-importance toast (not `danger`, no action) is merged into the one on screen instead of stacking: it shows the count, such as “×2”, and its timer starts over (`Kasane.toast()` does this; `{ merge: false }` turns it off).
 - Not for important content. Input mistakes go under the field (`.k-error`), not in a toast.
 
 ### Page frame (header, menu, sidebar)

@@ -692,6 +692,11 @@ var region = toastRegion();
 if (!region) return { close: function () {} };
 opts = opts || {};
 var type = opts.type, en = lang() === 'en';
+var key = (type || '') + '|' + message, mergeable = type !== 'danger' && !opts.action && opts.merge !== false;
+if (mergeable) {
+for (var n = region.firstChild; n; n = n.nextSibling) if (n.kasaneKey === key && n.kasaneRepeat) return n.kasaneRepeat();
+}
+var count = 1;
 var el = document.createElement('div');
 el.className = 'k-toast';
 if (type === 'danger') el.setAttribute('role', 'alert');
@@ -734,6 +739,17 @@ el.addEventListener('focusin', function () { focused = true; pause(); });
 el.addEventListener('focusout', function (e) { if (!el.contains(e.relatedTarget)) { focused = false; if (!hovered) run(); } });
 document.addEventListener('visibilitychange', vis);
 el.kasaneClose = close;
+if (mergeable) {
+el.kasaneKey = key;
+el.kasaneRepeat = function () {
+count++;
+text.textContent = message + ' ×' + count;
+left = duration;
+if (timer) { clearTimeout(timer); timer = null; }
+if (!hovered && !focused && document.visibilityState !== 'hidden') run();
+return { close: close };
+};
+}
 region.appendChild(el);
 while (region.children.length > TOAST_MAX) {
 var f = region.firstChild;

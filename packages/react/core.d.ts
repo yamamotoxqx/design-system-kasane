@@ -7,6 +7,8 @@ export interface ToastOptions {
   duration?: number;
   action?: { label: string; onClick?: () => void };
   closable?: boolean;
+  /** Merge a repeat of the same message into the toast on screen ("×2"). Default true; never for danger or with an action. */
+  merge?: boolean;
   closeLabel?: string;
   returnFocus?: HTMLElement;
   onClose?: () => void;

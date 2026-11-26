@@ -92,6 +92,7 @@
      toast('保存しました', { type: 'ok' })                  ok | info | danger, or nothing
      toast('削除しました', { action: { label: '元に戻す', onClick: undo } })
      Plain toasts close after 5 s, toasts with an action after 10 s. Errors (danger) stay until closed.
+     The same message again (not danger, no action) is merged into the toast on screen as "×2"; { merge: false } turns this off.
      The timer stops while the pointer is on the toast, while it has focus, and while the page is hidden. */
   var TOAST_MAX = 3;
   function toastRegion() {
@@ -105,6 +106,13 @@
     if (!region) return { close: function () {} };
     opts = opts || {};
     var type = opts.type, en = lang() === 'en';
+    /* The same low-importance toast again (not danger, no action): merge into the one on screen,
+       show the count and start its timer over, so a burst of saves does not pile up. */
+    var key = (type || '') + '|' + message, mergeable = type !== 'danger' && !opts.action && opts.merge !== false;
+    if (mergeable) {
+      for (var n = region.firstChild; n; n = n.nextSibling) if (n.kasaneKey === key && n.kasaneRepeat) return n.kasaneRepeat();
+    }
+    var count = 1;
     var el = document.createElement('div');
     el.className = 'k-toast';
     if (type === 'danger') el.setAttribute('role', 'alert');
@@ -147,6 +155,17 @@
     el.addEventListener('focusout', function (e) { if (!el.contains(e.relatedTarget)) { focused = false; if (!hovered) run(); } });
     document.addEventListener('visibilitychange', vis);
     el.kasaneClose = close;
+    if (mergeable) {
+      el.kasaneKey = key;
+      el.kasaneRepeat = function () {
+        count++;
+        text.textContent = message + ' ×' + count;
+        left = duration;
+        if (timer) { clearTimeout(timer); timer = null; }
+        if (!hovered && !focused && document.visibilityState !== 'hidden') run();
+        return { close: close };
+      };
+    }
     region.appendChild(el);
     while (region.children.length > TOAST_MAX) {
       var f = region.firstChild;
